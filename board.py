@@ -15,7 +15,19 @@ all_mochigoma = ['FU']*9 + ['KI', 'GI', 'KE', 'KY']*2 + ['HI', 'KA', 'OU']
 class Board:
     '''Shogi board class
 
-    ☗7六歩 <-> board[6][5] = ['+', 'FU']
+    Member variables
+    -------------------
+    Board.board : list (two-dimensional array, 9 x 9)
+        If you want to move a piece as '☗7六歩'
+        >>> board[6][5] = ['+', 'FU']
+    Board.mochigoma : list
+        mochigoma list
+
+    Examples
+    -------------------
+    >>> board = Board()
+    >>> board.set_initial_state()
+    >>> board.move('+7776FU')
     '''
     def __init__(self):
         self.board = [[empty_str]*9 for n in range(9)]
@@ -47,6 +59,8 @@ class Board:
         return self.board[index]
 
     def set_initial_state(self):
+        '''Set state as hirate initial state.
+        '''
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
         with open('initial_state.csa', 'r') as f:
@@ -59,6 +73,14 @@ class Board:
                 self.move(move)
 
     def move(self, move):
+        '''Move a piece on a board
+
+        Args
+        -------------------
+        move : str
+            Move CSA format
+            ex. '+9998KY'
+        '''
         teban = int(move[0] != '+')  ## 0 if sente, 1 if gote
 
         points = list(map(int, list(move[1:5])))
