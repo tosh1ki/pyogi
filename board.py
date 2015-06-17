@@ -27,6 +27,7 @@ class Board:
     >>> board = Board()
     >>> board.set_initial_state()
     >>> board.move('+7776FU')
+    >>> print(board)
     '''
     def __init__(self):
         self.board = [[empty_str]*9 for n in range(9)]
@@ -98,7 +99,6 @@ class Board:
         next_point = points[2:4]
         koma = move[5:]
 
-        prev_point_info = board[prev_point[0] - 1][prev_point[1] - 1]
         if prev_point == [0, 0]:
             # use mochigoma
             self.mochigoma[teban].remove(koma)
