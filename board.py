@@ -3,7 +3,6 @@
 
 '''
 TODO
- 持ち駒の表示
  成の実装
 '''
 
@@ -11,6 +10,7 @@ import pdb
 
 empty_str = '   '
 all_mochigoma = ['FU']*9 + ['KI', 'GI', 'KE', 'KY']*2 + ['HI', 'KA', 'OU']
+board_indexes = list(range(0, 9))
 
 class Board:
     '''Shogi board class
@@ -38,11 +38,14 @@ class Board:
 
     def __str__(self):
         row_separator = '-'*37
-        s = [row_separator]
 
-        for j in range(0, 9):
+        sente_mochigoma = ','.join(self.mochigoma[0])
+        gote_mochigoma = ','.join(self.mochigoma[1])
+        s = [gote_mochigoma, row_separator]
+
+        for j in board_indexes:
             s_j = []
-            for i in range(8, -1, -1):
+            for i in board_indexes[::-1]:
                 s_ij = ''.join(self.board[i][j])
                 s_j.append(s_ij)
 
@@ -50,6 +53,8 @@ class Board:
             s.append(s_temp)
             s.append(row_separator)
             
+        s.append(sente_mochigoma)  # sente's mochigoma
+
         return '\n'.join(s)
 
     def __setitem__(self, index, value):
