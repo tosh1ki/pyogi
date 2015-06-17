@@ -17,7 +17,7 @@ class Board:
     Member variables
     -------------------
     Board.board : list (two-dimensional array, 9 x 9)
-        If you want to move a piece as '☗7六歩'
+        If you want to move a piece as '☗7六歩',
         >>> board[6][5] = ['+', 'FU']
     Board.mochigoma : list
         mochigoma list
@@ -32,6 +32,7 @@ class Board:
         self.board = [[empty_str]*9 for n in range(9)]
         self.mochigoma = [[], []]
         self.tesu = 0
+        self.last_move = ''
 
     def __repr__(self):
         return self.__str__()
@@ -41,7 +42,8 @@ class Board:
 
         sente_mochigoma = ','.join(self.mochigoma[0])
         gote_mochigoma = ','.join(self.mochigoma[1])
-        s = ['{}手目'.format(self.tesu), gote_mochigoma, row_separator]
+        s = ['{}手目: {}'.format(self.tesu, self.last_move),
+             gote_mochigoma, row_separator]
 
         for j in board_indexes:
             s_j = []
@@ -76,6 +78,9 @@ class Board:
         for move in moves:
             if move:
                 self.move(move)
+
+        self.last_move = ''
+        self.tesu = 0
 
     def move(self, move):
         '''Move a piece on a board
@@ -113,6 +118,7 @@ class Board:
 
         self.board[next_point[0] - 1][next_point[1] - 1] = [move[0], koma]
         
+        self.last_move = move
         self.tesu += 1
 
 if __name__ == '__main__':
