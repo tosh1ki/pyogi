@@ -1,3 +1,17 @@
+ACT1 = [
+    [[ 1,  0]],
+    [[ 0,  1]],
+    [[-1,  0]],
+    [[ 0, -1]]
+]
+ACT2 = [
+    [[ 1,  1]],
+    [[-1,  1]],
+    [[-1, -1]],
+    [[ 1, -1]]
+]
+
+
 KA_ACT = [
     [[ 1,  1], [ 2,  2], [ 3,  3], [ 4,  4],
      [ 5,  5], [ 6,  6], [ 7,  7], [ 8,  8]],
@@ -30,40 +44,37 @@ KE_ACT = [
     [[-1, -2]]
 ]
 
+
+
 KI_ACT = [
     [[ 1,  0]],
-    [[-1,  1]],
-    [[ 0, -1]],
-    [[-1, -1]],
-    [[-1,  0]],
-    [[ 0,  1]]
+    [[-1, -1]]
 ]
+KI_ACT.extend(ACT1)
+
 TO_ACT = KI_ACT
 NG_ACT = KI_ACT
 NY_ACT = KI_ACT
 NK_ACT = KI_ACT
 
 GI_ACT = [
-    [[ 1,  1]],
-    [[-1,  1]],
-    [[ 0, -1]],
-    [[-1, -1]],
-    [[-1,  1]]
+    [[ 0, -1]]
 ]
+GI_ACT.extend(ACT2)
 
 FU_ACT = [[[0, -1]]]
 
 UM_ACT = []
 UM_ACT.extend(KA_ACT)
-UM_ACT.extend(KI_ACT)
+UM_ACT.extend(ACT1)
 
 RY_ACT = []
 RY_ACT.extend(HI_ACT)
-RY_ACT.extend(GI_ACT)
+RY_ACT.extend(ACT2)
 
 OU_ACT = []
-OU_ACT.extend(KI_ACT)
-OU_ACT.extend(GI_ACT)
+OU_ACT.extend(ACT1)
+OU_ACT.extend(ACT2)
 
 ACTS = [
     OU_ACT, HI_ACT, KA_ACT, KI_ACT, GI_ACT,

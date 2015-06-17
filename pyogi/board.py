@@ -155,22 +155,28 @@ class Board:
         return [sente_index, gote_index]
 
     def is_forking(self, targets = ['OU', 'HI']):
-        
-        sente_index, gote_index = self.get_piece_indexes('UM')
+        for query_piece in ALL_KOMA:
+            self.is_forking_query(query_piece, targets)
 
+    def is_forking_query(self, query_piece, targets):
+        
+        sente_index, gote_index = self.get_piece_indexes(query_piece)
+
+#        pdb.set_trace()
         for i, j in sente_index:
             fork_candidates = []
 
-            for act in UM_ACT:
+            for act in eval('{}_ACT'.format(query_piece)):
                 for move in act:
                     next_i = i + move[0]
                     next_j = j + move[1]
-                    
+
                     ## if next_i or next_j is outside of the board
-                    if next_i < 0 or 9 <= next_i or next_j < 0 or 9 <= next_j:
+                    if (next_i < 0 or 9 <= next_i or
+                        next_j < 0 or 9 <= next_j):
                         break
 
-                    # print(next_i, next_j, self.board[next_i][next_j])
+                    #print(next_i, next_j, self.board[next_i][next_j])
                     
                     ## if conflict with other piece
                     if self.board[next_i][next_j] != empty_str:
@@ -188,4 +194,5 @@ class Board:
                     break
             else:
                 print(self)
-                print('forked:', ','.join(fork_candidates))
+                print('forked by', query_piece,
+                      ':', ','.join(fork_candidates))
