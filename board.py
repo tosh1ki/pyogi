@@ -27,6 +27,9 @@ class Board:
     >>> board = Board()
     >>> board.set_initial_state()
     >>> board.move('+7776FU')
+    >>> board.move('-3334FU')
+    >>> board.move('+8822UM')
+    >>> board.move('-3122GI')
     >>> print(board)
     '''
     def __init__(self):
@@ -120,12 +123,3 @@ class Board:
         
         self.last_move = move
         self.tesu += 1
-
-if __name__ == '__main__':
-    board = Board()
-    board.set_initial_state()
-    board.move('+7776FU')
-    board.move('-3334FU')
-    board.move('+8822UM')
-    board.move('-3122GI')
-    print(board)
