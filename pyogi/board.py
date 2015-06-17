@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from pieces_act import *
 import pdb
+
 
 empty_str = '   '
 all_mochigoma = ['FU']*9 + ['KI', 'GI', 'KE', 'KY']*2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
-turn_koma = {
-    'TO': 'FU', 'NY': 'KY', 'NK': 'KE',
-    'NG': 'GI', 'UM': 'KA', 'RY': 'HI'
-}
 SENTE = '+'
 GOTE = '-'
 
@@ -116,8 +114,8 @@ class Board:
             picked_koma = next_point_info[1]
 
             # なった駒を取る場合
-            if picked_koma in turn_koma:
-                picked_koma = turn_koma[picked_koma]
+            if picked_koma in TURN_PIECE:
+                picked_koma = TURN_PIECE[picked_koma]
 
             self.mochigoma[teban].append(picked_koma)
 
@@ -150,26 +148,44 @@ class Board:
                 board_piece = value[1]
                 if board_piece == piece:
                     if teban == SENTE:
-                        sente_index.append([i, j])
+                        sente_index.append([j, i])
                     elif teban == GOTE:
-                        gote_index.append([i, j])
+                        gote_index.append([j, i])
 
         return [sente_index, gote_index]
 
-    # def is_ouhi_forking(self):
-    #     KA_ACT = [
-    #         [[1, 1], [2, 2], [3, 3], [4, 4],
-    #          [5, 5], [6, 6], [7, 7], [8, 8]],
-    #         [[1, -1], [2, -2], [3, -3], [4, -4],
-    #          [5, -5], [6, -6], [7, -7], [8, -8]],
-    #         [[-1, 1], [-2, 2], [-3, 3], [-4, 4],
-    #          [-5, 5], [-6, 6], [-7, 7], [-8, 8]],
-    #         [[-1, -1], [-2, -2], [-3, -3], [-4, -4],
-    #          [-5, -5], [-6, -6], [-7, -7], [-8, -8]]
-    #     ]
+    def is_forking(self, targets = ['OU', 'HI']):
+        
+        sente_index, gote_index = self.get_piece_indexes('UM')
 
-    #     for act in KA_ACT:
-    #         for move in act:
-    #             'KA'
-            
-            
+        for i, j in sente_index:
+            fork_candidates = []
+
+            for act in UM_ACT:
+                for move in act:
+                    next_i = i + move[0]
+                    next_j = j + move[1]
+                    
+                    ## if next_i or next_j is outside of the board
+                    if next_i < 0 or 9 <= next_i or next_j < 0 or 9 <= next_j:
+                        break
+
+                    # print(next_i, next_j, self.board[next_i][next_j])
+                    
+                    ## if conflict with other piece
+                    if self.board[next_i][next_j] != empty_str:
+                        b = self.board[next_i][next_j]
+                        
+                        if b[0] == '-':
+                            fork_candidates.append(b[1])
+                            
+                        break
+
+            ## if all targets in fork_candidates,
+            ## print board & info.
+            for target in targets:
+                if not target in fork_candidates:
+                    break
+            else:
+                print(self)
+                print('forked:', ','.join(fork_candidates))
