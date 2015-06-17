@@ -10,6 +10,8 @@ turn_koma = {
     'TO': 'FU', 'NY': 'KY', 'NK': 'KE',
     'NG': 'GI', 'UM': 'KA', 'RY': 'HI'
 }
+SENTE = '+'
+GOTE = '-'
 
 class Board:
     '''Shogi board class
@@ -123,3 +125,51 @@ class Board:
         
         self.last_move = move
         self.tesu += 1
+
+    def get_piece_indexes(self, piece):
+        '''Get indexes of piece on a board.
+
+        Args
+        -------------------
+        piece : str
+           which piece you want to search.
+            ex. 'KA'
+
+        Returns
+        -------------------
+        (at initial state)
+        >>> board.get_piece_indexes('HI')
+        [[[7, 1]], [[1, 7]]]
+        '''
+        sente_index = []
+        gote_index = []
+
+        for j, column in enumerate(self.board):
+            for i, value in enumerate(column):
+                teban = value[0]
+                board_piece = value[1]
+                if board_piece == piece:
+                    if teban == SENTE:
+                        sente_index.append([i, j])
+                    elif teban == GOTE:
+                        gote_index.append([i, j])
+
+        return [sente_index, gote_index]
+
+    # def is_ouhi_forking(self):
+    #     KA_ACT = [
+    #         [[1, 1], [2, 2], [3, 3], [4, 4],
+    #          [5, 5], [6, 6], [7, 7], [8, 8]],
+    #         [[1, -1], [2, -2], [3, -3], [4, -4],
+    #          [5, -5], [6, -6], [7, -7], [8, -8]],
+    #         [[-1, 1], [-2, 2], [-3, 3], [-4, 4],
+    #          [-5, 5], [-6, 6], [-7, 7], [-8, 8]],
+    #         [[-1, -1], [-2, -2], [-3, -3], [-4, -4],
+    #          [-5, -5], [-6, -6], [-7, -7], [-8, -8]]
+    #     ]
+
+    #     for act in KA_ACT:
+    #         for move in act:
+    #             'KA'
+            
+            
