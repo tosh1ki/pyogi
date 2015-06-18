@@ -47,7 +47,7 @@ KE_ACT = [
 
 
 KI_ACT = [
-    [[ 1,  0]],
+    [[ 1, -1]],
     [[-1, -1]]
 ]
 KI_ACT.extend(ACT1)
