@@ -111,9 +111,8 @@ class Kifu:
             if not move.startswith('%'):
                 self.board.move(move)
 
-                if n == 2:
-                    print(self.board)
-                    self.board.is_forking()
+                #print(self.board)
+                print(self.board.is_forking())
 
         return [sente_forked, gote_forked]
 

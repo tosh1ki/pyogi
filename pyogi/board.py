@@ -154,45 +154,109 @@ class Board:
 
         return [sente_index, gote_index]
 
-    def is_forking(self, targets = ['OU', 'HI']):
-        for query_piece in ALL_KOMA:
-            self.is_forking_query(query_piece, targets)
+    def is_forking(self, targets = ['OU', 'HI'], display = True):
+        '''Check that there is an piece which forked by enemy's piece.
+        Search a state that one of all pieces forks all pieces of `target` at.
 
-    def is_forking_query(self, query_piece, targets):
+        Args
+        -------------------
+        target : list
+            ex. ['OU', 'HI']
+        display : bool, optional (default = True)
+            If True, display state that forked.
+
+        Returns
+        -------------------
+        is_forked_list : list of True/False
+            is_forked_list[0] : Is sente's piece forked?
+            is_forked_list[1] : Is  gote's piece forked?
+        '''
+        results = [False, False]
+
+        for query_piece in ALL_KOMA:
+            results_tmp = self.is_forking_query(query_piece, targets, display)
+            results = [results[0] or results_tmp[0],
+                       results[1] or results_tmp[1]]
         
+        return results
+
+
+    def is_forking_query(self, query_piece, targets, display = True):
+        '''Check that there is an piece which forked by enemy's piece.
+        Search a state that `query_piece` forks all pieces of `target` at.
+
+        Args
+        -------------------
+        query_piece : str
+            ex. 'KA'
+        target : list
+            ex. ['OU', 'HI']
+        display : bool, optional (default = True)
+            If True, display state that forked.
+
+        Returns
+        -------------------
+        is_forked_list : list of True/False
+            is_forked_list[0] : Is sente's piece forked?
+            is_forked_list[1] : Is  gote's piece forked?
+        '''
+        is_forked_list = []
         sente_index, gote_index = self.get_piece_indexes(query_piece)
 
-#        pdb.set_trace()
-        for i, j in sente_index:
-            fork_candidates = []
+        options = [
+            ['-',  1, sente_index],
+            ['+', -1,  gote_index]
+        ]
 
-            for act in eval('{}_ACT'.format(query_piece)):
-                for move in act:
-                    next_i = i + move[0]
-                    next_j = j + move[1]
+        ## pdb.set_trace()
 
-                    ## if next_i or next_j is outside of the board
-                    if (next_i < 0 or 9 <= next_i or
-                        next_j < 0 or 9 <= next_j):
-                        break
+        ## for sente and gote
+        for option in options:
+            is_forked = False
 
-                    #print(next_i, next_j, self.board[next_i][next_j])
+            enemys_pm = option[0]
+            direction = option[1]
+            index = option[2]
+
+            ## for each cell of query_piece
+            for i, j in index:
+                fork_candidates = []
+
+                ## for each act(効き) of query_piece
+                for act in eval('{}_ACT'.format(query_piece)):
+                    for move in act:
+                        next_i = i + move[0]
+                        next_j = j + move[1] * direction
+
+                        ## if next_i or next_j is outside of the board
+                        if (next_i < 0 or 9 <= next_i or
+                            next_j < 0 or 9 <= next_j):
+                            break
+
+                        #print(next_i, next_j, self.board[next_i][next_j])
                     
-                    ## if conflict with other piece
-                    if self.board[next_i][next_j] != empty_str:
-                        b = self.board[next_i][next_j]
+                        ## if conflict with other piece
+                        if self.board[next_i][next_j] != empty_str:
+                            b = self.board[next_i][next_j]
                         
-                        if b[0] == '-':
-                            fork_candidates.append(b[1])
+                            if b[0] == enemys_pm:
+                                fork_candidates.append(b[1])
                             
-                        break
+                            break
 
-            ## if all targets in fork_candidates,
-            ## print board & info.
-            for target in targets:
-                if not target in fork_candidates:
-                    break
-            else:
-                print(self)
-                print('forked by', query_piece,
-                      ':', ','.join(fork_candidates))
+                ## if all targets in fork_candidates,
+                ## print board & info.
+                for target in targets:
+                    if not target in fork_candidates:
+                        break
+                else:
+                    if display:
+                        print(self)
+                        print('forked by', enemys_pm, query_piece,
+                              ':', ','.join(fork_candidates))
+
+                    is_forked = True
+
+            is_forked_list.append(is_forked)
+
+        return is_forked_list
