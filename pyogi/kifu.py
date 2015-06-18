@@ -101,9 +101,9 @@ class Kifu:
 
         Returns
         -------------------
-        fork_sente
-        fork_gote
-        '''        
+        sente_forked : list
+        gote_forked  : list
+        '''
         sente_forked = []
         gote_forked = []
 
@@ -111,8 +111,11 @@ class Kifu:
             if not move.startswith('%'):
                 self.board.move(move)
 
-                #print(self.board)
-                print(self.board.is_forking())
+                results = self.board.is_forking()
+                if results[0]:
+                    sente_forked.append(n+1)
+                if results[1]:
+                    gote_forked.append(n+1)
 
         return [sente_forked, gote_forked]
 
@@ -124,4 +127,4 @@ if __name__ == '__main__':
         kifu_txt = f.read()
 
     kifu = Kifu(kifu_txt)
-    kifu.get_forking()
+    results = kifu.get_forking()
