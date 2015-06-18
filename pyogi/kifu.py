@@ -4,7 +4,7 @@
 import re
 import datetime as dt
 
-from board import Board
+from .board import Board
 
 
 regexp_moves = re.compile( '\'指し手と消費時間\n(.+)\n', re.S)

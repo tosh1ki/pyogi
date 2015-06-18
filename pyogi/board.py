@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pieces_act import *
+import os
 import pdb
 
 
@@ -74,7 +74,9 @@ class Board:
         '''
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
-        with open('initial_state.csa', 'r') as f:
+        curdir = os.path.dirname(__file__)
+        csapath = os.path.join(curdir, 'initial_state.csa')
+        with open(csapath, 'r') as f:
             initial_csa = f.read()
 
         moves = initial_csa.split('\n')
