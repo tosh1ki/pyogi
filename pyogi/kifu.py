@@ -11,6 +11,7 @@ regexp_moves = re.compile( '\'指し手と消費時間\n(.+)\n', re.S)
 regexp_datetime = re.compile('\'開始日時\n\$START_TIME:(.+)\n', re.S)
 regexp_player = re.compile('\'対局者名\nN\+\n(\w+)\nN-\n(\w+)\n', re.S)
 
+
 class Kifu:
     '''Class for handling kifu
 
@@ -27,16 +28,15 @@ class Kifu:
     datetime
     description
     '''
-    def __init__(self, kifu_path):
-        with open(kifu_path, 'r') as f:
-            self.kifu_txt = f.read()
-
+    def __init__(self, kifu_txt):
+        self.kifu_txt = kifu_txt
         self.moves = []
         self.sente_win = None
         self.datetime = None
         self.description = ''
         self.players = []
         self.times = []
+
         self.board = Board()
         self.reset_board()
 
@@ -116,7 +116,12 @@ class Kifu:
 
         return [sente_forked, gote_forked]
 
-if __name__ == '__main__':
 
-    kifu = Kifu('./../testgetfork.csa')
+if __name__ == '__main__':
+    
+    kifu_path = './../testgetfork.csa'
+    with open(kifu_path, 'r') as f:
+        kifu_txt = f.read()
+
+    kifu = Kifu(kifu_txt)
     kifu.get_forking()
