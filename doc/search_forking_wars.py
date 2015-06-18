@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+This script finds states that OU and HI are forked at,
+using data that crawled by shogiwars.
+'''
+
 import os
 import sys
 sys.path.append('./../')
