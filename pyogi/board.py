@@ -4,6 +4,7 @@
 import os
 import pdb
 
+from .pieces_act import *
 
 empty_str = '   '
 all_mochigoma = ['FU']*9 + ['KI', 'GI', 'KE', 'KY']*2 + ['HI', 'KA', 'OU']
@@ -182,7 +183,6 @@ class Board:
         
         return results
 
-
     def is_forking_query(self, query_piece, targets, display = True):
         '''Check that there is an piece which forked by enemy's piece.
         Search a state that `query_piece` forks all pieces of `target` at.
@@ -258,6 +258,7 @@ class Board:
                               ':', ','.join(fork_candidates))
 
                     is_forked = True
+
 
             is_forked_list.append(is_forked)
 

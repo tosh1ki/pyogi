@@ -15,14 +15,15 @@ if __name__ == '__main__':
     dbpath = os.path.expanduser('~/data/sqlite3/shogiwars.sqlite3')
     con = sqlite3.connect(dbpath)
 
-    query = 'SELECT * FROM kifu LIMIT 1000;'
-    df = pd.read_sql(query, con)
+    query = 'SELECT * FROM kifu LIMIT 100;'
+    df = pd.read_sql(query, con).drop_duplicates()
 
     for key, d in df.T.to_dict().items():
         kifu = Kifu(d['csa'])
-        results = kifu.get_forking(['OU', 'HI'])
 
-        if True in results:
-            print(d['name'])
+        if kifu.extracted:
+            results = kifu.get_forking(['OU', 'HI'])
 
-        print()
+            if results[0] != [] or results[1] != []:
+                print(d['name'])
+                print()

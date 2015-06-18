@@ -40,7 +40,7 @@ class Kifu:
         self.board = Board()
         self.reset_board()
 
-        self.extract_infomation()
+        self.extracted = self.extract_infomation()
 
     def __repr__(self):
         return 'pyogi.kifu object'
@@ -55,8 +55,10 @@ class Kifu:
         '''Extract infomations from kifu text.
         '''
         match = re.search(regexp_moves, self.kifu_txt)
-        if len(match.groups()) > 0:
+        if match and len(match.groups()) > 0:
             move_txt = match.groups()[0]
+        else:
+            return False
 
         self.moves = move_txt.split('\n')[::2]
         times = move_txt.split('\n')[1::2]
@@ -69,6 +71,8 @@ class Kifu:
 
         match = re.search(regexp_player, self.kifu_txt)
         self.players = list(match.groups())
+
+        return True
 
     def print_state(self, tesu = -1):
         '''Print state of the game
@@ -94,7 +98,7 @@ class Kifu:
         pass
 
 
-    def get_forking(self):
+    def get_forking(self, target):
         '''先手と後手それぞれが何手目に王飛両取りをかけられたかを探索し，
         それをリストにまとめて返す．両取りをかけられていなければNoneを返す．
         [TODO] 英訳
@@ -109,9 +113,10 @@ class Kifu:
 
         for n, move in enumerate(self.moves):
             if not move.startswith('%'):
+#                print(n, move)
                 self.board.move(move)
 
-                results = self.board.is_forking()
+                results = self.board.is_forking(target)
                 if results[0]:
                     sente_forked.append(n+1)
                 if results[1]:
@@ -127,4 +132,4 @@ if __name__ == '__main__':
         kifu_txt = f.read()
 
     kifu = Kifu(kifu_txt)
-    results = kifu.get_forking()
+    results = kifu.get_forking(['OU', 'HI'])
