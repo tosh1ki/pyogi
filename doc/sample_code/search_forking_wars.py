@@ -8,7 +8,7 @@ using data that crawled by shogiwars.
 
 import os
 import sys
-sys.path.append('./../')
+sys.path.append('./../../')
 import sqlite3
 import pandas as pd
 

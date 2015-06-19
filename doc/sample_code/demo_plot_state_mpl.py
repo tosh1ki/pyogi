@@ -6,7 +6,7 @@ demo using pyogi.board.plot_state_mpl()
 '''
 
 import sys
-sys.path.append('./../')
+sys.path.append('./../../')
 
 from pyogi.board import *
 
