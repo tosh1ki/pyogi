@@ -3,6 +3,12 @@
 
 import os
 import pdb
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
+
+font = {'family':'TakaoGothic'}
+matplotlib.rc('font', **font)
 
 from .pieces_act import *
 
@@ -11,6 +17,11 @@ all_mochigoma = ['FU']*9 + ['KI', 'GI', 'KE', 'KY']*2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
 SENTE = '+'
 GOTE = '-'
+piece_kanji = {
+    'FU': '歩', 'KI': '金', 'GI': '銀', 'KE': '桂', 'KY': '香',
+    'HI': '飛', 'KA': '角', 'OU': '王', 'UM': '馬', 'RY': '竜',
+    'NG': '全', 'NY': '杏', 'NK': '圭', 'TO': 'と'
+}
 
 class Board:
     '''Shogi board class
@@ -37,7 +48,8 @@ class Board:
         self.board = [[empty_str]*9 for n in range(9)]
         self.mochigoma = [[], []]
         self.tesu = 0
-        self.last_move = ''
+        self.last_move_txt = ''
+        self.last_move_xy = []
 
     def __repr__(self):
         return self.__str__()
@@ -64,6 +76,68 @@ class Board:
 
         return '\n'.join(s)
 
+    def plot_state_mpl(self, figsize = (8,9), title = ''):
+        '''Plot current state using matplotlib.
+        '''
+        fig, ax = plt.subplots(figsize=figsize)
+
+        width_x = 9
+        width_y = 9
+
+        plt.xlim(0, width_x)
+        plt.ylim(0, width_y)
+
+        dx = width_x / 9
+        dy = width_y / 9
+
+        fontsize = 20 * dx
+
+        ## Plot grids
+        for i in range(1, 9):
+            x = i * dx
+            y = i * dy
+            plt.plot([0, width_x], [y, y], color='black')
+            plt.plot([x, x], [0, width_y], color='black')
+        
+        ## Plot pch
+        for x in [3*dx, 6*dx]:
+            for y in [3*dy, 6*dy]:
+                plt.plot([x], [y],
+                         marker='o', color='black', linestyle='None')
+                
+        ## Plot pieces
+        for j in board_indexes:
+            for i, b_i in enumerate(board_indexes):
+                d = self.board[b_i][j]
+                
+                x = (8-i) + dx/2
+                y = (8-j) + dy/2
+
+                if d != empty_str:
+                    s = piece_kanji[d[1]]
+                    is_gote = int(d[0] == '-')
+                    plt.text(x - 1/5, y - 1/10, s,
+                             size=fontsize, rotation=180*is_gote)
+
+                ## Plot circle around piece moved recently
+                if self.last_move_xy[0] == i and self.last_move_xy[1] == j:
+                    circle = Circle((x, y), 0.5, facecolor='none',
+                                    linewidth=3, alpha=0.5)
+                    ax.add_patch(circle)
+
+        ## Plot mochigoma
+        sente_mochigoma = ','.join(map(lambda x: piece_kanji[x],
+                                       self.mochigoma[0]))
+        plt.text(0, -0.5*dx, sente_mochigoma, fontsize=fontsize)
+
+        gote_mochigoma = ','.join(map(lambda x: piece_kanji[x],
+                                      self.mochigoma[1]))
+        plt.text(0, dy*9.5, gote_mochigoma, 
+                 fontsize=fontsize, rotation=180)
+
+        plt.title(title, y = 1.1, fontsize=fontsize)
+        plt.tick_params(labelleft='off', labelbottom='off')
+
     def __setitem__(self, index, value):
         self.board[index] = value
 
@@ -86,7 +160,7 @@ class Board:
             if move:
                 self.move(move)
 
-        self.last_move = ''
+        self.last_move_txt = ''
         self.tesu = 0
 
     def move(self, move):
@@ -124,7 +198,8 @@ class Board:
 
         self.board[next_point[0] - 1][next_point[1] - 1] = [move[0], koma]
         
-        self.last_move = move
+        self.last_move_txt = move
+        self.last_move_xy = [next_point[0] - 1, next_point[1] - 1]
         self.tesu += 1
 
     def get_piece_indexes(self, piece):
