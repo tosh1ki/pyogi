@@ -333,7 +333,7 @@ class Board:
                         break
                 else:
                     if display:
-                        print(self)
+                        self.plot_state_mpl()
                         print('forked by', enemys_pm, query_piece,
                               ':', ','.join(fork_candidates))
 
