@@ -76,7 +76,7 @@ class Board:
 
         return '\n'.join(s)
 
-    def plot_state_mpl(self, figsize = (8,9), title = ''):
+    def plot_state_mpl(self, figsize = (8,9), title = '', savepath=None):
         '''Plot current state using matplotlib.
         '''
         fig, ax = plt.subplots(figsize=figsize)
@@ -132,13 +132,16 @@ class Board:
 
         gote_mochigoma = ','.join(map(lambda x: piece_kanji[x],
                                       self.mochigoma[1]))
-        plt.text(0, dy*9.5, gote_mochigoma, 
+        plt.text(0, dy*9.2, gote_mochigoma, 
                  fontsize=fontsize, rotation=180)
 
-        plt.title(title, y = 1.1, fontsize=fontsize)
+        plt.title(title, y = 1.07, fontsize=fontsize)
         plt.tick_params(labelleft='off', labelbottom='off')
 
-        plt.show()
+        if savepath:
+            fig.savefig(savepath)
+        else:
+            plt.show()
 
     def __setitem__(self, index, value):
         self.board[index] = value
