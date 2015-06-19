@@ -138,6 +138,8 @@ class Board:
         plt.title(title, y = 1.1, fontsize=fontsize)
         plt.tick_params(labelleft='off', labelbottom='off')
 
+        plt.show()
+
     def __setitem__(self, index, value):
         self.board[index] = value
 
