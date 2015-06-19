@@ -18,5 +18,7 @@ if __name__ == '__main__':
     board.move('+7776FU')
     board.move('-3334FU')
     board.move('+2868HI')
+    board.move('-2288UM')
+    board.move('+7988GI')
 
-    board.plot_state_mpl(title='角交換四間飛車')
+    board.plot_state_mpl(title='角交換四間飛車 (☗８八銀まで)')
