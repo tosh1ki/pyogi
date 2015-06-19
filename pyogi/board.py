@@ -59,7 +59,7 @@ class Board:
 
         sente_mochigoma = ','.join(self.mochigoma[0])
         gote_mochigoma = ','.join(self.mochigoma[1])
-        s = ['{}手目: {}'.format(self.tesu, self.last_move),
+        s = ['{}手目: {}'.format(self.tesu, self.last_move_txt),
              gote_mochigoma, row_separator]
 
         for j in board_indexes:
