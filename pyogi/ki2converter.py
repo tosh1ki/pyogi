@@ -195,7 +195,7 @@ class Ki2converter:
                             prev_pos_candidates)
 
 
-                if '上' in matched[3]:
+                if '上' in matched[3] or '行' in matched[3]:
                     prev_pos_candidates = filter(
                         lambda x: (x[1] - j) * direction > 0,
                         prev_pos_candidates

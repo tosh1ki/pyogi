@@ -9,12 +9,12 @@ from pyogi.ki2converter import *
 
 if __name__ == '__main__':
     
-    for n in range(10000, 20000):
+    for n in range(26377, 30000):
 
-        if n in [1]:
+        if n in [26377]:
             continue
 
-        relpath = '~/data/shogi/2chkifu/10000/{:0>5}.KI2'.format(n)
+        relpath = '~/data/shogi/2chkifu/20000/{:0>5}.KI2'.format(n)
         kifile = os.path.expanduser(relpath)
 
         if not os.path.exists(kifile):
@@ -24,8 +24,3 @@ if __name__ == '__main__':
         ki2converter.from_path(kifile)
 
         ki2converter.to_csa()
-
-        # try:
-        #     ki2converter.to_csa()
-        # except RuntimeError:
-        #     print('RuntimeError')

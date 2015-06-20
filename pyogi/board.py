@@ -166,6 +166,8 @@ class Board:
             csapath = 'initial_state_nimaioti.csa'
         elif teai == 'rokumaioti':
             csapath = 'initial_state_rokumaioti.csa'
+        else:
+            raise RuntimeError('invalid teai', teai)
 
         csapath = os.path.join(curdir, csapath)
         with open(csapath, 'r') as f:
