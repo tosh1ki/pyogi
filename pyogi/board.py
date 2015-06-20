@@ -156,39 +156,49 @@ class Board:
 
         curdir = os.path.dirname(__file__)
 
-        if teai == 'hirate':
-            csapath = 'initial_state_hirate.csa'
-        elif teai == 'kakuoti':
-            csapath = 'initial_state_kakuoti.csa'
-        elif teai == 'hisyaoti':
-            csapath = 'initial_state_hisyaoti.csa'
-        elif teai == 'hikyouoti':
-            csapath = 'initial_state_hikyouoti.csa'
-        elif teai == 'kyouoti':
-            csapath = 'initial_state_kyouoti.csa'
-        elif teai == 'migikyouoti':
-            csapath = 'initial_state_migikyouoti.csa'
-        elif teai == 'nimaioti':
-            csapath = 'initial_state_nimaioti.csa'
-        elif teai == 'sanmaioti':
-            csapath = 'initial_state_sanmaioti.csa'
-        elif teai == 'yonmaioti':
-            csapath = 'initial_state_yonmaioti.csa'
-        elif teai == 'rokumaioti':
-            csapath = 'initial_state_rokumaioti.csa'
-        else:
-            raise RuntimeError('invalid teai', teai)
 
-        csapath = os.path.join(curdir, csapath)
+        csapath = os.path.join(curdir, 'initial_state_hirate.csa')
         with open(csapath, 'r') as f:
             initial_csa = f.read()
 
         moves = initial_csa.split('\n')
 
-
         for move in moves:
             if move:
                 self.move(move)
+
+        ## Komaochi
+        if teai == 'hirate':
+            delete_piece = []
+        elif teai == 'kakuoti':
+            delete_piece = ['22KA']
+        elif teai == 'hisyaoti':
+            delete_piece = ['82HI']
+        elif teai == 'hikyouoti':
+            delete_piece = ['82HI', '11KY']
+        elif teai == 'kyouoti':
+            delete_piece = ['91KY']
+        elif teai == 'migikyouoti':
+            delete_piece = ['11KY']
+        elif teai == 'nimaioti':
+            delete_piece = ['82HI', '22KA']
+        elif teai == 'sanmaioti':
+            delete_piece = ['82HI', '22KA', '11KY']
+        elif teai == 'yonmaioti':
+            delete_piece = ['91KY', '82HI', '22KA', '11KY']
+        elif teai == 'rokumaioti':
+            delete_piece = ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
+        else:
+            raise RuntimeError('invalid teai', teai)
+        
+        for dp in delete_piece:
+            i = int(dp[0]) - 1
+            j = int(dp[1]) - 1
+            p = dp[2:]
+
+            if self[i][j] == ['-', p]:
+                self[i][j] = empty_str
+
 
         self.last_move_txt = ''
         self.tesu = 0
