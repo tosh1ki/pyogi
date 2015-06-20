@@ -9,12 +9,11 @@ from pyogi.ki2converter import *
 
 if __name__ == '__main__':
     
-    for n in range(39659, 40000):
+    for n in range(15372, 50000):
 
-        if n in [1]:
-            continue
-
-        relpath = '~/data/shogi/2chkifu/30000/{:0>5}.KI2'.format(n)
+        n1 = (n // 10000)
+    
+        relpath = '~/data/shogi/2chkifu/{0}0000/{1:0>5}.KI2'.format(n1, n)
         kifile = os.path.expanduser(relpath)
 
         if not os.path.exists(kifile):
