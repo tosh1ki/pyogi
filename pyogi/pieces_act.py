@@ -91,3 +91,5 @@ TURN_PIECE = {
     'TO': 'FU', 'NY': 'KY', 'NK': 'KE',
     'NG': 'GI', 'UM': 'KA', 'RY': 'HI'
 }
+
+PIECE_TO_ACT = dict(zip(ALL_KOMA, ACTS))
