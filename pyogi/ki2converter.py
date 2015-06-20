@@ -114,7 +114,6 @@ class Ki2converter:
             move_csa = self.move_ki2_to_csa(move_ki2)
             self.board.move(move_csa)
 
-#            print(self.board)
         else:            
             print(self.board)
 

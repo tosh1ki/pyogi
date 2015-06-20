@@ -9,10 +9,7 @@ from pyogi.ki2converter import *
 
 if __name__ == '__main__':
     
-    for n in range(12900, 50000):
-
-        if n in [12926]:
-            continue
+    for n in range(0, 50000):
 
         n1 = (n // 10000)
         n2 = int(n < 10000)
