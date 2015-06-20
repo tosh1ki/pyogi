@@ -11,6 +11,7 @@ KANJI_TO_INT = dict(zip(tuple('一二三四五六七八九'), range(1, 10)))
 ZEN_TO_INT =   dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
 KANJI_TO_PIECE = {v: k for k, v in piece_kanji.items()}
 TURN_PIECE_REVERSED = {v: k for k, v in TURN_PIECE.items()}
+REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 
 class Ki2converter:
     '''Converter from KI2 format to CSA format.
@@ -23,9 +24,14 @@ class Ki2converter:
 
     def from_path(self, ki2path):
 
-        with open(ki2path, 'r', encoding='shiftjis') as f:
-            lines = f.readlines()
-       
+        try:
+            with open(ki2path, 'r', encoding='shiftjis') as f:
+                lines = f.readlines()
+        except UnicodeDecodeError:
+            with open(ki2path, 'r', encoding='CP932') as f:
+                lines = f.readlines()
+
+ 
         self.from_lines(lines)
         self.ki2_txt = ''.join(lines)
  
@@ -43,22 +49,23 @@ class Ki2converter:
         infos = []
 
         for line in lines:
+            ## Comment line
             if line.startswith('*'):
                 comments.append(line[1:])
 
+            ## Move line
             elif line.startswith('▲') or line.startswith('△'):
                 line = re.sub('  ', '\u3000', line)
                 tesu_line = len(re.findall('[▲△]', line))
 
                 if tesu_line >= 2:
-                    moves_line = [line[6*i : 6*(i+1)] 
-                                  for i in range(tesu_line+1)]
-
+                    moves_line = re.findall(REGEX_MOVE, line)
                     moves.extend(moves_line)
 
                 elif len(line) > 3:
                     moves.append(line)
 
+            ## Header information
             else:
                 infos.append(line)
 
@@ -75,17 +82,16 @@ class Ki2converter:
         self.board.set_initial_state()
 
         for move_ki2 in self.moves_ki2:
-            print(move_ki2)
             move_csa = self.move_ki2_to_csa(move_ki2)
 
             self.board.move(move_csa)
+        else:            
             print(self.board)
 
 
     def move_ki2_to_csa(self, move_ki2):
         '''Convert codes of KI2 format to that of CSA format
         '''
-        
         replace_list = [
             ['成桂', '圭'],
             ['成香', '杏'],
@@ -97,6 +103,7 @@ class Ki2converter:
         
         regex = re.compile('([▲△])(同|\d[一二三四五六七八九])(.)(.+)?')
         matched = re.search(regex, move_ki2).groups()
+
         print(matched)
 
         code = SYMBOL_TO_CODE[matched[0]]
@@ -125,16 +132,16 @@ class Ki2converter:
                     next_i = pi + move[0] * direction
                     next_j = pj + move[1] * direction
 
-                    ## if next_i or next_j is outside of the board
+                    ## If next_i or next_j is outside of the board
                     if (next_i < 0 or 9 <= next_i or
                         next_j < 0 or 9 <= next_j):
                         break
                     
-                    print(i, j, next_i, next_j)
-
+                    ## If conflict with the piece of move_ki2
                     if i == next_i and j == next_j:
                         prev_pos_candidates.append([pi, pj])
                     
+                    ## If conflict with other pieces
                     if self.board[next_i][next_j] != empty_str:
                         break
                     
@@ -156,13 +163,24 @@ class Ki2converter:
         elif n_candidates >= 2:
             if matched[3]:
                 if '右' in matched[3]:
-                    prev_pos_candidates = filter(
-                        lambda x: (i - x[0]) * direction > 0,
-                        prev_pos_candidates)
+                    if piece in ['HI', 'KA', 'RY', 'UM']:
+                        prev_pos_candidates = filter(
+                            lambda x: (i - x[0]) * direction >= 0,
+                            prev_pos_candidates)
+                    else:
+                        prev_pos_candidates = filter(
+                            lambda x: (i - x[0]) * direction > 0,
+                            prev_pos_candidates)
                 elif '左' in matched[3]:
-                    prev_pos_candidates = filter(
-                        lambda x: (i - x[0]) * direction < 0,
-                        prev_pos_candidates)
+                    if piece in ['HI', 'KA', 'RY', 'UM']:
+                        prev_pos_candidates = filter(
+                            lambda x: (i - x[0]) * direction <= 0,
+                            prev_pos_candidates)
+                    else:
+                        prev_pos_candidates = filter(
+                            lambda x: (i - x[0]) * direction < 0,
+                            prev_pos_candidates)
+
 
                 if '上' in matched[3]:
                     prev_pos_candidates = filter(
@@ -184,6 +202,19 @@ class Ki2converter:
                         lambda x: (x[1] - j) * direction < 0,
                         prev_pos_candidates
                     )
+
+                if (piece in ['HI', 'KA', 'RY', 'UM'] and 
+                    ('右' in matched[3] or '左' in matched[3])
+                ):
+                    if '右' in matched[3]:
+                        lr = -1
+                    elif '左' in matched[3]:
+                        lr = 1
+
+                    prev_pos_candidates = [
+                        max(prev_pos_candidates,
+                            key=lambda x: lr*direction*x[0])
+                    ]                
                         
                 prev_pos_candidates = list(prev_pos_candidates)
                 if (not prev_pos_candidates or 
