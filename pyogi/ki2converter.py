@@ -79,17 +79,28 @@ class Ki2converter:
     def to_csa(self):
     
         self.board = Board()
-            
-        if '手合割：角落ち' in self.ki2_txt:
+         
+        if '手合割：平手' in self.ki2_txt:
+            teai = 'hirate'
+        elif '手合割：角落ち' in self.ki2_txt:
             teai = 'kakuoti'
         elif '手合割：飛車落ち' in self.ki2_txt:
             teai = 'hisyaoti'
+        elif '手合割：飛香落ち' in self.ki2_txt:
+            teai = 'hikyouoti'
+        elif '手合割：香落ち' in self.ki2_txt:
+            teai = 'kyouoti'
+        elif '手合割：右香落ち' in self.ki2_txt:
+            teai = 'migikyouoti'
         elif '手合割：二枚落ち' in self.ki2_txt:
             teai = 'nimaioti'
         elif '手合割：六枚落ち' in self.ki2_txt:
             teai = 'rokumaioti'
         else:
-            teai = 'hirate'
+            if not '手合割' in self.ki2_txt:
+                teai = 'hirate'
+            else:
+                raise RuntimeError('invalid teai')
 
         self.board.set_initial_state(teai = teai)
 

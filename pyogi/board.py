@@ -162,6 +162,12 @@ class Board:
             csapath = 'initial_state_kakuoti.csa'
         elif teai == 'hisyaoti':
             csapath = 'initial_state_hisyaoti.csa'
+        elif teai == 'hikyouoti':
+            csapath = 'initial_state_hikyouoti.csa'
+        elif teai == 'kyouoti':
+            csapath = 'initial_state_kyouoti.csa'
+        elif teai == 'migikyouoti':
+            csapath = 'initial_state_migikyouoti.csa'
         elif teai == 'nimaioti':
             csapath = 'initial_state_nimaioti.csa'
         elif teai == 'rokumaioti':
