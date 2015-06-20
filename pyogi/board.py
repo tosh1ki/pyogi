@@ -149,17 +149,30 @@ class Board:
     def __getitem__(self, index):
         return self.board[index]
 
-    def set_initial_state(self):
+    def set_initial_state(self, teai='hirate'):
         '''Set state as hirate initial state.
         '''
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
         curdir = os.path.dirname(__file__)
-        csapath = os.path.join(curdir, 'initial_state.csa')
+
+        if teai == 'hirate':
+            csapath = 'initial_state_hirate.csa'
+        elif teai == 'kakuoti':
+            csapath = 'initial_state_kakuoti.csa'
+        elif teai == 'hisyaoti':
+            csapath = 'initial_state_hisyaoti.csa'
+        elif teai == 'nimaioti':
+            csapath = 'initial_state_nimaioti.csa'
+        elif teai == 'rokumaioti':
+            csapath = 'initial_state_rokumaioti.csa'
+
+        csapath = os.path.join(curdir, csapath)
         with open(csapath, 'r') as f:
             initial_csa = f.read()
 
         moves = initial_csa.split('\n')
+
 
         for move in moves:
             if move:

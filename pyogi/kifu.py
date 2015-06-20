@@ -49,7 +49,7 @@ class Kifu:
         return self.kifu_txt    
 
     def reset_board(self):
-        self.board.set_initial_state()
+        self.board.set_initial_state(teai=teai)
 
     def extract_infomation(self):
         '''Extract infomations from kifu text.
