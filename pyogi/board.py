@@ -170,6 +170,8 @@ class Board:
             csapath = 'initial_state_migikyouoti.csa'
         elif teai == 'nimaioti':
             csapath = 'initial_state_nimaioti.csa'
+        elif teai == 'sanmaioti':
+            csapath = 'initial_state_sanmaioti.csa'
         elif teai == 'yonmaioti':
             csapath = 'initial_state_yonmaioti.csa'
         elif teai == 'rokumaioti':

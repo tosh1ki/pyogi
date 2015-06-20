@@ -94,10 +94,14 @@ class Ki2converter:
             teai = 'migikyouoti'
         elif '手合割：二枚落ち' in self.ki2_txt:
             teai = 'nimaioti'
+        elif '手合割：三枚落ち' in self.ki2_txt:
+            teai = 'sanmaioti'
         elif '手合割：四枚落ち' in self.ki2_txt:
             teai = 'yonmaioti'
         elif '手合割：六枚落ち' in self.ki2_txt:
             teai = 'rokumaioti'
+        elif '手合割：その他' in self.ki2_txt:
+            return -1
         else:
             if not '手合割' in self.ki2_txt:
                 teai = 'hirate'
