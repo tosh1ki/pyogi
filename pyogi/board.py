@@ -150,7 +150,14 @@ class Board:
         return self.board[index]
 
     def set_initial_state(self, teai='hirate'):
-        '''Set state as hirate initial state.
+        '''Set state as initial state (with handicap).
+
+        Args
+        -------------------
+        teai : str, optional (default = 'hirate')
+            Type of komaoti (handicap)
+            ex. hirate, kakuoti, hisyaoti, kyouoti,migikyouoti,
+                hikyouoti, nimaioti, sanmaioti, yonmaioti, rokumaioti
         '''
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
