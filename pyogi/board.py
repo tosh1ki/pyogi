@@ -19,7 +19,7 @@ SENTE = '+'
 GOTE = '-'
 piece_kanji = {
     'FU': '歩', 'KI': '金', 'GI': '銀', 'KE': '桂', 'KY': '香',
-    'HI': '飛', 'KA': '角', 'OU': '王', 'UM': '馬', 'RY': '竜',
+    'HI': '飛', 'KA': '角', 'OU': '玉', 'UM': '馬', 'RY': '竜',
     'NG': '全', 'NY': '杏', 'NK': '圭', 'TO': 'と'
 }
 
@@ -149,13 +149,22 @@ class Board:
     def __getitem__(self, index):
         return self.board[index]
 
-    def set_initial_state(self):
-        '''Set state as hirate initial state.
+    def set_initial_state(self, teai='hirate'):
+        '''Set state as initial state (with handicap).
+
+        Args
+        -------------------
+        teai : str, optional (default = 'hirate')
+            Type of komaoti (handicap)
+            ex. hirate, kakuoti, hisyaoti, kyouoti,migikyouoti,
+                hikyouoti, nimaioti, sanmaioti, yonmaioti, rokumaioti
         '''
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
         curdir = os.path.dirname(__file__)
-        csapath = os.path.join(curdir, 'initial_state.csa')
+
+
+        csapath = os.path.join(curdir, 'initial_state_hirate.csa')
         with open(csapath, 'r') as f:
             initial_csa = f.read()
 
@@ -164,6 +173,39 @@ class Board:
         for move in moves:
             if move:
                 self.move(move)
+
+        ## Komaochi
+        if teai == 'hirate':
+            delete_piece = []
+        elif teai == 'kakuoti':
+            delete_piece = ['22KA']
+        elif teai == 'hisyaoti':
+            delete_piece = ['82HI']
+        elif teai == 'kyouoti':
+            delete_piece = ['11KY']
+        elif teai == 'migikyouoti':
+            delete_piece = ['91KY']
+        elif teai == 'hikyouoti':
+            delete_piece = ['82HI', '11KY']
+        elif teai == 'nimaioti':
+            delete_piece = ['82HI', '22KA']
+        elif teai == 'sanmaioti':
+            delete_piece = ['82HI', '22KA', '11KY']
+        elif teai == 'yonmaioti':
+            delete_piece = ['91KY', '82HI', '22KA', '11KY']
+        elif teai == 'rokumaioti':
+            delete_piece = ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
+        else:
+            raise RuntimeError('invalid teai', teai)
+        
+        for dp in delete_piece:
+            i = int(dp[0]) - 1
+            j = int(dp[1]) - 1
+            p = dp[2:]
+
+            if self[i][j] == ['-', p]:
+                self[i][j] = empty_str
+
 
         self.last_move_txt = ''
         self.tesu = 0
