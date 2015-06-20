@@ -174,12 +174,12 @@ class Board:
             delete_piece = ['22KA']
         elif teai == 'hisyaoti':
             delete_piece = ['82HI']
+        elif teai == 'kyouoti':
+            delete_piece = ['11KY']
+        elif teai == 'migikyouoti':
+            delete_piece = ['91KY']
         elif teai == 'hikyouoti':
             delete_piece = ['82HI', '11KY']
-        elif teai == 'kyouoti':
-            delete_piece = ['91KY']
-        elif teai == 'migikyouoti':
-            delete_piece = ['11KY']
         elif teai == 'nimaioti':
             delete_piece = ['82HI', '22KA']
         elif teai == 'sanmaioti':

@@ -9,7 +9,10 @@ from pyogi.ki2converter import *
 
 if __name__ == '__main__':
     
-    for n in range(0, 50000):
+    for n in range(12900, 50000):
+
+        if n in [12926]:
+            continue
 
         n1 = (n // 10000)
         n2 = int(n < 10000)
@@ -24,3 +27,4 @@ if __name__ == '__main__':
         ki2converter.from_path(kifile)
 
         ki2converter.to_csa()
+        print()

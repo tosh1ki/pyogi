@@ -134,7 +134,7 @@ class Ki2converter:
         regex = re.compile('([▲△])(同|\d[一二三四五六七八九])(.)(.+)?')
         matched = re.search(regex, move_ki2).groups()
 
-        print(matched)
+        #print(matched)
 
         code = SYMBOL_TO_CODE[matched[0]]
 
