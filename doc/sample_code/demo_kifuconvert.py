@@ -10,7 +10,7 @@ from pyogi.ki2converter import *
 if __name__ == '__main__':
     
     for n in range(2,100):
-        if n == 4:
+        if n in [4, 23, 29]:
             continue
 
         relpath = '~/data/shogi/2chkifu/00001/{:0>5}.KI2'.format(n)

@@ -135,6 +135,9 @@ class Ki2converter:
                     if i == next_i and j == next_j:
                         prev_pos_candidates.append([pi, pj])
                     
+                    if self.board[next_i][next_j] != empty_str:
+                        break
+                    
         ## If promote
         if matched[3] and re.findall('(?<!不)成', matched[3]):
             piece = TURN_PIECE_REVERSED[piece]
@@ -149,45 +152,45 @@ class Ki2converter:
         n_candidates = len(prev_pos_candidates)
         if n_candidates == 1:
             prev_pos = prev_pos_candidates[0]
+
         elif n_candidates >= 2:
             if matched[3]:
                 if '右' in matched[3]:
-                    prev_pos = min(prev_pos_candidates,
-                                   key = lambda x: x[0] * direction)
-
+                    prev_pos_candidates = filter(
+                        lambda x: (i - x[0]) * direction > 0,
+                        prev_pos_candidates)
                 elif '左' in matched[3]:
-                    prev_pos = max(prev_pos_candidates,
-                                   key = lambda x: x[0] * direction)
+                    prev_pos_candidates = filter(
+                        lambda x: (i - x[0]) * direction < 0,
+                        prev_pos_candidates)
 
-                elif '上' in matched[3]:
-                    prev_pos = max(prev_pos_candidates,
-                                   key = lambda x: x[1] * direction)
-
+                if '上' in matched[3]:
+                    prev_pos_candidates = filter(
+                        lambda x: (x[1] - j) * direction > 0,
+                        prev_pos_candidates
+                    )
                 elif '直' in matched[3]:
-                    prev_pos_list = [p for p in prev_pos_candidates
-                                     if p[0] ==  i]
- 
-                    prev_pos = max(prev_pos_list,
-                                   key = lambda x: x[1] * direction)           
+                    prev_pos_candidates = filter(
+                        lambda x: x[0] == i and (x[1] - j) * direction > 0,
+                        prev_pos_candidates
+                    )
                 elif '寄' in matched[3]:
-                    prev_pos_list = [p for p in prev_pos_candidates
-                                     if p[1] ==  j]
-                    if len(prev_pos_list) >= 2:
-                        raise RuntimeError('Too many candidates')
-                    else:
-                        prev_pos = prev_pos_list[0]
-
+                    prev_pos_candidates = filter(
+                        lambda x: x[1] == j,
+                        prev_pos_candidates
+                    )
                 elif '引' in matched[3]:
-                    prev_pos_list = [p for p in prev_pos_candidates
-                                     if direction*(p[1] - j) < 0]
-                    if len(prev_pos_list) >= 2:
-                        raise RuntimeError('Too many candidates')
-                    else:
-                        prev_pos = prev_pos_list[0]
+                    prev_pos_candidates = filter(
+                        lambda x: (x[1] - j) * direction < 0,
+                        prev_pos_candidates
+                    )
                         
-                else:
-                    raise RuntimeError('未知の符号')
+                prev_pos_candidates = list(prev_pos_candidates)
+                if (not prev_pos_candidates or 
+                    len(prev_pos_candidates) >= 2):
+                    raise RuntimeError('Parse Error')
 
+                prev_pos = prev_pos_candidates[0]
         else:
             raise RuntimeError('Cannot find prev position.')
 
