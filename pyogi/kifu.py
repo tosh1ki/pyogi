@@ -9,7 +9,7 @@ from .board import Board
 
 regexp_moves = re.compile( '\'指し手と消費時間\n(.+)\n', re.S)
 regexp_datetime = re.compile('^\$START_TIME:([\d/:\s]+)\n', re.S|re.M)
-regexp_player = re.compile('\'対局者名\nN\+\n(\w+)\nN-\n(\w+)\n', re.S)
+regexp_player = re.compile('\'対局者名\nN\+\n([\w\s]+)\nN-\n([\w\s]+)\n', re.S)
 
 
 class Kifu:
