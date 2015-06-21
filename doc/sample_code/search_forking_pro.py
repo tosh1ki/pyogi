@@ -29,5 +29,3 @@ if __name__ == '__main__':
         kifu = Kifu(csa)
         kifu.get_forking(['OU', 'HI'])
         print()
-
-        break

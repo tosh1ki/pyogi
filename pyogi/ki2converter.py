@@ -132,8 +132,15 @@ class Ki2converter:
     
         self.board = Board()
         header_infos = self.extract_header_infos()
+        
+        if header_infos == -1:
+            return None
+
         self.board.set_initial_state(teai = header_infos['teai'])
 
+        ## とりあえず
+        if '上手' in self.ki2_txt:
+            return None
 
         csa_kifu = [
             '\'バージョン',
@@ -162,7 +169,11 @@ class Ki2converter:
             csa_kifu.append(move_csa)
             csa_kifu.append('T0')
 
-        csa_kifu.append('%TORYO')
+        if self.ki2_txt.endswith('勝ち\n'):
+            csa_kifu.append('%TORYO')
+        elif self.ki2_txt.endswith('千日手\n'):
+            csa_kifu.append('%SENNICHITE')
+
         csa = '\n'.join(csa_kifu)
         
         return csa

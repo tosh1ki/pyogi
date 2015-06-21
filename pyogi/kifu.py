@@ -64,17 +64,19 @@ class Kifu:
         times = move_txt.split('\n')[1::2]
         self.times = list(map(lambda x: int(x[1:]), times))
         self.tesu = len(self.moves)
+        self.is_sennichite = self.kifu_txt.endswith('%SENNICHITE')
         self.sente_win = self.tesu % 2 == 1
 
         match = re.search(regexp_datetime, self.kifu_txt)
-        self.datetime = match.groups()[0]
+        if match:
+            self.datetime = match.groups()[0]
 
         match = re.search(regexp_player, self.kifu_txt)
         self.players = list(match.groups())
 
         return True
 
-    def print_state(self, tesu = -1):
+    def print_state(self, tesu = -1, mode = 'cui'):
         '''Print state of the game
         '''
         for n, move in enumerate(self.moves):
@@ -84,8 +86,11 @@ class Kifu:
                 else:
                     print(move)
 
-        print(self.board)
-        print()
+        if mode == 'cui':
+            print(self.board)
+            print()
+        else:
+            self.board.plot_state_mpl()
 
     def get_state(self, tesu = -1):
         '''Get state of game at specific tesu.
