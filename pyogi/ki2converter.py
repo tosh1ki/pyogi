@@ -76,10 +76,25 @@ class Ki2converter:
         self.infos = ''.join(infos)
         self.comments = ''.join(comments)
 
-    def to_csa(self):
-    
-        self.board = Board()
-         
+
+    def extract_header_infos(self):
+        header_infos = {}
+        queries = [
+            ['sente', '^先手：(.+)'],
+            ['gote', '^後手：(.+)'],
+            ['start_time', '^開始日時：(.+)'],
+            ['site', '^場所：(.+)'],
+            ['event', '^棋戦：(.+)'],
+            ['opening', '^戦型：(.+)'],
+            ['time', '^持ち時間：(.+)']
+        ]
+        for query in queries:
+            match = re.findall(query[1], self.ki2_txt, re.M)
+
+            if match:
+                header_infos[query[0]] = match[0]
+                
+        ## Detect teai
         if '手合割：平手' in self.ki2_txt:
             teai = 'hirate'
         elif '手合割：角落ち' in self.ki2_txt:
@@ -108,15 +123,49 @@ class Ki2converter:
             else:
                 raise RuntimeError('invalid teai')
 
-        self.board.set_initial_state(teai = teai)
+        header_infos['teai'] = teai
 
+
+        return header_infos
+
+    def to_csa(self):
+    
+        self.board = Board()
+        header_infos = self.extract_header_infos()
+        self.board.set_initial_state(teai = header_infos['teai'])
+
+
+        csa_kifu = [
+            '\'バージョン',
+            'V2.2',
+            '\'対局者名',
+            'N+', header_infos['sente'],
+            'N-', header_infos['gote'],
+            '\'棋譜情報',
+            '\'棋戦名',
+            '$EVENT:' + header_infos.get('event', ''),
+            '\'対局場所', 
+            '$SITE:' + header_infos.get('site', ''),
+            '\'開始日時', 
+            '$START_TIME:' + header_infos.get('start_time', ''),
+            '\'持ち時間:' + header_infos.get('time', ''),
+            '\'$TIME_LIMIT:',
+            '\'先手番', '+',
+            '\'指し手と消費時間'
+        ]
+
+        ## Move pieces
         for move_ki2 in self.moves_ki2:
             move_csa = self.move_ki2_to_csa(move_ki2)
             self.board.move(move_csa)
 
-        else:            
-            print(self.board)
+            csa_kifu.append(move_csa)
+            csa_kifu.append('T0')
 
+        csa_kifu.append('%TORYO')
+        csa = '\n'.join(csa_kifu)
+        
+        return csa
 
     def move_ki2_to_csa(self, move_ki2):
         '''Convert codes of KI2 format to that of CSA format

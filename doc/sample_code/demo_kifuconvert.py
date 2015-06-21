@@ -23,5 +23,7 @@ if __name__ == '__main__':
         ki2converter = Ki2converter()
         ki2converter.from_path(kifile)
 
-        ki2converter.to_csa()
+        csa = ki2converter.to_csa()
+        print(csa)
+        print(ki2converter.board)
         print()
