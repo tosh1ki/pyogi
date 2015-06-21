@@ -7,12 +7,13 @@ import datetime as dt
 from .board import Board
 
 
-regexp_moves = re.compile( '\'指し手と消費時間\n(.+)\n', re.S)
-regexp_datetime = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S|re.M)
+regexp_moves = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
+regexp_datetime = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S | re.M)
 regexp_player = re.compile('\'対局者名\nN\+\n(.+?)\nN-\n(.+?)\n', re.S)
 
 
 class Kifu:
+
     '''Class for handling kifu
 
     Args
@@ -28,6 +29,7 @@ class Kifu:
     datetime
     description
     '''
+
     def __init__(self, kifu_txt):
         self.kifu_txt = kifu_txt
         self.moves = []
@@ -46,7 +48,7 @@ class Kifu:
         return 'pyogi.kifu object'
 
     def __str__(self):
-        return self.kifu_txt    
+        return self.kifu_txt
 
     def reset_board(self, teai='hirate'):
         self.board.set_initial_state(teai=teai)
@@ -76,7 +78,7 @@ class Kifu:
 
         return True
 
-    def print_state(self, tesu = -1, mode = 'cui'):
+    def print_state(self, tesu=-1, mode='cui'):
         '''Print state of the game
         '''
         for n, move in enumerate(self.moves):
@@ -92,7 +94,7 @@ class Kifu:
         else:
             self.board.plot_state_mpl()
 
-    def get_state(self, tesu = -1):
+    def get_state(self, tesu=-1):
         '''Get state of game at specific tesu.
 
         Args
@@ -101,7 +103,6 @@ class Kifu:
            Returns last state of game if tesu == -1
         '''
         pass
-
 
     def get_forking(self, target):
         '''先手と後手それぞれが何手目に王飛両取りをかけられたかを探索し，
@@ -122,15 +123,15 @@ class Kifu:
 
                 results = self.board.is_forking(target)
                 if results[0]:
-                    sente_forked.append(n+1)
+                    sente_forked.append(n + 1)
                 if results[1]:
-                    gote_forked.append(n+1)
+                    gote_forked.append(n + 1)
 
         return [sente_forked, gote_forked]
 
 
 if __name__ == '__main__':
-    
+
     kifu_path = './../testgetfork.csa'
     with open(kifu_path, 'r') as f:
         kifu_txt = f.read()

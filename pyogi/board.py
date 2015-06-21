@@ -7,13 +7,13 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 
-font = {'family':'TakaoGothic'}
+font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
 from .pieces_act import *
 
 empty_str = '   '
-all_mochigoma = ['FU']*9 + ['KI', 'GI', 'KE', 'KY']*2 + ['HI', 'KA', 'OU']
+all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
 SENTE = '+'
 GOTE = '-'
@@ -23,7 +23,9 @@ piece_kanji = {
     'NG': '全', 'NY': '杏', 'NK': '圭', 'TO': 'と'
 }
 
+
 class Board:
+
     '''Shogi board class
 
     Member variables
@@ -44,8 +46,9 @@ class Board:
     >>> board.move('-3122GI')
     >>> print(board)
     '''
+
     def __init__(self):
-        self.board = [[empty_str]*9 for n in range(9)]
+        self.board = [[empty_str] * 9 for n in range(9)]
         self.mochigoma = [[], []]
         self.tesu = 0
         self.last_move_txt = ''
@@ -55,7 +58,7 @@ class Board:
         return self.__str__()
 
     def __str__(self):
-        row_separator = '-'*37
+        row_separator = '-' * 37
 
         sente_mochigoma = ','.join(self.mochigoma[0])
         gote_mochigoma = ','.join(self.mochigoma[1])
@@ -71,12 +74,12 @@ class Board:
             s_temp = '|' + '|'.join(s_j) + '|'
             s.append(s_temp)
             s.append(row_separator)
-            
+
         s.append(sente_mochigoma)  # sente's mochigoma
 
         return '\n'.join(s)
 
-    def plot_state_mpl(self, figsize = (8,9), title = '', savepath=None):
+    def plot_state_mpl(self, figsize=(8, 9), title = '', savepath=None):
         '''Plot current state using matplotlib.
         '''
         fig, ax = plt.subplots(figsize=figsize)
@@ -92,52 +95,52 @@ class Board:
 
         fontsize = 20 * dx
 
-        ## Plot grids
+        # Plot grids
         for i in range(1, 9):
             x = i * dx
             y = i * dy
             plt.plot([0, width_x], [y, y], color='black')
             plt.plot([x, x], [0, width_y], color='black')
-        
-        ## Plot pch
-        for x in [3*dx, 6*dx]:
-            for y in [3*dy, 6*dy]:
+
+        # Plot pch
+        for x in [3 * dx, 6 * dx]:
+            for y in [3 * dy, 6 * dy]:
                 plt.plot([x], [y],
                          marker='o', color='black', linestyle='None')
-                
-        ## Plot pieces
+
+        # Plot pieces
         for j in board_indexes:
             for i, b_i in enumerate(board_indexes):
                 d = self.board[b_i][j]
-                
-                x = (8-i) + dx/2
-                y = (8-j) + dy/2
+
+                x = (8 - i) + dx / 2
+                y = (8 - j) + dy / 2
 
                 if d != empty_str:
                     s = piece_kanji[d[1]]
                     is_gote = int(d[0] == '-')
-                    plt.text(x - 1/5, y - 1/10, s,
-                             size=fontsize, rotation=180*is_gote)
+                    plt.text(x - 1 / 5, y - 1 / 10, s,
+                             size=fontsize, rotation=180 * is_gote)
 
-                ## Plot circle around piece moved recently
-                if (len(self.last_move_xy) == 2 and 
-                    self.last_move_xy[0] == i and 
-                    self.last_move_xy[1] == j):
+                # Plot circle around piece moved recently
+                if (len(self.last_move_xy) == 2 and
+                        self.last_move_xy[0] == i and
+                        self.last_move_xy[1] == j):
                     circle = Circle((x, y), 0.5, facecolor='none',
                                     linewidth=3, alpha=0.5)
                     ax.add_patch(circle)
 
-        ## Plot mochigoma
+        # Plot mochigoma
         sente_mochigoma = ','.join(map(lambda x: piece_kanji[x],
                                        self.mochigoma[0]))
-        plt.text(0, -0.5*dx, sente_mochigoma, fontsize=fontsize)
+        plt.text(0, -0.5 * dx, sente_mochigoma, fontsize=fontsize)
 
         gote_mochigoma = ','.join(map(lambda x: piece_kanji[x],
                                       self.mochigoma[1]))
-        plt.text(0, dy*9.2, gote_mochigoma, 
+        plt.text(0, dy * 9.2, gote_mochigoma,
                  fontsize=fontsize, rotation=180)
 
-        plt.title(title, y = 1.07, fontsize=fontsize)
+        plt.title(title, y=1.07, fontsize=fontsize)
         plt.tick_params(labelleft='off', labelbottom='off')
 
         if savepath:
@@ -165,7 +168,6 @@ class Board:
 
         curdir = os.path.dirname(__file__)
 
-
         csapath = os.path.join(curdir, 'initial_state_hirate.csa')
         with open(csapath, 'r') as f:
             initial_csa = f.read()
@@ -176,7 +178,7 @@ class Board:
             if move:
                 self.move(move)
 
-        ## Komaochi
+        # Komaochi
         if teai == 'hirate':
             delete_piece = []
         elif teai == 'kakuoti':
@@ -199,7 +201,7 @@ class Board:
             delete_piece = ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
         else:
             raise RuntimeError('invalid teai', teai)
-        
+
         for dp in delete_piece:
             i = int(dp[0]) - 1
             j = int(dp[1]) - 1
@@ -207,7 +209,6 @@ class Board:
 
             if self[i][j] == ['-', p]:
                 self[i][j] = empty_str
-
 
         self.last_move_txt = ''
         self.last_move_xy = []
@@ -222,7 +223,7 @@ class Board:
             Move CSA format
             ex. '+9998KY'
         '''
-        teban = int(move[0] != '+')  ## 0 if sente, 1 if gote
+        teban = int(move[0] != '+')  # 0 if sente, 1 if gote
 
         points = list(map(int, list(move[1:5])))
         prev_point = points[0:2]
@@ -247,7 +248,7 @@ class Board:
             self.mochigoma[teban].append(picked_koma)
 
         self.board[next_point[0] - 1][next_point[1] - 1] = [move[0], koma]
-        
+
         self.last_move_txt = move
         self.last_move_xy = [next_point[0] - 1, next_point[1] - 1]
         self.tesu += 1
@@ -282,7 +283,7 @@ class Board:
 
         return [sente_index, gote_index]
 
-    def is_forking(self, targets = ['OU', 'HI'], display = True):
+    def is_forking(self, targets=['OU', 'HI'], display=True):
         '''Check that there is an piece which forked by enemy's piece.
         Search a state that one of all pieces forks all pieces of `target` at.
 
@@ -305,10 +306,10 @@ class Board:
             results_tmp = self.is_forking_query(query_piece, targets, display)
             results = [results[0] or results_tmp[0],
                        results[1] or results_tmp[1]]
-        
+
         return results
 
-    def is_forking_query(self, query_piece, targets, display = True):
+    def is_forking_query(self, query_piece, targets, display=True):
         '''Check that there is an piece which forked by enemy's piece.
         Search a state that `query_piece` forks all pieces of `target` at.
 
@@ -335,9 +336,9 @@ class Board:
             ['+', -1,  gote_index]
         ]
 
-        ## pdb.set_trace()
+        # pdb.set_trace()
 
-        ## for sente and gote
+        # for sente and gote
         for option in options:
             is_forked = False
 
@@ -345,34 +346,34 @@ class Board:
             direction = option[1]
             index = option[2]
 
-            ## for each cell of query_piece
+            # for each cell of query_piece
             for i, j in index:
                 fork_candidates = []
 
-                ## for each act(効き) of query_piece
+                # for each act(効き) of query_piece
                 for act in eval('{}_ACT'.format(query_piece)):
                     for move in act:
                         next_i = i + move[0]
                         next_j = j + move[1] * direction
 
-                        ## if next_i or next_j is outside of the board
+                        # if next_i or next_j is outside of the board
                         if (next_i < 0 or 9 <= next_i or
-                            next_j < 0 or 9 <= next_j):
+                                next_j < 0 or 9 <= next_j):
                             break
 
                         #print(next_i, next_j, self.board[next_i][next_j])
-                    
-                        ## if conflict with other piece
+
+                        # if conflict with other piece
                         if self.board[next_i][next_j] != empty_str:
                             b = self.board[next_i][next_j]
-                        
+
                             if b[0] == enemys_pm:
                                 fork_candidates.append(b[1])
-                            
+
                             break
 
-                ## if all targets in fork_candidates,
-                ## print board & info.
+                # if all targets in fork_candidates,
+                # print board & info.
                 for target in targets:
                     if not target in fork_candidates:
                         break
@@ -383,7 +384,6 @@ class Board:
                               ':', ','.join(fork_candidates))
 
                     is_forked = True
-
 
             is_forked_list.append(is_forked)
 
