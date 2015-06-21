@@ -8,7 +8,7 @@ from .board import Board
 
 
 regexp_moves = re.compile( '\'指し手と消費時間\n(.+)\n', re.S)
-regexp_datetime = re.compile('\'開始日時\n\$START_TIME:(.+)\n', re.S)
+regexp_datetime = re.compile('^\$START_TIME:([\d/:\s]+)\n', re.S|re.M)
 regexp_player = re.compile('\'対局者名\nN\+\n(\w+)\nN-\n(\w+)\n', re.S)
 
 
@@ -48,7 +48,7 @@ class Kifu:
     def __str__(self):
         return self.kifu_txt    
 
-    def reset_board(self):
+    def reset_board(self, teai='hirate'):
         self.board.set_initial_state(teai=teai)
 
     def extract_infomation(self):
@@ -63,7 +63,7 @@ class Kifu:
         self.moves = move_txt.split('\n')[::2]
         times = move_txt.split('\n')[1::2]
         self.times = list(map(lambda x: int(x[1:]), times))
-        self.tesu = len(self.moves) - 1
+        self.tesu = len(self.moves)
         self.sente_win = self.tesu % 2 == 1
 
         match = re.search(regexp_datetime, self.kifu_txt)
@@ -113,7 +113,6 @@ class Kifu:
 
         for n, move in enumerate(self.moves):
             if not move.startswith('%'):
-#                print(n, move)
                 self.board.move(move)
 
                 results = self.board.is_forking(target)
