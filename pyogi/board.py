@@ -120,7 +120,9 @@ class Board:
                              size=fontsize, rotation=180*is_gote)
 
                 ## Plot circle around piece moved recently
-                if self.last_move_xy[0] == i and self.last_move_xy[1] == j:
+                if (len(self.last_move_xy) == 2 and 
+                    self.last_move_xy[0] == i and 
+                    self.last_move_xy[1] == j):
                     circle = Circle((x, y), 0.5, facecolor='none',
                                     linewidth=3, alpha=0.5)
                     ax.add_patch(circle)
@@ -208,6 +210,7 @@ class Board:
 
 
         self.last_move_txt = ''
+        self.last_move_xy = []
         self.tesu = 0
 
     def move(self, move):
