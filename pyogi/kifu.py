@@ -119,7 +119,7 @@ class Kifu:
 
         for n, move in enumerate(self.moves):
             if not move.startswith('%'):
-                self.board.move(move)
+                res_move = self.board.move(move)
 
                 results = self.board.is_forking(target)
                 if results[0]:

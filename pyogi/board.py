@@ -230,6 +230,8 @@ class Board:
         next_point = points[2:4]
         koma = move[5:]
 
+        picked_koma = []
+
         if prev_point == [0, 0]:
             # use mochigoma
             self.mochigoma[teban].remove(koma)
@@ -247,11 +249,14 @@ class Board:
 
             self.mochigoma[teban].append(picked_koma)
 
-        self.board[next_point[0] - 1][next_point[1] - 1] = [move[0], koma]
+        moved_koma = [move[0], koma]
+        self.board[next_point[0] - 1][next_point[1] - 1] = moved_koma
 
         self.last_move_txt = move
         self.last_move_xy = [next_point[0] - 1, next_point[1] - 1]
         self.tesu += 1
+
+        return [moved_koma, picked_koma]
 
     def get_piece_indexes(self, piece):
         '''Get indexes of piece on a board.
