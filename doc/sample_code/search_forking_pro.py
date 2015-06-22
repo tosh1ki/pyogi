@@ -3,6 +3,7 @@
 
 import os
 import sys
+import pandas as pd
 sys.path.append('./../../')
 
 from pyogi.ki2converter import *
@@ -10,6 +11,8 @@ from pyogi.kifu import *
 
 
 if __name__ == '__main__':
+
+    res_table = []
     
     for n in range(0, 50000):
 
@@ -27,8 +30,23 @@ if __name__ == '__main__':
 
         csa = ki2converter.to_csa()
 
+        if not csa:
+            continue
 
         kifu = Kifu(csa)
         res = kifu.get_forking(['OU', 'HI'])
         if res[2] or res[3]:
             print(kifu.players)
+
+        # Output
+        # 1. sente forked | gote forked
+        # 2. (sente won & sente forked) | (gote won & gote forked)
+        res_table.append(
+            [res[2] != [] or res[3] != [],
+             (kifu.sente_win and res[2]!=[]) or 
+             ((not kifu.sente_win) and res[3]!=[])])
+
+
+
+    df = pd.DataFrame(res_table, columns=['fork', 'fork&win'])
+    pd.crosstab(df.loc[:, 'fork'], df.loc[:, 'fork&win'])
