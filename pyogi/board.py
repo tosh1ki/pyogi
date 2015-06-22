@@ -230,7 +230,7 @@ class Board:
         next_point = points[2:4]
         koma = move[5:]
 
-        picked_koma = []
+        picked_koma = ''
 
         if prev_point == [0, 0]:
             # use mochigoma

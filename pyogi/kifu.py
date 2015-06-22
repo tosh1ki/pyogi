@@ -4,6 +4,8 @@
 import re
 import datetime as dt
 
+import pdb
+
 from .board import Board
 
 
@@ -38,6 +40,7 @@ class Kifu:
         self.description = ''
         self.players = []
         self.times = []
+        self.teai = ''
 
         self.board = Board()
         self.reset_board()
@@ -52,6 +55,7 @@ class Kifu:
 
     def reset_board(self, teai='hirate'):
         self.board.set_initial_state(teai=teai)
+        self.teai = teai
 
     def extract_infomation(self):
         '''Extract infomations from kifu text.
@@ -81,18 +85,21 @@ class Kifu:
     def print_state(self, tesu=-1, mode='cui'):
         '''Print state of the game
         '''
+        new_board = Board()
+        new_board.set_initial_state(teai=self.teai)
+        
         for n, move in enumerate(self.moves):
             if tesu == -1 or n < tesu:
                 if not move.startswith('%'):
-                    self.board.move(move)
+                    new_board.move(move)
                 else:
                     print(move)
 
         if mode == 'cui':
-            print(self.board)
+            print(new_board)
             print()
         else:
-            self.board.plot_state_mpl()
+            new_board.plot_state_mpl()
 
     def get_state(self, tesu=-1):
         '''Get state of game at specific tesu.
@@ -116,18 +123,33 @@ class Kifu:
         '''
         sente_forked = []
         gote_forked = []
+        sente_forked_and_picked = []
+        gote_forked_and_picked = []
 
         for n, move in enumerate(self.moves):
             if not move.startswith('%'):
                 res_move = self.board.move(move)
+                results = self.board.is_forking(target, display=False)
 
-                results = self.board.is_forking(target)
+                # If forking pieces of target
                 if results[0]:
                     sente_forked.append(n + 1)
                 if results[1]:
                     gote_forked.append(n + 1)
 
-        return [sente_forked, gote_forked]
+                # If forked at previous state and picked piece of target,
+                # save and plot state.
+                if n - 1 in sente_forked and res_move[1] in target:
+                    sente_forked_and_picked.append(n + 1)
+                    self.print_state(tesu=n-1, mode='mpl')
+                    self.board.plot_state_mpl()
+                if n - 1 in gote_forked and res_move[1] in target:
+                    gote_forked_and_picked.append(n + 1)
+                    self.print_state(tesu=n-1, mode='mpl')
+                    self.board.plot_state_mpl()
+
+        return [sente_forked, gote_forked,
+                sente_forked_and_picked, gote_forked_and_picked]
 
 
 if __name__ == '__main__':

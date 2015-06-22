@@ -26,6 +26,9 @@ if __name__ == '__main__':
         ki2converter.from_path(kifile)
 
         csa = ki2converter.to_csa()
+
+
         kifu = Kifu(csa)
-        kifu.get_forking(['OU', 'HI'])
-        print()
+        res = kifu.get_forking(['OU', 'HI'])
+        if res[2] or res[3]:
+            print(kifu.players)
