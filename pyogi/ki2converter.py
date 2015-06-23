@@ -6,7 +6,7 @@ import re
 from .board import *
 
 
-SYMBOL_TO_CODE = {'▲': SENTE, '△': GOTE}
+SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
 KANJI_TO_INT = dict(zip(tuple('一二三四五六七八九'), range(1, 10)))
 ZEN_TO_INT = dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
 KANJI_TO_PIECE = {v: k for k, v in piece_kanji.items()}

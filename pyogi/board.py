@@ -6,28 +6,17 @@ from collections import Counter
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
-
-import pdb
-
-
 font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
+import pdb
+
 from .pieces_act import *
 
-empty_str = '   '
+EMPTY_STR = '   '
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
-koma_kanji = ['歩', '香', '桂', '銀', '金', '角', '飛', '玉']
-koma_csa = ['FU', 'KY', 'KE', 'GI', 'KI', 'KA', 'HI', 'OU']
-
 board_indexes = list(range(0, 9))
-SENTE = '+'
-GOTE = '-'
-piece_kanji = {
-    'FU': '歩', 'KI': '金', 'GI': '銀', 'KE': '桂', 'KY': '香',
-    'HI': '飛', 'KA': '角', 'OU': '玉', 'UM': '馬', 'RY': '竜',
-    'NG': '全', 'NY': '杏', 'NK': '圭', 'TO': 'と'
-}
+TEBAN_CODE = ['+', '-']
 
 
 class Board:
@@ -54,7 +43,7 @@ class Board:
     '''
 
     def __init__(self):
-        self.board = [[empty_str] * 9 for n in range(9)]
+        self.board = [[EMPTY_STR] * 9 for n in range(9)]
         self.mochigoma = [[], []]
         self.tesu = 0
         self.last_move_txt = ''
@@ -85,31 +74,6 @@ class Board:
         s.append(sente_mochigoma)  # sente's mochigoma
 
         return '\n'.join(s)
-
-    def get_mochigoma_str(self, teban, kanji=True):
-        '''Returns string of all mochigoma.
-
-        teban : int
-            0 : sente
-            1 : gote
-        '''
-        if kanji:
-            mochigoma = map(lambda x: piece_kanji[x], self.mochigoma[teban])
-            koma = koma_kanji
-        else:
-            mochigoma = self.mochigoma[teban]
-            koma = koma_csa
-
-        counter = Counter(mochigoma)
-
-        mochigoma_list = []
-        for k in koma:
-            if counter[k] == 1:
-                mochigoma_list.append(k)
-            elif counter[k] > 1:
-                mochigoma_list.append('{0}x{1}'.format(k, counter[k]))
-
-        return ' '.join(mochigoma_list)
 
     def plot_state_mpl(self, figsize=(8, 9), title = '', savepath=None):
         '''Plot current state using matplotlib.
@@ -148,8 +112,8 @@ class Board:
                 x = (8 - i) + dx / 2
                 y = (8 - j) + dy / 2
 
-                if d != empty_str:
-                    s = piece_kanji[d[1]]
+                if d != EMPTY_STR:
+                    s = CSA_TO_KANJI[d[1]]
                     is_gote = int(d[0] == '-')
                     plt.text(x - 1 / 5, y - 1 / 10, s,
                              size=fontsize, rotation=180 * is_gote)
@@ -176,6 +140,31 @@ class Board:
             fig.savefig(savepath)
         else:
             plt.show()
+
+    def get_mochigoma_str(self, teban, kanji=True):
+        '''Returns string of all mochigoma.
+
+        teban : int
+            0 : sente
+            1 : gote
+        '''
+        if kanji:
+            mochigoma = map(lambda x: CSA_TO_KANJI[x], self.mochigoma[teban])
+            koma = KOMA_KANJI
+        else:
+            mochigoma = self.mochigoma[teban]
+            koma = KOMA_CSA
+
+        counter = Counter(mochigoma)
+
+        mochigoma_list = []
+        for k in koma:
+            if counter[k] == 1:
+                mochigoma_list.append(k)
+            elif counter[k] > 1:
+                mochigoma_list.append('{0}x{1}'.format(k, counter[k]))
+
+        return ' '.join(mochigoma_list)
 
     def __setitem__(self, index, value):
         self.board[index] = value
@@ -237,7 +226,7 @@ class Board:
             p = dp[2:]
 
             if self[i][j] == ['-', p]:
-                self[i][j] = empty_str
+                self[i][j] = EMPTY_STR
 
         self.last_move_txt = ''
         self.last_move_xy = []
@@ -265,10 +254,10 @@ class Board:
             # use mochigoma
             self.mochigoma[teban].remove(koma)
         else:
-            self.board[prev_point[0] - 1][prev_point[1] - 1] = empty_str
+            self.board[prev_point[0] - 1][prev_point[1] - 1] = EMPTY_STR
 
         next_point_info = self.board[next_point[0] - 1][next_point[1] - 1]
-        if next_point_info != empty_str:
+        if next_point_info != EMPTY_STR:
             # pick enemy's koma
             picked_koma = next_point_info[1]
 
@@ -288,7 +277,7 @@ class Board:
         return [moved_koma, picked_koma]
 
     def get_piece_indexes(self, piece):
-        '''Get indexes of piece on a board.
+        '''Get indexes of a certain piece on a board.
 
         Args
         -------------------
@@ -302,20 +291,15 @@ class Board:
         >>> board.get_piece_indexes('HI')
         [[[7, 1]], [[1, 7]]]
         '''
-        sente_index = []
-        gote_index = []
-
+        pieces_index = [[], []]
         for j, column in enumerate(self.board):
             for i, value in enumerate(column):
                 teban = value[0]
                 board_piece = value[1]
                 if board_piece == piece:
-                    if teban == SENTE:
-                        sente_index.append([j, i])
-                    elif teban == GOTE:
-                        gote_index.append([j, i])
+                    pieces_index[teban==TEBAN_CODE[1]].append([j, i])
 
-        return [sente_index, gote_index]
+        return pieces_index
 
     def is_forking(self, targets=['OU', 'HI'], display=True):
         '''Check that there is an piece which forked by enemy's piece.
@@ -398,7 +382,7 @@ class Board:
                         #print(next_i, next_j, self.board[next_i][next_j])
 
                         # if conflict with other piece
-                        if self.board[next_i][next_j] != empty_str:
+                        if self.board[next_i][next_j] != EMPTY_STR:
                             b = self.board[next_i][next_j]
 
                             if b[0] == enemys_pm:

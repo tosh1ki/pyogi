@@ -8,10 +8,9 @@ import pdb
 
 from .board import Board
 
-
-regexp_moves = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
-regexp_datetime = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S | re.M)
-regexp_player = re.compile('\'対局者名\nN\+\n(.+?)\nN-\n(.+?)\n', re.S)
+REGEXP_MOVES = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
+REGEXP_DATETIME = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S | re.M)
+REGEXP_PLAYERS = re.compile('\'対局者名\nN\+\n(.+?)\nN-\n(.+?)\n', re.S)
 
 
 class Kifu:
@@ -60,7 +59,7 @@ class Kifu:
     def extract_infomation(self):
         '''Extract infomations from kifu text.
         '''
-        match = re.search(regexp_moves, self.kifu_txt)
+        match = re.search(REGEXP_MOVES, self.kifu_txt)
         if match and len(match.groups()) > 0:
             move_txt = match.groups()[0]
         else:
@@ -73,11 +72,11 @@ class Kifu:
         self.is_sennichite = self.kifu_txt.endswith('%SENNICHITE')
         self.sente_win = self.tesu % 2 == 1
 
-        match = re.search(regexp_datetime, self.kifu_txt)
+        match = re.search(REGEXP_DATETIME, self.kifu_txt)
         if match:
             self.datetime = match.groups()[0]
 
-        match = re.search(regexp_player, self.kifu_txt)
+        match = re.search(REGEXP_PLAYERS, self.kifu_txt)
         self.players = list(match.groups())
 
         return True
