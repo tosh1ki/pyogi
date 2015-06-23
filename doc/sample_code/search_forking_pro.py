@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+プロ棋士の棋譜の中から王手飛車取りの場面を探して，
+「プロの対局では王手飛車をかけたほうが負ける」が本当かどうかを確かめる
+'''
+
 import os
 import sys
 import pandas as pd
@@ -34,31 +39,33 @@ if __name__ == '__main__':
             continue
 
         kifu = Kifu(csa)
+        
+        if not kifu.extracted:
+            continue
+
         res = kifu.get_forking(['OU', 'HI'], display=False)
         if res[2] or res[3]:
             print(kifu.players)
 
-        # Output
-        # 1. sente forked | gote forked
-        # 2. (sente won & sente forked) | (gote won & gote forked)
+        # Data
+        #   fork: sente forked | gote forked
+        #   forkandwin: (sente won & sente forked) | (gote won & gote forked)
         res_table.append(
-            [n,
-             kifu.players[0],
-             kifu.players[1],
-             kifu.sente_win,
-             kifu.is_sennichite,
-             res[2] != [],
-             res[3] != [],
-             res[2] != [] or res[3] != [],
-             (kifu.sente_win and res[2]!=[]) or 
-             ((not kifu.sente_win) and res[3]!=[])])
+            {
+                'n': n,
+                'player0': kifu.players[0],
+                'player1': kifu.players[1],
+                'sente_won': kifu.sente_win,
+                'sennichite': kifu.is_sennichite,
+                'sente_forking': res[2] != [],
+                'gote_forking': res[3] != [],
+                'fork': res[2] != [] or res[3] != [],
+                'forkandwin': ((kifu.sente_win and res[2]!=[]) or 
+                               (not kifu.sente_win and res[3]!=[]))
+            }
+        )
 
 
-        break
-
-    columns = ['n', 'player0', 'player1', 'sente_win',
-               'sennichite', 'sente_forking', 'gote_forking',
-               'fork', 'fork&win']
-    df = pd.DataFrame(res_table, columns=columns)
-
-    pd.crosstab(df.loc[:, 'fork'], df.loc[:, 'fork&win'])
+    # Output
+    df = pd.DataFrame(res_table)
+    print(pd.crosstab(df.loc[:, 'fork'], df.loc[:, 'forkandwin']))
