@@ -150,13 +150,3 @@ class Kifu:
 
         return [sente_forked, gote_forked,
                 sente_forked_and_picked, gote_forked_and_picked]
-
-
-if __name__ == '__main__':
-
-    kifu_path = './../testgetfork.csa'
-    with open(kifu_path, 'r') as f:
-        kifu_txt = f.read()
-
-    kifu = Kifu(kifu_txt)
-    results = kifu.get_forking(['OU', 'HI'])
