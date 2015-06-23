@@ -26,8 +26,8 @@ class Board:
     Member variables
     -------------------
     Board.board : list (two-dimensional array, 9 x 9)
-        If you want to move a piece as '☗7六歩',
-        >>> board[6][5] = ['+', 'FU']
+        If you want to access a piece as '7六',
+        >>> print(board[6][5])
     Board.mochigoma : list
         mochigoma list
 
@@ -127,12 +127,12 @@ class Board:
                     ax.add_patch(circle)
 
         # Plot mochigoma
-        sente_mochigoma_str = self.get_mochigoma_str(0)
-        plt.text(0, -0.5 * dx, sente_mochigoma_str, fontsize=fontsize)
+        plt.text(0, -0.5 * dx, self.get_mochigoma_str(0),
+                 fontsize=fontsize)
+        plt.text(0,  9.2 * dy, self.get_mochigoma_str(1),
+                 fontsize=fontsize, rotation=180)
 
-        gote_mochigoma_str = self.get_mochigoma_str(1)
-        plt.text(0, dy * 9.2, gote_mochigoma_str, fontsize=fontsize, rotation=180)
-
+        # Plot title
         plt.title(title, y=1.07, fontsize=fontsize)
         plt.tick_params(labelleft='off', labelbottom='off')
 
@@ -156,8 +156,8 @@ class Board:
             koma = KOMA_CSA
 
         counter = Counter(mochigoma)
-
         mochigoma_list = []
+
         for k in koma:
             if counter[k] == 1:
                 mochigoma_list.append(k)
@@ -257,11 +257,12 @@ class Board:
             self.board[prev_point[0] - 1][prev_point[1] - 1] = EMPTY_STR
 
         next_point_info = self.board[next_point[0] - 1][next_point[1] - 1]
+
+        # If picking enemy's koma
         if next_point_info != EMPTY_STR:
-            # pick enemy's koma
             picked_koma = next_point_info[1]
 
-            # なった駒を取る場合
+            # If picking promoted piece
             if picked_koma in TURN_PIECE:
                 picked_koma = TURN_PIECE[picked_koma]
 
@@ -328,14 +329,15 @@ class Board:
         return results
 
     def is_forking_query(self, query_piece, targets, display=True):
-        '''Check that there is an piece which forked by enemy's piece.
-        Search a state that `query_piece` forks all pieces of `target` at.
+        '''Check that there is a piece which forked by enemy's piece.
+        Search a state which `query_piece` forks all pieces of `target` at.
 
         Args
         -------------------
         query_piece : str
             ex. 'KA'
         target : list
+            Check whether pieces of `target` are forked or not.
             ex. ['OU', 'HI']
         display : bool, optional (default = True)
             If True, display state that forked.
@@ -354,9 +356,7 @@ class Board:
             ['+', -1,  gote_index]
         ]
 
-        # pdb.set_trace()
-
-        # for sente and gote
+        # For sente and gote
         for option in options:
             is_forked = False
 
@@ -364,24 +364,22 @@ class Board:
             direction = option[1]
             index = option[2]
 
-            # for each cell of query_piece
+            # For each cell of query_piece
             for i, j in index:
                 fork_candidates = []
 
-                # for each act(効き) of query_piece
+                # For each act of query_piece
                 for act in eval('{}_ACT'.format(query_piece)):
                     for move in act:
                         next_i = i + move[0]
                         next_j = j + move[1] * direction
 
-                        # if next_i or next_j is outside of the board
+                        # If next_i or next_j is outside of the board
                         if (next_i < 0 or 9 <= next_i or
                                 next_j < 0 or 9 <= next_j):
                             break
 
-                        #print(next_i, next_j, self.board[next_i][next_j])
-
-                        # if conflict with other piece
+                        # If conflict with other piece
                         if self.board[next_i][next_j] != EMPTY_STR:
                             b = self.board[next_i][next_j]
 
@@ -390,8 +388,8 @@ class Board:
 
                             break
 
-                # if all targets in fork_candidates,
-                # print board & info.
+                # If all targets in fork_candidates,
+                #  print board & info.
                 for target in targets:
                     if not target in fork_candidates:
                         break

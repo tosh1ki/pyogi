@@ -24,11 +24,15 @@ class Kifu:
 
     Member variable
     -------------------
-    kifu_txt
-    moves
-    sente_win
+    kifu_txt : str
+    moves : list of str
+    times
+    board
+    sente_win : bool
+    is_sennichite
     datetime
     description
+    teai
     '''
 
     def __init__(self, kifu_txt):
@@ -82,7 +86,15 @@ class Kifu:
         return True
 
     def print_state(self, tesu=-1, mode='cui'):
-        '''Print state of the game
+        '''Print state of the kifu
+
+        Args
+        -------------------
+        tesu : int, optional (default = -1)
+            This function prints board at `tesu`.
+        mode : str, optional (default = 'cui')
+            'cui' : Print state using command line
+            'mpl' : Print state using matplotlib
         '''
         new_board = Board()
         new_board.set_initial_state(teai=self.teai)
@@ -97,33 +109,31 @@ class Kifu:
         if mode == 'cui':
             print(new_board)
             print()
-        else:
+        elif mode == 'mpl':
             new_board.plot_state_mpl()
-
-    def get_state(self, tesu=-1):
-        '''Get state of game at specific tesu.
-
-        Args
-        -------------------
-        tesu : int, optional (defaults = -1)
-           Returns last state of game if tesu == -1
-        '''
-        pass
+        else:
+            raise RuntimeError('Invalid mode', mode)
 
     def get_forking(self, target):
-        '''先手と後手それぞれが何手目に王飛両取りをかけられたかを探索し，
-        それをリストにまとめて返す．両取りをかけられていなければNoneを返す．
-        [TODO] 英訳
+        '''Returns list of a time which there is a piece forked.
+
+        For example, if this function is called like 
+        `kifu.get_forking(target=['OU', 'HI'])`,
+        this returns a list of time at which state there is a piece forked.
+        If there is no piece forked, it returns None.
 
         Returns
         -------------------
         sente_forked : list
         gote_forked  : list
+        sente_forked_and_picked : list
+        gote_forked_and_picked : list
         '''
         sente_forked = []
         gote_forked = []
         sente_forked_and_picked = []
         gote_forked_and_picked = []
+        appended = False
 
         for n, move in enumerate(self.moves):
             if not move.startswith('%'):
@@ -140,12 +150,16 @@ class Kifu:
                 # save and plot state.
                 if n - 1 in sente_forked and res_move[1] in target:
                     sente_forked_and_picked.append(n + 1)
-                    self.print_state(tesu=n-1, mode='mpl')
-                    self.board.plot_state_mpl()
+                    appended = True
+
                 if n - 1 in gote_forked and res_move[1] in target:
                     gote_forked_and_picked.append(n + 1)
+                    appended = True
+
+                if appended:
                     self.print_state(tesu=n-1, mode='mpl')
                     self.board.plot_state_mpl()
+                    appended = False
 
         return [sente_forked, gote_forked,
                 sente_forked_and_picked, gote_forked_and_picked]

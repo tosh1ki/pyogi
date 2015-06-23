@@ -19,8 +19,8 @@ if __name__ == '__main__':
         n1 = (n // 10000)
         n2 = int(n < 10000)
     
-        relpath = '~/data/shogi/2chkifu/{0}000{1}/{2:0>5}.KI2'.format(n1, n2, n)
-        kifile = os.path.expanduser(relpath)
+        path = '~/data/shogi/2chkifu/{0}000{1}/{2:0>5}.KI2'.format(n1, n2, n)
+        kifile = os.path.expanduser(path)
 
         if not os.path.exists(kifile):
             continue
