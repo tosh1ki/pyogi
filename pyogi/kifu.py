@@ -114,7 +114,7 @@ class Kifu:
         else:
             raise RuntimeError('Invalid mode', mode)
 
-    def get_forking(self, target):
+    def get_forking(self, target, display=True):
         '''Returns list of a time which there is a piece forked.
 
         For example, if this function is called like 
@@ -156,10 +156,11 @@ class Kifu:
                     gote_forked_and_picked.append(n + 1)
                     appended = True
 
-                if appended:
+                if appended and display:
                     self.print_state(tesu=n-1, mode='mpl')
                     self.board.plot_state_mpl()
-                    appended = False
+
+                appended = False
 
         return [sente_forked, gote_forked,
                 sente_forked_and_picked, gote_forked_and_picked]

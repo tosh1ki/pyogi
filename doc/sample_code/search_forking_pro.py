@@ -34,7 +34,7 @@ if __name__ == '__main__':
             continue
 
         kifu = Kifu(csa)
-        res = kifu.get_forking(['OU', 'HI'])
+        res = kifu.get_forking(['OU', 'HI'], display=False)
         if res[2] or res[3]:
             print(kifu.players)
 
