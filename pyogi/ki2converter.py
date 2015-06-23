@@ -231,7 +231,7 @@ class Ki2converter:
                         prev_pos_candidates.append([pi, pj])
 
                     # If conflict with other pieces
-                    if self.board[next_i][next_j] != empty_str:
+                    if self.board[next_i][next_j] != EMPTY_STR:
                         break
 
         # If promote
