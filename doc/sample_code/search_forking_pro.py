@@ -54,6 +54,8 @@ if __name__ == '__main__':
              ((not kifu.sente_win) and res[3]!=[])])
 
 
+        break
+
     columns = ['n', 'player0', 'player1', 'sente_win',
                'sennichite', 'sente_forking', 'gote_forking',
                'fork', 'fork&win']
