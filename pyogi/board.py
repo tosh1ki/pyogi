@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-import pdb
+from collections import Counter
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
+
+import pdb
+
 
 font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
@@ -14,6 +17,9 @@ from .pieces_act import *
 
 empty_str = '   '
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
+koma_kanji = ['歩', '香', '桂', '銀', '金', '角', '飛', '玉']
+koma_csa = ['FU', 'KY', 'KE', 'GI', 'KI', 'KA', 'HI', 'OU']
+
 board_indexes = list(range(0, 9))
 SENTE = '+'
 GOTE = '-'
@@ -60,8 +66,9 @@ class Board:
     def __str__(self):
         row_separator = '-' * 37
 
-        sente_mochigoma = ','.join(self.mochigoma[0])
-        gote_mochigoma = ','.join(self.mochigoma[1])
+        sente_mochigoma = self.get_mochigoma_str(0, kanji=False)
+        gote_mochigoma = self.get_mochigoma_str(1, kanji=False)
+
         s = ['{}手目: {}'.format(self.tesu, self.last_move_txt),
              gote_mochigoma, row_separator]
 
@@ -78,6 +85,31 @@ class Board:
         s.append(sente_mochigoma)  # sente's mochigoma
 
         return '\n'.join(s)
+
+    def get_mochigoma_str(self, teban, kanji=True):
+        '''Returns string of all mochigoma.
+
+        teban : int
+            0 : sente
+            1 : gote
+        '''
+        if kanji:
+            mochigoma = map(lambda x: piece_kanji[x], self.mochigoma[teban])
+            koma = koma_kanji
+        else:
+            mochigoma = self.mochigoma[teban]
+            koma = koma_csa
+
+        counter = Counter(mochigoma)
+
+        mochigoma_list = []
+        for k in koma:
+            if counter[k] == 1:
+                mochigoma_list.append(k)
+            elif counter[k] > 1:
+                mochigoma_list.append('{0}x{1}'.format(k, counter[k]))
+
+        return ' '.join(mochigoma_list)
 
     def plot_state_mpl(self, figsize=(8, 9), title = '', savepath=None):
         '''Plot current state using matplotlib.
@@ -131,14 +163,11 @@ class Board:
                     ax.add_patch(circle)
 
         # Plot mochigoma
-        sente_mochigoma = ','.join(map(lambda x: piece_kanji[x],
-                                       self.mochigoma[0]))
-        plt.text(0, -0.5 * dx, sente_mochigoma, fontsize=fontsize)
+        sente_mochigoma_str = self.get_mochigoma_str(0)
+        plt.text(0, -0.5 * dx, sente_mochigoma_str, fontsize=fontsize)
 
-        gote_mochigoma = ','.join(map(lambda x: piece_kanji[x],
-                                      self.mochigoma[1]))
-        plt.text(0, dy * 9.2, gote_mochigoma,
-                 fontsize=fontsize, rotation=180)
+        gote_mochigoma_str = self.get_mochigoma_str(1)
+        plt.text(0, dy * 9.2, gote_mochigoma_str, fontsize=fontsize, rotation=180)
 
         plt.title(title, y=1.07, fontsize=fontsize)
         plt.tick_params(labelleft='off', labelbottom='off')
