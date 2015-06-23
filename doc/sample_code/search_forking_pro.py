@@ -42,11 +42,21 @@ if __name__ == '__main__':
         # 1. sente forked | gote forked
         # 2. (sente won & sente forked) | (gote won & gote forked)
         res_table.append(
-            [res[2] != [] or res[3] != [],
+            [n,
+             kifu.players[0],
+             kifu.players[1],
+             kifu.sente_win,
+             kifu.is_sennichite,
+             res[2] != [],
+             res[3] != [],
+             res[2] != [] or res[3] != [],
              (kifu.sente_win and res[2]!=[]) or 
              ((not kifu.sente_win) and res[3]!=[])])
 
 
+    columns = ['n', 'player0', 'player1', 'sente_win',
+               'sennichite', 'sente_forking', 'gote_forking',
+               'fork', 'fork&win']
+    df = pd.DataFrame(res_table, columns=columns)
 
-    df = pd.DataFrame(res_table, columns=['fork', 'fork&win'])
     pd.crosstab(df.loc[:, 'fork'], df.loc[:, 'fork&win'])
