@@ -79,10 +79,10 @@ class Ki2converter:
         self.comments = ''.join(comments)
 
     def extract_header_infos(self):
-        header_infos = {}
+        header_infos = {'senteban': '+'}
         queries = [
-            ['sente', '^先手：(.+)'],
-            ['gote', '^後手：(.+)'],
+            ['sente', '^[先下]手：(.+)'],
+            ['gote', '^[後上]手：(.+)'],
             ['start_time', '^開始日時：(.+)'],
             ['site', '^場所：(.+)'],
             ['event', '^棋戦：(.+)'],
@@ -96,28 +96,23 @@ class Ki2converter:
                 header_infos[query[0]] = match[0]
 
         # Detect teai
-        if '手合割：平手' in self.ki2_txt:
-            teai = 'hirate'
-        elif '手合割：角落ち' in self.ki2_txt:
-            teai = 'kakuoti'
-        elif '手合割：飛車落ち' in self.ki2_txt:
-            teai = 'hisyaoti'
-        elif '手合割：飛香落ち' in self.ki2_txt:
-            teai = 'hikyouoti'
-        elif '手合割：香落ち' in self.ki2_txt:
-            teai = 'kyouoti'
-        elif '手合割：右香落ち' in self.ki2_txt:
-            teai = 'migikyouoti'
-        elif '手合割：二枚落ち' in self.ki2_txt:
-            teai = 'nimaioti'
-        elif '手合割：三枚落ち' in self.ki2_txt:
-            teai = 'sanmaioti'
-        elif '手合割：四枚落ち' in self.ki2_txt:
-            teai = 'yonmaioti'
-        elif '手合割：六枚落ち' in self.ki2_txt:
-            teai = 'rokumaioti'
-        elif '手合割：その他' in self.ki2_txt:
-            return -1
+        teaitxt_to_teai = {
+            '手合割：平手': 'hirate',
+            '手合割：角落ち': 'kakuoti',
+            '手合割：飛車落ち': 'hisyaoti',
+            '手合割：香落ち': 'kyouoti',
+            '手合割：右香落ち': 'migikyouoti',
+            '手合割：二枚落ち': 'nimaioti',
+            '手合割：三枚落ち': 'sanmaioti',
+            '手合割：四枚落ち': 'yonmaioti',
+            '手合割：六枚落ち': 'rokumaioti',
+            '手合割：その他': 'sonota'
+        }
+
+        for t_teaitxt, t_teai in teaitxt_to_teai.items():
+            if t_teaitxt in self.ki2_txt:
+                teai = t_teai
+                break
         else:
             if not '手合割' in self.ki2_txt:
                 teai = 'hirate'
@@ -125,6 +120,13 @@ class Ki2converter:
                 raise RuntimeError('invalid teai')
 
         header_infos['teai'] = teai
+        if teai == 'sonota':
+            # とりあえず
+            raise RuntimeError('invalid teai', teai)
+
+        elif teai != 'hirate':
+            header_infos['csa_komaochi'] = 'PI' + ''.join(KOMAOCHI_OPTIONS[teai])
+            header_infos['senteban'] = '-'
 
         return header_infos
 
@@ -139,8 +141,10 @@ class Ki2converter:
         self.board.set_initial_state(teai=header_infos['teai'])
 
         # とりあえず
-        if '上手' in self.ki2_txt:
-            return None
+        if re.search('手合割：.{,2}落ち', self.ki2_txt):
+            komaochi_txt = '\n' + header_infos['csa_komaochi']
+        else:
+            komaochi_txt = ' 初期配置'
 
         csa_kifu = [
             '\'バージョン',
@@ -157,7 +161,8 @@ class Ki2converter:
             '$START_TIME:' + header_infos.get('start_time', ''),
             '\'持ち時間:' + header_infos.get('time', ''),
             '\'$TIME_LIMIT:',
-            '\'先手番', '+',
+            '\'開始局面' + komaochi_txt,
+            '\'先手番', header_infos['senteban'],
             '\'指し手と消費時間'
         ]
 
@@ -174,9 +179,7 @@ class Ki2converter:
         elif self.ki2_txt.endswith('千日手\n'):
             csa_kifu.append('%SENNICHITE')
 
-        csa = '\n'.join(csa_kifu)
-
-        return csa
+        return '\n'.join(csa_kifu)
 
     def move_ki2_to_csa(self, move_ki2):
         '''Convert codes of KI2 format to that of CSA format
