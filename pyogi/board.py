@@ -17,6 +17,18 @@ EMPTY_STR = '   '
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
 TEBAN_CODE = ['+', '-']
+KOMAOCHI_OPTIONS = {
+    'hirate': [],
+    'kakuoti': ['22KA'],
+    'hisyaoti': ['82HI'],
+    'kyouoti': ['11KY'],
+    'migikyouoti': ['91KY'],
+    'hikyouoti': ['82HI', '11KY'],
+    'nimaioti': ['82HI', '22KA'],
+    'sanmaioti': ['82HI', '22KA', '11KY'],
+    'yonmaioti': ['91KY', '82HI', '22KA', '11KY'],
+    'rokumaioti': ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
+}
 
 
 class Board:
@@ -48,6 +60,7 @@ class Board:
         self.tesu = 0
         self.last_move_txt = ''
         self.last_move_xy = []
+        self.teai = ''
 
     def __repr__(self):
         return self.__str__()
@@ -197,26 +210,10 @@ class Board:
                 self.move(move)
 
         # Komaochi
-        if teai == 'hirate':
-            delete_piece = []
-        elif teai == 'kakuoti':
-            delete_piece = ['22KA']
-        elif teai == 'hisyaoti':
-            delete_piece = ['82HI']
-        elif teai == 'kyouoti':
-            delete_piece = ['11KY']
-        elif teai == 'migikyouoti':
-            delete_piece = ['91KY']
-        elif teai == 'hikyouoti':
-            delete_piece = ['82HI', '11KY']
-        elif teai == 'nimaioti':
-            delete_piece = ['82HI', '22KA']
-        elif teai == 'sanmaioti':
-            delete_piece = ['82HI', '22KA', '11KY']
-        elif teai == 'yonmaioti':
-            delete_piece = ['91KY', '82HI', '22KA', '11KY']
-        elif teai == 'rokumaioti':
-            delete_piece = ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
+        for d_teai, d_pieces in KOMAOCHI_OPTIONS.items():
+            if teai == d_teai:
+                delete_piece = d_pieces
+                break
         else:
             raise RuntimeError('invalid teai', teai)
 
@@ -231,6 +228,7 @@ class Board:
         self.last_move_txt = ''
         self.last_move_xy = []
         self.tesu = 0
+        self.teai = teai
 
     def move(self, move):
         '''Move a piece on a board
