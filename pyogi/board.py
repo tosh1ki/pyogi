@@ -14,6 +14,7 @@ import pdb
 from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS, PIECE_TO_ACT
 
 EMPTY_STR = '   '
+row_separator = '-' * 37
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
 TEBAN_CODE = ['+', '-']
@@ -54,8 +55,6 @@ class Board:
         return self.__str__()
 
     def __str__(self):
-        row_separator = '-' * 37
-
         sente_mochigoma = self.get_mochigoma_str(0, kanji=False)
         gote_mochigoma = self.get_mochigoma_str(1, kanji=False)
 
