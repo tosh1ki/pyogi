@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import pandas as pd
+
+
 ACT1 = [
     [[ 1,  0]],
     [[ 0,  1]],
@@ -98,3 +104,23 @@ CSA_TO_KANJI = {
     'HI': '飛', 'KA': '角', 'OU': '玉', 'UM': '馬', 'RY': '竜',
     'NG': '全', 'NY': '杏', 'NK': '圭', 'TO': 'と'
 }
+
+columns = ['csa', 'kanji', 'promoted', 'act']
+koma_infos_list = [
+    ['FU', '歩', False, FU_ACT],
+    ['KI', '金', False, KI_ACT],
+    ['GI', '銀', False, GI_ACT],
+    ['KE', '桂', False, KE_ACT],
+    ['KY', '香', False, KY_ACT],
+    ['HI', '飛', False, HI_ACT],
+    ['KA', '角', False, KA_ACT],
+    ['OU', '玉', False, OU_ACT],
+    ['UM', '馬', True,  UM_ACT],
+    ['RY', '竜', True,  RY_ACT],
+    ['NG', '全', True,  NG_ACT],
+    ['NY', '杏', True,  NY_ACT],
+    ['NK', '圭', True,  NK_ACT],
+    ['TO', 'と', True,  TO_ACT]
+]
+
+KOMA_INFOS = pd.DataFrame(koma_infos_list, columns=columns)
