@@ -85,26 +85,6 @@ ACTS = [
     NG_ACT, NK_ACT, NY_ACT, TO_ACT
 ]
 
-ALL_KOMA = [
-    'OU', 'HI', 'KA', 'KI', 'GI',
-    'KE', 'KY', 'FU', 'RY', 'UM',
-    'NG', 'NK', 'NY', 'TO'
-]
-TURN_PIECE = {
-    'TO': 'FU', 'NY': 'KY', 'NK': 'KE',
-    'NG': 'GI', 'UM': 'KA', 'RY': 'HI'
-}
-
-PIECE_TO_ACT = dict(zip(ALL_KOMA, ACTS))
-
-KOMA_KANJI = ['歩', '香', '桂', '銀', '金', '角', '飛', '玉']
-KOMA_CSA = ['FU', 'KY', 'KE', 'GI', 'KI', 'KA', 'HI', 'OU']
-CSA_TO_KANJI = {
-    'FU': '歩', 'KI': '金', 'GI': '銀', 'KE': '桂', 'KY': '香',
-    'HI': '飛', 'KA': '角', 'OU': '玉', 'UM': '馬', 'RY': '竜',
-    'NG': '全', 'NY': '杏', 'NK': '圭', 'TO': 'と'
-}
-
 columns = ['csa', 'kanji', 'promoted', 'canpromote', 'beforepromote', 'act']
 koma_infos_list = [
     ['FU', '歩', False, True,  None, FU_ACT],
@@ -125,5 +105,8 @@ koma_infos_list = [
 
 KOMA_INFOS = pd.DataFrame(koma_infos_list, columns=columns)
 
+PIECE_TO_ACT = dict(zip(KOMA_INFOS.csa, KOMA_INFOS.act))
+CSA_TO_KANJI = dict(zip(KOMA_INFOS.csa, KOMA_INFOS.kanji))
 
-CSA_TO_KANJI2 = KOMA_INFOS
+promoted = KOMA_INFOS[KOMA_INFOS.promoted]
+TURN_PIECE = dict(zip(promoted.csa, promoted.beforepromote))
