@@ -11,7 +11,7 @@ matplotlib.rc('font', **font)
 
 import pdb
 
-from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS
+from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS, PIECE_TO_ACT
 
 EMPTY_STR = '   '
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
@@ -310,7 +310,7 @@ class Board:
         '''
         results = [False, False]
 
-        for query_piece in ALL_KOMA:
+        for query_piece in list(KOMA_INFOS.csa):
             results_tmp = self.is_forking_query(query_piece, targets, display)
             results = [results[0] or results_tmp[0],
                        results[1] or results_tmp[1]]
@@ -358,7 +358,7 @@ class Board:
                 fork_candidates = []
 
                 # For each act of query_piece
-                for act in eval('{}_ACT'.format(query_piece)):
+                for act in PIECE_TO_ACT[query_piece]:
                     for move in act:
                         next_i = i + move[0]
                         next_j = j + move[1] * direction
