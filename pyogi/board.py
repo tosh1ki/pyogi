@@ -11,24 +11,13 @@ matplotlib.rc('font', **font)
 
 import pdb
 
-from .pieces_act import *
+from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS, PIECE_TO_ACT
 
 EMPTY_STR = '   '
+row_separator = '-' * 37
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
 TEBAN_CODE = ['+', '-']
-KOMAOCHI_OPTIONS = {
-    'hirate': [],
-    'kakuoti': ['22KA'],
-    'hisyaoti': ['82HI'],
-    'kyouoti': ['11KY'],
-    'migikyouoti': ['91KY'],
-    'hikyouoti': ['82HI', '11KY'],
-    'nimaioti': ['82HI', '22KA'],
-    'sanmaioti': ['82HI', '22KA', '11KY'],
-    'yonmaioti': ['91KY', '82HI', '22KA', '11KY'],
-    'rokumaioti': ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
-}
 
 
 class Board:
@@ -66,8 +55,6 @@ class Board:
         return self.__str__()
 
     def __str__(self):
-        row_separator = '-' * 37
-
         sente_mochigoma = self.get_mochigoma_str(0, kanji=False)
         gote_mochigoma = self.get_mochigoma_str(1, kanji=False)
 
@@ -163,10 +150,10 @@ class Board:
         '''
         if kanji:
             mochigoma = map(lambda x: CSA_TO_KANJI[x], self.mochigoma[teban])
-            koma = KOMA_KANJI
+            koma = list(KOMA_INFOS.kanji)
         else:
             mochigoma = self.mochigoma[teban]
-            koma = KOMA_CSA
+            koma = list(KOMA_INFOS.csa)
 
         counter = Counter(mochigoma)
         mochigoma_list = []
@@ -261,8 +248,11 @@ class Board:
             picked_koma = next_point_info[1]
 
             # If picking promoted piece
-            if picked_koma in TURN_PIECE:
-                picked_koma = TURN_PIECE[picked_koma]
+            picked_koma_index = KOMA_INFOS.csa==picked_koma
+            if KOMA_INFOS[picked_koma_index].promoted.iloc[0]:
+                picked_koma = (KOMA_INFOS
+                               .loc[picked_koma_index, 'beforepromote']
+                               .iloc[0])
 
             self.mochigoma[teban].append(picked_koma)
 
@@ -319,7 +309,7 @@ class Board:
         '''
         results = [False, False]
 
-        for query_piece in ALL_KOMA:
+        for query_piece in list(KOMA_INFOS.csa):
             results_tmp = self.is_forking_query(query_piece, targets, display)
             results = [results[0] or results_tmp[0],
                        results[1] or results_tmp[1]]
@@ -367,7 +357,7 @@ class Board:
                 fork_candidates = []
 
                 # For each act of query_piece
-                for act in eval('{}_ACT'.format(query_piece)):
+                for act in PIECE_TO_ACT[query_piece]:
                     for move in act:
                         next_i = i + move[0]
                         next_j = j + move[1] * direction
