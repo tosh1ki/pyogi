@@ -110,3 +110,18 @@ CSA_TO_KANJI = dict(zip(KOMA_INFOS.csa, KOMA_INFOS.kanji))
 
 promoted = KOMA_INFOS[KOMA_INFOS.promoted]
 TURN_PIECE = dict(zip(promoted.csa, promoted.beforepromote))
+
+
+TEAITXT_TO_TEAI = {
+    '手合割：平手': 'hirate',
+    '手合割：角落ち': 'kakuoti',
+    '手合割：飛車落ち': 'hisyaoti',
+    '手合割：香落ち': 'kyouoti',
+    '手合割：右香落ち': 'migikyouoti',
+    '手合割：二枚落ち': 'nimaioti',
+    '手合割：三枚落ち': 'sanmaioti',
+    '手合割：四枚落ち': 'yonmaioti',
+    '手合割：六枚落ち': 'rokumaioti',
+    '手合割：その他': 'sonota'
+}
+

@@ -4,6 +4,7 @@
 import re
 
 from .board import *
+from .pieces_act import PIECE_TO_ACT, TURN_PIECE, CSA_TO_KANJI, TEAITXT_TO_TEAI
 
 
 SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
@@ -12,6 +13,7 @@ ZEN_TO_INT = dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
 KANJI_TO_PIECE = {v: k for k, v in CSA_TO_KANJI.items()}
 TURN_PIECE_REVERSED = {v: k for k, v in TURN_PIECE.items()}
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
+OGOMA = ['HI', 'KA', 'RY', 'UM']
 
 
 class Ki2converter:
@@ -96,20 +98,7 @@ class Ki2converter:
                 header_infos[query[0]] = match[0]
 
         # Detect teai
-        teaitxt_to_teai = {
-            '手合割：平手': 'hirate',
-            '手合割：角落ち': 'kakuoti',
-            '手合割：飛車落ち': 'hisyaoti',
-            '手合割：香落ち': 'kyouoti',
-            '手合割：右香落ち': 'migikyouoti',
-            '手合割：二枚落ち': 'nimaioti',
-            '手合割：三枚落ち': 'sanmaioti',
-            '手合割：四枚落ち': 'yonmaioti',
-            '手合割：六枚落ち': 'rokumaioti',
-            '手合割：その他': 'sonota'
-        }
-
-        for t_teaitxt, t_teai in teaitxt_to_teai.items():
+        for t_teaitxt, t_teai in TEAITXT_TO_TEAI.items():
             if t_teaitxt in self.ki2_txt:
                 teai = t_teai
                 break
@@ -255,7 +244,7 @@ class Ki2converter:
         elif n_candidates >= 2:
             if matched[3]:
                 if '右' in matched[3]:
-                    if piece in ['HI', 'KA', 'RY', 'UM']:
+                    if piece in OGOMA:
                         prev_pos_candidates = filter(
                             lambda x: (i - x[0]) * direction >= 0,
                             prev_pos_candidates)
@@ -264,7 +253,7 @@ class Ki2converter:
                             lambda x: (i - x[0]) * direction > 0,
                             prev_pos_candidates)
                 elif '左' in matched[3]:
-                    if piece in ['HI', 'KA', 'RY', 'UM']:
+                    if piece in OGOMA:
                         prev_pos_candidates = filter(
                             lambda x: (i - x[0]) * direction <= 0,
                             prev_pos_candidates)
@@ -294,9 +283,9 @@ class Ki2converter:
                         prev_pos_candidates
                     )
 
-                if (piece in ['HI', 'KA', 'RY', 'UM'] and
-                            ('右' in matched[3] or '左' in matched[3])
-                        ):
+                if (piece in OGOMA and 
+                    ('右' in matched[3] or '左' in matched[3])
+                ):
                     if '右' in matched[3]:
                         lr = -1
                     elif '左' in matched[3]:
