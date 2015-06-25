@@ -1,20 +1,10 @@
-shogiwars
+warscrawler
 =================
 
 将棋ウォーズの棋譜を収集・解析したい
 
-# 作成物
-
-- main_crawl.py
-- warscrawler.py
-  - 将棋ウォーズの棋譜を収集するための各種関数
-  - **明示されていない棋譜ページの仕様に依存しているので，そのうち使えなくなる可能性がある．**
-- extract.py
-  - 特徴量を抽出する
-- ipynb/
-  - **古いバージョン**
-  - [データの可視化](http://nbviewer.ipython.org/github/tosh1ki/shogiwars/blob/master/ipynb/wars-visualize.ipynb)
-  - [将棋ウォーズで削除されたアカウントの棋譜を検討してみる](http://nbviewer.ipython.org/github/tosh1ki/shogiwars/blob/master/ipynb/junpe_.ipynb)
+- 将棋ウォーズの棋譜を収集するための各種関数
+- **明示されていない棋譜ページの仕様に依存しているので，そのうち使えなくなる可能性がある．**
 
 
 # 将棋ウォーズ内部の仕様について
