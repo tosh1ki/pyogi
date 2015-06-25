@@ -11,7 +11,7 @@ matplotlib.rc('font', **font)
 
 import pdb
 
-from .pieces_act import *
+from .pieces_act import KOMA_INFOS
 
 EMPTY_STR = '   '
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
@@ -29,6 +29,8 @@ KOMAOCHI_OPTIONS = {
     'yonmaioti': ['91KY', '82HI', '22KA', '11KY'],
     'rokumaioti': ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
 }
+CSA_TO_KANJI = lambda x: KOMA_INFOS.loc[KOMA_INFOS.csa==x, 'kanji'].iloc[0]
+
 
 
 class Board:
@@ -126,7 +128,7 @@ class Board:
                 y = (8 - j) + dy / 2
 
                 if d != EMPTY_STR:
-                    s = CSA_TO_KANJI[d[1]]
+                    s = CSA_TO_KANJI(d[1])
                     is_gote = int(d[0] == '-')
                     plt.text(x - 1 / 5, y - 1 / 10, s,
                              size=fontsize, rotation=180 * is_gote)
@@ -162,11 +164,11 @@ class Board:
             1 : gote
         '''
         if kanji:
-            mochigoma = map(lambda x: CSA_TO_KANJI[x], self.mochigoma[teban])
-            koma = KOMA_KANJI
+            mochigoma = map(CSA_TO_KANJI, self.mochigoma[teban])
+            koma = list(KOMA_INFOS.kanji)
         else:
             mochigoma = self.mochigoma[teban]
-            koma = KOMA_CSA
+            koma = list(KOMA_INFOS.csa)
 
         counter = Counter(mochigoma)
         mochigoma_list = []
@@ -261,8 +263,11 @@ class Board:
             picked_koma = next_point_info[1]
 
             # If picking promoted piece
-            if picked_koma in TURN_PIECE:
-                picked_koma = TURN_PIECE[picked_koma]
+            picked_koma_index = KOMA_INFOS.csa==picked_koma
+            if KOMA_INFOS[picked_koma_index].promoted.iloc[0]:
+                picked_koma = (KOMA_INFOS
+                               .loc[picked_koma_index, 'beforepromote']
+                               .iloc[0])
 
             self.mochigoma[teban].append(picked_koma)
 

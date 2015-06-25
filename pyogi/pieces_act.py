@@ -105,22 +105,25 @@ CSA_TO_KANJI = {
     'NG': '全', 'NY': '杏', 'NK': '圭', 'TO': 'と'
 }
 
-columns = ['csa', 'kanji', 'promoted', 'act']
+columns = ['csa', 'kanji', 'promoted', 'canpromote', 'beforepromote', 'act']
 koma_infos_list = [
-    ['FU', '歩', False, FU_ACT],
-    ['KI', '金', False, KI_ACT],
-    ['GI', '銀', False, GI_ACT],
-    ['KE', '桂', False, KE_ACT],
-    ['KY', '香', False, KY_ACT],
-    ['HI', '飛', False, HI_ACT],
-    ['KA', '角', False, KA_ACT],
-    ['OU', '玉', False, OU_ACT],
-    ['UM', '馬', True,  UM_ACT],
-    ['RY', '竜', True,  RY_ACT],
-    ['NG', '全', True,  NG_ACT],
-    ['NY', '杏', True,  NY_ACT],
-    ['NK', '圭', True,  NK_ACT],
-    ['TO', 'と', True,  TO_ACT]
+    ['FU', '歩', False, True,  None, FU_ACT],
+    ['KI', '金', False, False, None, KI_ACT],
+    ['GI', '銀', False, True,  None, GI_ACT],
+    ['KE', '桂', False, True,  None, KE_ACT],
+    ['KY', '香', False, True,  None, KY_ACT],
+    ['HI', '飛', False, True,  None, HI_ACT],
+    ['KA', '角', False, True,  None, KA_ACT],
+    ['OU', '玉', False, False, None, OU_ACT],
+    ['UM', '馬', True,  False, 'KA', UM_ACT],
+    ['RY', '竜', True,  False, 'HI', RY_ACT],
+    ['NG', '全', True,  False, 'GI', NG_ACT],
+    ['NY', '杏', True,  False, 'KY', NY_ACT],
+    ['NK', '圭', True,  False, 'KE', NK_ACT],
+    ['TO', 'と', True,  False, 'FU', TO_ACT]
 ]
 
 KOMA_INFOS = pd.DataFrame(koma_infos_list, columns=columns)
+
+
+CSA_TO_KANJI2 = KOMA_INFOS
