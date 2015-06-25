@@ -281,6 +281,9 @@ class Ki2converter:
                         prev_pos_candidates
                     )
 
+                # cf. http://www.shogi.or.jp/faq/kihuhyouki.html
+                # "竜が2枚の場合はやはり動作を優先します。
+                #  ただし、「直」は使わずに「左」「右」で記入します。"
                 if (piece in OGOMA and 
                     ('右' in matched[3] or '左' in matched[3])
                 ):
