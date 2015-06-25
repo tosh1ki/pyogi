@@ -4,14 +4,12 @@
 import re
 
 from .board import *
-from .pieces_act import PIECE_TO_ACT, TURN_PIECE, CSA_TO_KANJI, TEAITXT_TO_TEAI
+from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI
 
 
 SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
 KANJI_TO_INT = dict(zip(tuple('一二三四五六七八九'), range(1, 10)))
 ZEN_TO_INT = dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
-KANJI_TO_PIECE = {v: k for k, v in CSA_TO_KANJI.items()}
-TURN_PIECE_REVERSED = {v: k for k, v in TURN_PIECE.items()}
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 OGOMA = ['HI', 'KA', 'RY', 'UM']
 

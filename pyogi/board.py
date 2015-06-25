@@ -11,24 +11,12 @@ matplotlib.rc('font', **font)
 
 import pdb
 
-from .pieces_act import KOMA_INFOS, CSA_TO_KANJI
+from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS
 
 EMPTY_STR = '   '
 all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
 TEBAN_CODE = ['+', '-']
-KOMAOCHI_OPTIONS = {
-    'hirate': [],
-    'kakuoti': ['22KA'],
-    'hisyaoti': ['82HI'],
-    'kyouoti': ['11KY'],
-    'migikyouoti': ['91KY'],
-    'hikyouoti': ['82HI', '11KY'],
-    'nimaioti': ['82HI', '22KA'],
-    'sanmaioti': ['82HI', '22KA', '11KY'],
-    'yonmaioti': ['91KY', '82HI', '22KA', '11KY'],
-    'rokumaioti': ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']
-}
 
 
 class Board:
