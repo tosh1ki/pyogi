@@ -106,13 +106,12 @@ koma_infos_list = [
 KOMA_INFOS = pd.DataFrame(koma_infos_list, columns=columns)
 
 PIECE_TO_ACT = dict(zip(KOMA_INFOS.csa, KOMA_INFOS.act))
+KANJI_TO_PIECE = dict(zip(KOMA_INFOS.kanji, KOMA_INFOS.csa))
 CSA_TO_KANJI = dict(zip(KOMA_INFOS.csa, KOMA_INFOS.kanji))
 
 promoted = KOMA_INFOS[KOMA_INFOS.promoted]
 TURN_PIECE = dict(zip(promoted.csa, promoted.beforepromote))
-
-KANJI_TO_PIECE = {v: k for k, v in CSA_TO_KANJI.items()}
-TURN_PIECE_REVERSED = {v: k for k, v in TURN_PIECE.items()}
+TURN_PIECE_REVERSED = dict(zip(promoted.beforepromote, promoted.csa))
 
 
 _teai_options = [
