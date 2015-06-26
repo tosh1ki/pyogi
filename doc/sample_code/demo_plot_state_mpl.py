@@ -21,5 +21,7 @@ if __name__ == '__main__':
     board.move('-2288UM')
     board.move('+7988GI')
 
+
+    print(board)
     board.plot_state_mpl(title='角交換四間飛車 (☗８八銀まで)',
                          savepath='kk4.png')
