@@ -43,6 +43,7 @@ class Ki2converter:
         ki2_txt : str
             str object of KI2 format
         '''
+        self.ki2_txt = ki2_txt
         self.from_lines(ki2_txt.split('\n'))
 
     def from_lines(self, lines):
@@ -81,13 +82,14 @@ class Ki2converter:
     def extract_header_infos(self):
         header_infos = {'senteban': '+'}
         queries = [
-            ['sente', '^[先下]手：(.+)'],
-            ['gote', '^[後上]手：(.+)'],
-            ['start_time', '^開始日時：(.+)'],
-            ['site', '^場所：(.+)'],
-            ['event', '^棋戦：(.+)'],
-            ['opening', '^戦型：(.+)'],
-            ['time', '^持ち時間：(.+)']
+            ['sente', '^\s*[先下]手：(.+)'],
+            ['gote', '^\s*[後上]手：(.+)'],
+            ['start_time', '^\s*開始日時：(.+)'],
+            ['end_time', '^\s*終了日時：(.+)'],
+            ['site', '^\s*場所：(.+)'],
+            ['event', '^\s*棋戦：(.+)'],
+            ['opening', '^\s*戦型：(.+)'],
+            ['time', '^\s*持ち時間：(.+)']
         ]
         for query in queries:
             match = re.findall(query[1], self.ki2_txt, re.M)
