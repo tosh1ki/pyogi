@@ -75,7 +75,8 @@ class Board:
 
         return '\n'.join(s)
 
-    def plot_state_mpl(self, figsize=(8, 9), title = '', savepath=None):
+    def plot_state_mpl(self, figsize=(8, 9), sente_name='', gote_name='',
+                       title = '', savepath=None):
         '''Plot current state using matplotlib.
         '''
         fig, ax = plt.subplots(figsize=figsize)
@@ -132,7 +133,16 @@ class Board:
         plt.text(0,  9.2 * dy, self.get_mochigoma_str(1),
                  fontsize=fontsize, rotation=180)
 
+        # Plot names
+        plt.text(width_x+0.2, 2*dx, sente_name,
+                 fontsize=fontsize, rotation=90)
+        plt.text(width_x+0.2, 8*dx, gote_name,
+                 fontsize=fontsize, rotation=90)
+
         # Plot title
+        if not title:
+            title = '{0}手目: {1}'.format(self.tesu, self.last_move_txt)
+
         plt.title(title, y=1.07, fontsize=fontsize)
         plt.tick_params(labelleft='off', labelbottom='off')
 
