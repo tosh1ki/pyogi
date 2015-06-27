@@ -111,7 +111,7 @@ class Ki2converter:
         header_infos['teai'] = teai
         if teai == 'sonota':
             # とりあえず
-            raise RuntimeError('invalid teai', teai)
+            return -1
 
         elif teai != 'hirate':
             header_infos['csa_komaochi'] = 'PI' + ''.join(KOMAOCHI_OPTIONS[teai])
