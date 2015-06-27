@@ -21,7 +21,7 @@ if __name__ == '__main__':
     con = sqlite3.connect(dbpath)
 
     query = 'SELECT * FROM kifu LIMIT 100;'
-    df = pd.read_sql(query, con).drop_duplicates()
+    df = pd.read_sql(query, con).drop_duplicates().reset_index()
 
     res_table = []
 
@@ -56,5 +56,5 @@ if __name__ == '__main__':
 
 
     # Output
-    df = pd.DataFrame(res_table)
-    print(pd.crosstab(df.loc[:, 'fork'], df.loc[:, 'forkandwin']))
+    df_ct = pd.DataFrame(res_table)
+    print(pd.crosstab(df_ct.loc[:, 'fork'], df_ct.loc[:, 'forkandwin']))
