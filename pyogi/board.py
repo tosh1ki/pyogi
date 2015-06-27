@@ -50,6 +50,7 @@ class Board:
         self.last_move_txt = ''
         self.last_move_xy = []
         self.teai = ''
+        self.players = ['', '']
 
     def __repr__(self):
         return self.__str__()
@@ -75,7 +76,7 @@ class Board:
 
         return '\n'.join(s)
 
-    def plot_state_mpl(self, figsize=(8, 9), sente_name='', gote_name='',
+    def plot_state_mpl(self, figsize=(8, 9),
                        title = '', savepath=None):
         '''Plot current state using matplotlib.
         '''
@@ -134,9 +135,9 @@ class Board:
                  fontsize=fontsize, rotation=180)
 
         # Plot names
-        plt.text(width_x+0.2, 2*dx, sente_name,
+        plt.text(width_x+0.2, 2*dx, self.players[0],
                  fontsize=fontsize, rotation=90)
-        plt.text(width_x+0.2, 8*dx, gote_name,
+        plt.text(width_x+0.2, 8*dx, self.players[1],
                  fontsize=fontsize, rotation=90)
 
         # Plot title
@@ -192,6 +193,7 @@ class Board:
             ex. hirate, kakuoti, hisyaoti, kyouoti,migikyouoti,
                 hikyouoti, nimaioti, sanmaioti, yonmaioti, rokumaioti
         '''
+        self.board = [[EMPTY_STR] * 9 for n in range(9)]
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
         curdir = os.path.dirname(__file__)

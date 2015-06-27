@@ -3,6 +3,7 @@
 
 import re
 import datetime as dt
+import copy
 
 import pdb
 
@@ -56,6 +57,10 @@ class Kifu:
     def __str__(self):
         return self.kifu_txt
 
+    def set_players_name(self, names):
+        self.players = names
+        self.board.players = names
+
     def reset_board(self, teai='hirate'):
         self.board.set_initial_state(teai=teai)
         self.teai = teai
@@ -81,7 +86,8 @@ class Kifu:
             self.datetime = match.groups()[0]
 
         match = re.search(REGEXP_PLAYERS, self.kifu_txt)
-        self.players = list(match.groups())
+        if len(match.groups()) == 2:
+            self.set_players_name(list(match.groups()))
 
         return True
 
@@ -96,9 +102,9 @@ class Kifu:
             'cui' : Print state using command line
             'mpl' : Print state using matplotlib
         '''
-        new_board = Board()
-        new_board.set_initial_state(teai=self.teai)
-        
+        new_board = copy.deepcopy(self.board)
+        new_board.set_initial_state(teai=new_board.teai)
+
         for n, move in enumerate(self.moves):
             if tesu == -1 or n < tesu:
                 if not move.startswith('%'):
