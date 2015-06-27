@@ -23,12 +23,38 @@ if __name__ == '__main__':
     query = 'SELECT * FROM kifu LIMIT 100;'
     df = pd.read_sql(query, con).drop_duplicates()
 
+    res_table = []
+
     for key, d in df.T.to_dict().items():
         kifu = Kifu(d['csa'])
 
-        if kifu.extracted:
-            results = kifu.get_forking(['OU', 'HI'])
+        if not kifu.extracted:
+            continue
 
-            if results[0] != [] or results[1] != []:
-                print(d['name'])
-                print()
+        res = kifu.get_forking(['OU', 'HI'])
+
+        if res[2] or res[3]:
+            print(kifu.players)
+
+        # Data
+        #   fork: sente forked | gote forked
+        #   forkandwin: (sente won & sente forked) | (gote won & gote forked)
+        res_table.append(
+            {
+                'id': d['name'],
+                'player0': kifu.players[0],
+                'player1': kifu.players[1],
+                'sente_won': kifu.sente_win,
+                'sennichite': kifu.is_sennichite,
+                'sente_forking': res[2] != [],
+                'gote_forking': res[3] != [],
+                'fork': res[2] != [] or res[3] != [],
+                'forkandwin': ((kifu.sente_win and res[2]!=[]) or 
+                               (not kifu.sente_win and res[3]!=[]))
+            }
+        )
+
+
+    # Output
+    df = pd.DataFrame(res_table)
+    print(pd.crosstab(df.loc[:, 'fork'], df.loc[:, 'forkandwin']))
