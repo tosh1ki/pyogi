@@ -10,6 +10,7 @@ Pyogi (**Py**thon s**yogi**) is a Python library for shogi analysis, display kif
 # Documentation
 # Reference
 ## Kifu data
+* [棋譜貼りスレッド Part1～Part120　過去ログ](http://shogikakolog.web.fc2.com/)
 * [日本将棋連盟公認 将棋ウォーズ ~ 将棋ゲームの決定版](http://shogiwars.heroz.jp/)
 * [2chkifu.zip - zipkifubrowser - ki2 ziped archive - zip kifu browser for android - Google Project Hosting](https://code.google.com/p/zipkifubrowser/downloads/detail?name=2chkifu.zip&can=2&q=)
 
