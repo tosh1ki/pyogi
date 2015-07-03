@@ -6,15 +6,24 @@ import time
 import requests
 
 
-REGEX_HTML = ('<dt>(\d+) ：([^：]+)：'
+_REGEX_HTML = ('<dt>(\d+) ：([^：]+)：'
               '(\d+)/(\d+)/(\d+)\((.)\) (\d+):(\d+):([\d\.]+) '
               'ID:([\w\+/]+)(?:(?:.(?!=<dd>))+.)?<dd> (.+)')
+_REGEX_HTML2 = ('<dt (?:id=res0_\d+)?><[^>]+?>'
+                '<FONT color=black>(\d+)</FONT></A> ：([^：]+)：'
+                '(\d+)/(\d+)/(\d+)\((.)\) (\d+):(\d+):([\d\.]+) '
+                'ID:([\w\+/]+)(?:(?:.(?!=<dd>))+.)?<dd> (.+)')
+REGEX_HTML = re.compile(_REGEX_HTML2, re.I)
+
+def extract_kifutxt(html):
+    return re.findall(REGEX_HTML, html)
 
 
 class ThreadCrawler:
 
     def __init__(self, INTERVAL_TIME=3, MAX_N_RETRY=10):
         self.res = None
+        self.html = None
         self.INTERVAL_TIME = INTERVAL_TIME
         self.MAX_N_RETRY = MAX_N_RETRY
 
@@ -34,14 +43,18 @@ class ThreadCrawler:
 
             if res and res.status_code == 200:
                 self.res = res
+                self.html = self.res.content.decode('CP932')
+
                 break
             else:
-                print('\nretry (2chCrawler.get_html())\n')
+                print('\nretry (ThreadCrawler.get_html())\n')
                 sys.stdout.flush()
         else:
             sys.exit('Exceeded MAX_N_RETRY (WarsCrawler.get_html())')
 
-
     def extract_kifutxt(self):
-        html = self.res.content.decode('CP932')
-        return re.findall(REGEX_HTML, html)
+        return extract_kifutxt(self.html)
+
+    def save_html(self, savepath):
+        with open(savepath, 'w') as f:
+            f.write(self.html)
