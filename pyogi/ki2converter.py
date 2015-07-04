@@ -14,7 +14,7 @@ REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 REGEX_KI2_MOVE = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
 OGOMA = ['HI', 'KA', 'RY', 'UM']
 
-TO_INT = dict(zip([str(r) for r in range(1, 10)], range(1, 10)))
+TO_INT = {str(r): r for r in range(1, 10)}
 TO_INT.update(KANJI_TO_INT)
 TO_INT.update(ZEN_TO_INT)
 
