@@ -13,6 +13,9 @@ ZEN_TO_INT = dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 OGOMA = ['HI', 'KA', 'RY', 'UM']
 
+TO_INT = dict(zip([str(r) for r in range(1, 10)], range(1, 10)))
+TO_INT.update(KANJI_TO_INT)
+TO_INT.update(ZEN_TO_INT)
 
 class Ki2converter:
 
@@ -192,7 +195,7 @@ class Ki2converter:
         for l in replace_list:
             move_ki2 = move_ki2.replace(l[0], l[1])
 
-        regex = re.compile('([▲△])(同|\d[一二三四五六七八九])(.)(.+)?')
+        regex = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
         
         reg = re.search(regex, move_ki2)
 
@@ -207,8 +210,8 @@ class Ki2converter:
             i = int(self.board.last_move_txt[3]) - 1
             j = int(self.board.last_move_txt[4]) - 1
         else:
-            i = ZEN_TO_INT[matched[1][0]] - 1
-            j = KANJI_TO_INT[matched[1][1]] - 1
+            i = TO_INT[matched[1][0]] - 1
+            j = TO_INT[matched[1][1]] - 1
 
         piece = KANJI_TO_PIECE[matched[2]]
 
