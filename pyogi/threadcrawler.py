@@ -7,16 +7,10 @@ import time
 import requests
 
 
-_REGEX_HTML = ('<dt>(\d+) ：([^：]+)：'
-              '(\d+)/(\d+)/(\d+)\((.)\) (\d+):(\d+):([\d\.]+) '
-              'ID:([\w\+/]+)(?:(?:.(?!=<dd>))+.)?<dd> (.+)')
-_REGEX_HTML2 = ('<dt (?:id=res0_\d+)?><[^>]+?>'
-                '<FONT color=black>(\d+)</FONT></A> ：([^：]+)：'
-                '(\d+)/(\d+)/(\d+)\((.)\) (\d+):(\d+):([\d\.]+) '
-                'ID:([\w\+/]+)(?:(?:.(?!=<dd>))+.)?<dd> (.+)')
-_REGEX_HTML3 = ('<A id=id_tag\d+ name=tag\d+>(.+?)'
-                '<A id=id_tag\d+ name=tag\d+>')
-REGEX_HTML = re.compile(_REGEX_HTML3, re.I)
+_REGEX_HTML2 = ('<A\s+id=id_tag(\d+)\s+name=tag\d+>(.+?)'
+                '(?=(?:<A\s+id=id_tag\d+\s+name=tag\d+>)|</DL>)')
+_REGEX_HTML = ('<dt[^>]*?>(.+?)(?=<dt)')
+REGEX_HTML = re.compile(_REGEX_HTML, re.I|re.S)
 
 def extract_kifutxt(html):
     return re.findall(REGEX_HTML, html)

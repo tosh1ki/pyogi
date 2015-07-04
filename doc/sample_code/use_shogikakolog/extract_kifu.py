@@ -13,17 +13,42 @@ from pyogi.ki2converter import Ki2converter
 
 if __name__ == '__main__':
 
-    n = 11
     save_dir = os.path.expanduser('~/data/shogi/threads/')
-    filename = '{0:04d}.htm'.format(n)
-    filepath = os.path.join(save_dir, filename)
+    file_list = os.listdir(save_dir)
 
-    with open(filepath, 'r') as f:
-        html = f.read()
+    for filename in sorted(file_list):
+        filepath = os.path.join(save_dir, filename)
+    
+        with open(filepath, 'r') as f:
+            html = f.read()
 
-    html = re.sub('\n', '', html)
+        html = re.sub('\n', '', html)
 
-    REGEX_KAKI = ('<A\s+id=id_tag(\d+)\s+name=tag\d+>(.+?)'
-                  '(?=(?:<A\s+id=id_tag\d+\s+name=tag\d+>)|</DL>)')
-    kakikomi_list = re.findall(REGEX_KAKI, html, re.S|re.I)
-    len(kakikomi_list)
+        kakikomi_list = extract_kifutxt(html)
+        print(filename, len(kakikomi_list))
+
+        break
+
+
+    kifu_list = []
+    for kakikomi in kakikomi_list:
+        txt = re.sub('<BR>', '\n', kakikomi)
+        txt = re.sub('^.+?<DD[^>]+?>', '', txt)
+        txt = re.sub('<A[^>]+?>', '', txt)
+        
+        converter = Ki2converter()
+        converter.from_txt(txt)
+
+        if not converter.moves_ki2:
+            continue
+
+        try:
+            csa = converter.to_csa()
+        except (KeyError, AttributeError, ValueError):
+            continue
+
+        if csa:
+            kifu = Kifu(csa)
+            kifu.print_state(mode='mpl')
+
+            kifu_list.append(kifu)
