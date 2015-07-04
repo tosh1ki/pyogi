@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+[WIP] Extract and convert CSA format kifu's from kifu's of kifu-paste threads (htm format) crawled from website
+'''
+
 import os
 import re
 import sys
@@ -20,7 +24,7 @@ if __name__ == '__main__':
     file_list = os.listdir(save_dir)
     kakikomi_list = []
 
-    for filename in sorted(file_list, reverse=True)[2:]:
+    for filename in sorted(file_list, reverse=True)[5:]:
         filepath = os.path.join(save_dir, filename)
     
         with open(filepath, 'r') as f:
@@ -60,7 +64,7 @@ if __name__ == '__main__':
 
         try:
             csa = converter.to_csa()
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, ValueError):
             print(kakikomi)
             continue
 
