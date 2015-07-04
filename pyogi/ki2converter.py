@@ -11,6 +11,7 @@ SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
 KANJI_TO_INT = dict(zip(tuple('一二三四五六七八九'), range(1, 10)))
 ZEN_TO_INT = dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
+REGEX_KI2_MOVE = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
 OGOMA = ['HI', 'KA', 'RY', 'UM']
 
 TO_INT = dict(zip([str(r) for r in range(1, 10)], range(1, 10)))
@@ -195,14 +196,13 @@ class Ki2converter:
         ]
         for l in replace_list:
             move_ki2 = move_ki2.replace(l[0], l[1])
-
-        regex = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
         
-        reg = re.search(regex, move_ki2)
+        reg = re.search(REGEX_KI2_MOVE, move_ki2)
 
         if reg:
             matched = reg.groups()
         else:
+            print('move_ki2 is not matched to REGEX_KI2_MOVE')
             return None
         
         code = SYMBOL_TO_CODE[matched[0]]
@@ -340,4 +340,5 @@ class Ki2converter:
             return move_csa
 
         else:
+            print('Error: prev_pos is invalid, prev_pos=', prev_pos)
             return None
