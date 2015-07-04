@@ -24,7 +24,7 @@ if __name__ == '__main__':
     file_list = os.listdir(save_dir)
     kakikomi_list = []
 
-    for filename in sorted(file_list, reverse=True)[5:]:
+    for filename in sorted(file_list, reverse=True):
         filepath = os.path.join(save_dir, filename)
     
         with open(filepath, 'r') as f:
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         txt = re.sub('<A[^>]+?>', '', txt)
         txt = re.search('(開始日時：.+?手で(?:[先後]手の勝ち|千日手))', txt, re.S)
         # Future works:
-        #  Implement case for long kifu 
+        #  Implement case for long kifu
 
         # If there is NOT strings of kifu like KI2 format
         if not txt:
@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
         try:
             csa = converter.to_csa()
-        except (UnicodeDecodeError, ValueError):
+        except:
             print(kakikomi)
             continue
 
