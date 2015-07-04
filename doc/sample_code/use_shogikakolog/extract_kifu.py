@@ -96,3 +96,15 @@ if __name__ == '__main__':
     df = pd.DataFrame(kifu_infos_list)
     csvpath = os.path.expanduser('~/data/shogi/output/thread_kifu.csv')
     df.to_csv(csvpath)
+
+
+    # Detect duplication of kifu
+    for i in range(df.shape[0]):
+        dup = df.loc[df.moves == df.loc[df.moves.duplicated(), :].iloc[i, :].moves, :]
+
+        if not (
+                (dup.player0.str[0] == (dup.player0.str[0]).iloc[0]).all()
+                and 
+                (dup.player1.str[0] == (dup.player1.str[0]).iloc[0]).all()
+        ):
+            print(dup)
