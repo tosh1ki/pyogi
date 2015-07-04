@@ -39,10 +39,16 @@ if __name__ == '__main__':
     prev_extracted = True
 
     for kakikomi in kakikomi_list:
+
+        if not prev_extracted and prev_converter:
+            print(prev_converter.ki2_txt)
+
         txt = re.sub('<br> ', '\n', kakikomi)
         txt = re.sub('^.+?<DD[^>]+?>', '', txt)
         txt = re.sub('<A[^>]+?>', '', txt)
-        txt = re.search('(開始日時：.+?手で[先後]手の勝ち)', txt, re.S)
+        txt = re.search('(開始日時：.+?手で(?:[先後]手の勝ち|千日手))', txt, re.S)
+        # Future works:
+        #  Implement case for long kifu 
 
         # If there is NOT strings of kifu like KI2 format
         if not txt:
@@ -55,6 +61,7 @@ if __name__ == '__main__':
         converter = Ki2converter()
         converter.from_txt(txt)
 
+        # If converter cannot extract moves of KI2 format
         if not converter.moves_ki2:
             prev_extracted = False
             prev_converter = None
@@ -73,8 +80,6 @@ if __name__ == '__main__':
         if csa:
             kifu = Kifu(csa)
             kifu_list.append(kifu)
-
-            kifu.print_state()
             prev_extracted = True
         else:
             print(txt)
