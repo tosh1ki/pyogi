@@ -158,6 +158,11 @@ class Ki2converter:
         # Move pieces
         for move_ki2 in self.moves_ki2:
             move_csa = self.move_ki2_to_csa(move_ki2)
+
+            # If move_ki2_to_csa cannot read `move_ki2`
+            if not move_csa:
+                return None
+
             self.board.move(move_csa)
 
             csa_kifu.append(move_csa)
@@ -183,10 +188,14 @@ class Ki2converter:
             move_ki2 = move_ki2.replace(l[0], l[1])
 
         regex = re.compile('([▲△])(同|\d[一二三四五六七八九])(.)(.+)?')
-        matched = re.search(regex, move_ki2).groups()
+        
+        reg = re.search(regex, move_ki2)
 
-        # print(matched)
-
+        if reg:
+            matched = reg.groups()
+        else:
+            return None
+        
         code = SYMBOL_TO_CODE[matched[0]]
 
         if matched[1] == '同':
