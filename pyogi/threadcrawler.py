@@ -12,7 +12,7 @@ _REGEX_HTML2 = ('<A\s+id=id_tag(\d+)\s+name=tag\d+>(.+?)'
 _REGEX_HTML = ('<dt[^>]*?>(.+?)(?=<dt)')
 REGEX_HTML = re.compile(_REGEX_HTML, re.I|re.S)
 
-def extract_kifutxt(html):
+def extract_kakikomitxt(html):
     return re.findall(REGEX_HTML, html)
 
 
@@ -57,8 +57,8 @@ class ThreadCrawler:
         else:
             sys.exit('Exceeded MAX_N_RETRY (WarsCrawler.get_html())')
 
-    def extract_kifutxt(self):
-        return extract_kifutxt(self.html)
+    def extract_kakikomitxt(self):
+        return extract_kakikomitxt(self.html)
 
     def save_html(self, savepath):
         with open(savepath, 'w') as f:
