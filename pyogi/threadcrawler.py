@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import sys
 import time
 import requests
 
@@ -36,7 +37,8 @@ class ThreadCrawler:
             time.sleep(10 * n * self.INTERVAL_TIME)
 
             try:
-                res = requests.session().get(url)
+                res = requests.get(url)
+
             except requests.ConnectionError:
                 print('\nConnection aborted.\n')
                 res = None
@@ -47,7 +49,7 @@ class ThreadCrawler:
 
                 break
             else:
-                print('\nretry (ThreadCrawler.get_html())\n')
+                print('\nretry (ThreadCrawler.get_response())\n')
                 sys.stdout.flush()
         else:
             sys.exit('Exceeded MAX_N_RETRY (WarsCrawler.get_html())')
