@@ -117,6 +117,9 @@ class Ki2converter:
             header_infos['csa_komaochi'] = 'PI' + ''.join(KOMAOCHI_OPTIONS[teai])
             header_infos['senteban'] = '-'
 
+        if not ('sente' in header_infos and 'gote' in header_infos):
+            return -1
+
         return header_infos
 
     def to_csa(self):
