@@ -186,6 +186,7 @@ class Ki2converter:
     def move_ki2_to_csa(self, move_ki2):
         '''Convert codes of KI2 format to that of CSA format
         '''
+        prev_pos = None
         replace_list = [
             ['成桂', '圭'],
             ['成香', '杏'],
@@ -325,13 +326,18 @@ class Ki2converter:
         else:
             raise RuntimeError('Cannot find prev position.')
 
-        move_csa = ''.join([
-            code,
-            str(prev_pos[0] + 1),
-            str(prev_pos[1] + 1),
-            str(i + 1),
-            str(j + 1),
-            piece
-        ])
 
-        return move_csa
+        if prev_pos and len(prev_pos) == 2:
+            move_csa = ''.join([
+                code,
+                str(prev_pos[0] + 1),
+                str(prev_pos[1] + 1),
+                str(i + 1),
+                str(j + 1),
+                piece
+            ])
+        
+            return move_csa
+
+        else:
+            return None
