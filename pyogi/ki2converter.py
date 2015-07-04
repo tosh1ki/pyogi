@@ -11,8 +11,12 @@ SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
 KANJI_TO_INT = dict(zip(tuple('一二三四五六七八九'), range(1, 10)))
 ZEN_TO_INT = dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
+REGEX_KI2_MOVE = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
 OGOMA = ['HI', 'KA', 'RY', 'UM']
 
+TO_INT = {str(r): r for r in range(1, 10)}
+TO_INT.update(KANJI_TO_INT)
+TO_INT.update(ZEN_TO_INT)
 
 class Ki2converter:
 
@@ -117,6 +121,9 @@ class Ki2converter:
             header_infos['csa_komaochi'] = 'PI' + ''.join(KOMAOCHI_OPTIONS[teai])
             header_infos['senteban'] = '-'
 
+        if not ('sente' in header_infos and 'gote' in header_infos):
+            return -1
+
         return header_infos
 
     def to_csa(self):
@@ -158,21 +165,29 @@ class Ki2converter:
         # Move pieces
         for move_ki2 in self.moves_ki2:
             move_csa = self.move_ki2_to_csa(move_ki2)
+
+            # If move_ki2_to_csa cannot read `move_ki2`
+            if not move_csa:
+                return None
+
             self.board.move(move_csa)
 
             csa_kifu.append(move_csa)
             csa_kifu.append('T0')
 
-        if self.ki2_txt.endswith('勝ち\n'):
+        if self.ki2_txt.endswith('勝ち'):
             csa_kifu.append('%TORYO')
-        elif self.ki2_txt.endswith('千日手\n'):
+        elif self.ki2_txt.endswith('千日手'):
             csa_kifu.append('%SENNICHITE')
+        else:
+            return None
 
         return '\n'.join(csa_kifu)
 
     def move_ki2_to_csa(self, move_ki2):
         '''Convert codes of KI2 format to that of CSA format
         '''
+        prev_pos = None
         replace_list = [
             ['成桂', '圭'],
             ['成香', '杏'],
@@ -181,20 +196,23 @@ class Ki2converter:
         ]
         for l in replace_list:
             move_ki2 = move_ki2.replace(l[0], l[1])
+        
+        reg = re.search(REGEX_KI2_MOVE, move_ki2)
 
-        regex = re.compile('([▲△])(同|\d[一二三四五六七八九])(.)(.+)?')
-        matched = re.search(regex, move_ki2).groups()
-
-        # print(matched)
-
+        if reg:
+            matched = reg.groups()
+        else:
+            print('move_ki2 is not matched to REGEX_KI2_MOVE')
+            return None
+        
         code = SYMBOL_TO_CODE[matched[0]]
 
         if matched[1] == '同':
             i = int(self.board.last_move_txt[3]) - 1
             j = int(self.board.last_move_txt[4]) - 1
         else:
-            i = ZEN_TO_INT[matched[1][0]] - 1
-            j = KANJI_TO_INT[matched[1][1]] - 1
+            i = TO_INT[matched[1][0]] - 1
+            j = TO_INT[matched[1][1]] - 1
 
         piece = KANJI_TO_PIECE[matched[2]]
 
@@ -308,13 +326,19 @@ class Ki2converter:
         else:
             raise RuntimeError('Cannot find prev position.')
 
-        move_csa = ''.join([
-            code,
-            str(prev_pos[0] + 1),
-            str(prev_pos[1] + 1),
-            str(i + 1),
-            str(j + 1),
-            piece
-        ])
 
-        return move_csa
+        if prev_pos and len(prev_pos) == 2:
+            move_csa = ''.join([
+                code,
+                str(prev_pos[0] + 1),
+                str(prev_pos[1] + 1),
+                str(i + 1),
+                str(j + 1),
+                piece
+            ])
+        
+            return move_csa
+
+        else:
+            print('Error: prev_pos is invalid, prev_pos=', prev_pos)
+            return None
