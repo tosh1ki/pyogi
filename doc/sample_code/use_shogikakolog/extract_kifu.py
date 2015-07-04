@@ -4,6 +4,7 @@
 import os
 import re
 import sys
+import pandas as pd
 sys.path.append('./../../../')
 
 from pyogi.kifu import Kifu
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     file_list = os.listdir(save_dir)
     kakikomi_list = []
 
-    for filename in sorted(file_list, reverse=True):
+    for filename in sorted(file_list, reverse=True)[2:]:
         filepath = os.path.join(save_dir, filename)
     
         with open(filepath, 'r') as f:
@@ -31,17 +32,11 @@ if __name__ == '__main__':
         kakikomi_list.extend(kakikomis)
         print(filename, len(kakikomis))
 
-        break
-
 
     kifu_list = []
-    prev_converter = None
-    prev_extracted = True
+    kifu_infos_list = []
 
     for kakikomi in kakikomi_list:
-
-        if not prev_extracted and prev_converter:
-            print(prev_converter.ki2_txt)
 
         txt = re.sub('<br> ', '\n', kakikomi)
         txt = re.sub('^.+?<DD[^>]+?>', '', txt)
@@ -52,8 +47,6 @@ if __name__ == '__main__':
 
         # If there is NOT strings of kifu like KI2 format
         if not txt:
-            prev_extracted = False
-            prev_converter = None
             continue
         else:
             txt = txt.group()
@@ -63,13 +56,7 @@ if __name__ == '__main__':
 
         # If converter cannot extract moves of KI2 format
         if not converter.moves_ki2:
-            prev_extracted = False
-            prev_converter = None
             continue
-
-        if not prev_extracted and not txt.startswith('開始日時'):
-            prev_converter.extend(converter.moves_ki2)
-            converter = prev_converter
 
         try:
             csa = converter.to_csa()
@@ -77,16 +64,31 @@ if __name__ == '__main__':
             print(kakikomi)
             continue
 
+        # If extracted kifu of CSA format
         if csa:
             kifu = Kifu(csa)
             kifu_list.append(kifu)
-            prev_extracted = True
         else:
             print(txt)
-            prev_extracted = False
 
         n_kifu = len(kifu_list)
         if n_kifu%1000 == 0:
             print(n_kifu)
 
-        prev_converter = converter
+
+        kifu_table = {
+            'player0': kifu.players[0],
+            'player1': kifu.players[1],
+            'sente_win': kifu.sente_win,
+            'datetime': kifu.datetime,
+            'teai': kifu.teai,
+            'moves': ' '.join(kifu.moves),
+            'description': kifu.description
+        }
+
+        kifu_infos_list.append(kifu_table)
+
+
+    df = pd.DataFrame(kifu_infos_list)
+    csvpath = os.path.expanduser('~/data/shogi/output/thread_kifu.csv')
+    df.to_csv(csvpath)
