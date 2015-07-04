@@ -40,6 +40,7 @@ class Kifu:
         self.kifu_txt = kifu_txt
         self.moves = []
         self.sente_win = None
+        self.is_sennichite = None
         self.datetime = None
         self.description = ''
         self.players = []
