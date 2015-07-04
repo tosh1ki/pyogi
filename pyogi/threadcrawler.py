@@ -45,7 +45,14 @@ class ThreadCrawler:
 
             if res and res.status_code == 200:
                 self.res = res
-                self.html = self.res.content.decode('CP932')
+
+                encoding_list = ['CP932', 'euc-jp', 'utf-8']
+                for encoding in encoding_list:
+                    try:
+                        self.html = self.res.content.decode(encoding)
+                        break
+                    except UnicodeDecodeError:
+                        continue
 
                 break
             else:
