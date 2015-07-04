@@ -14,7 +14,9 @@ _REGEX_HTML2 = ('<dt (?:id=res0_\d+)?><[^>]+?>'
                 '<FONT color=black>(\d+)</FONT></A> ：([^：]+)：'
                 '(\d+)/(\d+)/(\d+)\((.)\) (\d+):(\d+):([\d\.]+) '
                 'ID:([\w\+/]+)(?:(?:.(?!=<dd>))+.)?<dd> (.+)')
-REGEX_HTML = re.compile(_REGEX_HTML2, re.I)
+_REGEX_HTML3 = ('<A id=id_tag\d+ name=tag\d+>(.+?)'
+                '<A id=id_tag\d+ name=tag\d+>')
+REGEX_HTML = re.compile(_REGEX_HTML3, re.I)
 
 def extract_kifutxt(html):
     return re.findall(REGEX_HTML, html)
@@ -22,7 +24,7 @@ def extract_kifutxt(html):
 
 class ThreadCrawler:
 
-    def __init__(self, INTERVAL_TIME=3, MAX_N_RETRY=10):
+    def __init__(self, INTERVAL_TIME=10, MAX_N_RETRY=10):
         self.res = None
         self.html = None
         self.INTERVAL_TIME = INTERVAL_TIME
