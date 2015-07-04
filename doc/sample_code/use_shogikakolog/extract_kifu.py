@@ -7,7 +7,7 @@ import sys
 sys.path.append('./../../../')
 
 from pyogi.kifu import Kifu
-from pyogi.threadcrawler import extract_kifutxt
+from pyogi.threadcrawler import extract_kakikomitxt
 from pyogi.ki2converter import Ki2converter
 
 import pdb
