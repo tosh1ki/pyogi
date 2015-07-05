@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+Convert kifu's of KI2 format, collect them and output to CSV
+'''
+
 import os
 import sys
 import argparse
@@ -41,6 +45,7 @@ if __name__ == '__main__':
             'sente_win': kifu.sente_win,
             'sennnichite': kifu.is_sennichite,
             'joshogi': kifu.is_jishogi,
+            'chudan': kifu.is_chudan,
             'datetime': kifu.datetime,
             'teai': kifu.teai,
             'moves': ' '.join(kifu.moves),
@@ -55,6 +60,8 @@ if __name__ == '__main__':
     df = pd.DataFrame(kifu_table_list)
     df.to_csv('2chkifuzip_dataframe.csv')
 
+
+    # Example
     print(
         df
         .query('player0 == "谷川浩司"')
