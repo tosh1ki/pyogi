@@ -175,9 +175,9 @@ class Ki2converter:
             csa_kifu.append(move_csa)
             csa_kifu.append('T0')
 
-        if self.ki2_txt.endswith('勝ち'):
+        if re.findall('勝ち\n*$', self.ki2_txt):
             csa_kifu.append('%TORYO')
-        elif self.ki2_txt.endswith('千日手'):
+        elif re.findall('千日手\n*$', self.ki2_txt):
             csa_kifu.append('%SENNICHITE')
         else:
             return None
