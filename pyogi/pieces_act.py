@@ -127,15 +127,15 @@ _teai_options = [
     ['手合割：六枚落ち', 'rokumaioti', ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']],
     ['手合割：その他',   'sonota', None]
 ]
-TEAI_OPTIOMS = pd.DataFrame(_teai_options,
+TEAI_OPTIONS = pd.DataFrame(_teai_options,
                             columns = ['japanese', 'code', 'pieces'])
 
-KOMAOCHI_OPTIONS = dict(zip(TEAI_OPTIOMS.code, TEAI_OPTIOMS.pieces))
-TEAITXT_TO_TEAI = dict(zip(TEAI_OPTIOMS.japanese, TEAI_OPTIOMS.code))
-komaochi_csa = list(map(lambda x: 'PI'+''.join(x), TEAI_OPTIOMS.pieces[1:10]))
+KOMAOCHI_OPTIONS = dict(zip(TEAI_OPTIONS.code, TEAI_OPTIONS.pieces))
+TEAITXT_TO_TEAI = dict(zip(TEAI_OPTIONS.japanese, TEAI_OPTIONS.code))
+komaochi_csa = list(map(lambda x: 'PI'+''.join(x), TEAI_OPTIONS.pieces[1:10]))
 
-KOMAOCHI_CSA_TO_CODE = dict(zip(komaochi_csa, TEAI_OPTIOMS.code[1:10]))
-KOMAOCHI_CODE_TO_CSA = dict(zip(TEAI_OPTIOMS.code[1:10], komaochi_csaq))
+KOMAOCHI_CSA_TO_CODE = dict(zip(komaochi_csa, TEAI_OPTIONS.code[1:10]))
+KOMAOCHI_CODE_TO_CSA = dict(zip(TEAI_OPTIONS.code[1:10], komaochi_csa))
 
 
 
