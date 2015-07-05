@@ -18,7 +18,7 @@ if __name__ == '__main__':
     path_ki2_list = get_ki2_list(argparse.ArgumentParser())
     kifu_table_list = []
     
-    for path_ki2 in path_ki2_list[31110:]:
+    for path_ki2 in path_ki2_list:
             
         ki2converter = Ki2converter()
         ki2converter.from_path(path_ki2)
@@ -26,14 +26,13 @@ if __name__ == '__main__':
         csa = ki2converter.to_csa()
 
         if not csa:
-            print(path_ki2)
-            pdb.set_trace()
-
+            print('Cannot convert:', path_ki2)
             continue
 
         kifu = Kifu(csa)
         
         if not kifu.extracted:
+            print('Cannot extract:', path_ki2)
             continue
 
         kifu_table = {
@@ -56,9 +55,10 @@ if __name__ == '__main__':
     df = pd.DataFrame(kifu_table_list)
     df.to_csv('2chkifuzip_dataframe.csv')
 
-    (df
-     .query('player0 == "谷川浩司"')
-     .assign(first3=df.moves.str[0:8*3])
-     .assign(count=1)
-     .pipe(pd.pivot_table, 'count', 'first3', 'sente_win', aggfunc=sum)
+    print(
+        df
+        .query('player0 == "谷川浩司"')
+        .assign(first3=df.moves.str[0:8*3])
+        .assign(count=1)
+        .pipe(pd.pivot_table, 'count', 'first3', 'sente_win', aggfunc=sum)
     ) 
