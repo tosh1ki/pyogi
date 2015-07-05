@@ -41,6 +41,7 @@ class Kifu:
         self.moves = []
         self.sente_win = None
         self.is_sennichite = None
+        self.is_jishogi = None
         self.datetime = None
         self.description = ''
         self.players = []
@@ -80,6 +81,7 @@ class Kifu:
         self.times = list(map(lambda x: int(x[1:]), times))
         self.tesu = len(self.moves)
         self.is_sennichite = self.kifu_txt.endswith('%SENNICHITE')
+        self.is_jishogi = self.kifu_txt.endswith('%JISHOGI')
         self.sente_win = self.tesu % 2 == 1
 
         match = re.search(REGEXP_DATETIME, self.kifu_txt)
