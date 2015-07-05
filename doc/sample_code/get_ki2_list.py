@@ -23,4 +23,4 @@ def get_ki2_list(parser):
         for ki2file in ki2files:
             path_ki2_list.append(os.path.join(path_dir, ki2file))
 
-    return path_ki2_list
+    return sorted(path_ki2_list)
