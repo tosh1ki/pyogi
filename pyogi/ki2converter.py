@@ -168,7 +168,7 @@ class Ki2converter:
 
             # If move_ki2_to_csa cannot read `move_ki2`
             if not move_csa:
-                return None
+                raise Exception('Parse error at Kifu.move_ki2_to_csa')
 
             self.board.move(move_csa)
 
@@ -184,7 +184,7 @@ class Ki2converter:
         elif re.findall('中断\n*$', self.ki2_txt):
             csa_kifu.append('%CHUDAN')
         else:
-            return None
+            raise Exception('Parse error: Unknown terminate word')
 
         return '\n'.join(csa_kifu)
 
