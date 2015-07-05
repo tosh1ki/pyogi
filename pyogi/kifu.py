@@ -8,6 +8,7 @@ import copy
 import pdb
 
 from .board import Board
+from .pieces_act import KOMAOCHI_CSA_TO_CODE
 
 REGEXP_MOVES = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
 REGEXP_DATETIME = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S | re.M)
@@ -39,19 +40,20 @@ class Kifu:
     def __init__(self, kifu_txt):
         self.kifu_txt = kifu_txt
         self.moves = []
+
         self.sente_win = None
         self.is_sennichite = None
         self.is_jishogi = None
+
         self.datetime = None
         self.description = ''
         self.players = []
         self.times = []
-        self.teai = ''
+        self.teai = 'hirate'
 
         self.board = Board()
-        self.reset_board()
-
         self.extracted = self.extract_infomation()
+        self.reset_board(teai=self.teai)
 
     def __repr__(self):
         return 'pyogi.kifu object'
@@ -77,12 +79,19 @@ class Kifu:
             return False
 
         self.moves = move_txt.split('\n')[::2]
+        self.tesu = len(self.moves)
+
         times = move_txt.split('\n')[1::2]
         self.times = list(map(lambda x: int(x[1:]), times))
-        self.tesu = len(self.moves)
+
         self.is_sennichite = self.kifu_txt.endswith('%SENNICHITE')
         self.is_jishogi = self.kifu_txt.endswith('%JISHOGI')
         self.sente_win = self.tesu % 2 == 1
+
+        komaochi_match = re.findall('^PI.+$', self.kifu_txt, re.M)
+        if komaochi_match:
+            komaochi_txt = komaochi_match[0]
+            self.teai = KOMAOCHI_CSA_TO_CODE[komaochi_txt]            
 
         match = re.search(REGEXP_DATETIME, self.kifu_txt)
         if match:
