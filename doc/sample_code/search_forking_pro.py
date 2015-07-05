@@ -26,7 +26,9 @@ if __name__ == '__main__':
     res_table = []
     
     for path_ki2 in path_ki2_list:
-            
+
+        print(path_ki2)
+        
         ki2converter = Ki2converter()
         ki2converter.from_path(path_ki2)
 
@@ -61,7 +63,7 @@ if __name__ == '__main__':
                                (not kifu.sente_win and res[3]!=[]))
             }
         )
-
+        
 
     # Output
     df = pd.DataFrame(res_table)
