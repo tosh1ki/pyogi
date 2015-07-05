@@ -132,7 +132,22 @@ TEAI_OPTIOMS = pd.DataFrame(_teai_options,
 
 KOMAOCHI_OPTIONS = dict(zip(TEAI_OPTIOMS.code, TEAI_OPTIOMS.pieces))
 TEAITXT_TO_TEAI = dict(zip(TEAI_OPTIOMS.japanese, TEAI_OPTIOMS.code))
-KOMAOCHI_CSA_TO_CODE = dict(zip(
-    list(map(lambda x: 'PI'+''.join(x), TEAI_OPTIOMS.pieces[1:10])),
-    TEAI_OPTIOMS.code[1:10]
-))
+komaochi_csa = list(map(lambda x: 'PI'+''.join(x), TEAI_OPTIOMS.pieces[1:10]))
+
+KOMAOCHI_CSA_TO_CODE = dict(zip(komaochi_csa, TEAI_OPTIOMS.code[1:10]))
+KOMAOCHI_CODE_TO_CSA = dict(zip(TEAI_OPTIOMS.code[1:10], komaochi_csaq))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

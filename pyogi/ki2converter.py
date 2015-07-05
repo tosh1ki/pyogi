@@ -4,7 +4,7 @@
 import re
 
 from .board import *
-from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI
+from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA
 
 
 SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
@@ -118,7 +118,7 @@ class Ki2converter:
             return -1
 
         elif teai != 'hirate':
-            header_infos['csa_komaochi'] = 'PI' + ''.join(KOMAOCHI_OPTIONS[teai])
+            header_infos['csa_komaochi'] = KOMAOCHI_CODE_TO_CSA[teai]
             header_infos['senteban'] = '-'
 
         if not ('sente' in header_infos and 'gote' in header_infos):
