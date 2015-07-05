@@ -181,6 +181,8 @@ class Ki2converter:
             csa_kifu.append('%SENNICHITE')
         elif re.findall('持将棋\n*$', self.ki2_txt):
             csa_kifu.append('%JISHOGI')
+        elif re.findall('中断\n*$', self.ki2_txt):
+            csa_kifu.append('%CHUDAN')
         else:
             return None
 

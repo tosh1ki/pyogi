@@ -44,6 +44,7 @@ class Kifu:
         self.sente_win = None
         self.is_sennichite = None
         self.is_jishogi = None
+        self.is_chudan = None
 
         self.datetime = None
         self.description = ''
@@ -86,6 +87,7 @@ class Kifu:
 
         self.is_sennichite = self.kifu_txt.endswith('%SENNICHITE')
         self.is_jishogi = self.kifu_txt.endswith('%JISHOGI')
+        self.is_chudan = self.kifu_txt.endswith('%CHUDAN')
         self.sente_win = self.tesu % 2 == 1
 
         komaochi_match = re.findall('^PI.+$', self.kifu_txt, re.M)
