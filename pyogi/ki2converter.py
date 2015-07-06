@@ -4,19 +4,18 @@
 import re
 
 from .board import *
-from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA
+from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA, KOMA_INFOS
 
 
 SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
-KANJI_TO_INT = dict(zip(tuple('一二三四五六七八九'), range(1, 10)))
-ZEN_TO_INT = dict(zip(tuple('１２３４５６７８９'), range(1, 10)))
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 REGEX_KI2_MOVE = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
-OGOMA = ['HI', 'KA', 'RY', 'UM']
+OGOMA = KOMA_INFOS.query('ogoma == True').csa.pipe(list)
 
 TO_INT = {str(r): r for r in range(1, 10)}
-TO_INT.update(KANJI_TO_INT)
-TO_INT.update(ZEN_TO_INT)
+TO_INT.update(dict(zip(tuple('一二三四五六七八九'), range(1, 10))))
+TO_INT.update(dict(zip(tuple('１２３４５６７８９'), range(1, 10))))
+
 
 class Ki2converter:
 

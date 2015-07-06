@@ -79,28 +79,24 @@ OU_ACT = []
 OU_ACT.extend(ACT1)
 OU_ACT.extend(ACT2)
 
-ACTS = [
-    OU_ACT, HI_ACT, KA_ACT, KI_ACT, GI_ACT,
-    KE_ACT, KY_ACT, FU_ACT, RY_ACT, UM_ACT,
-    NG_ACT, NK_ACT, NY_ACT, TO_ACT
-]
 
-columns = ['csa', 'kanji', 'promoted', 'canpromote', 'beforepromote', 'act']
+columns = ['csa', 'kanji', 'promoted', 'canpromote', 'ogoma',
+           'beforepromote', 'act']
 koma_infos_list = [
-    ['FU', '歩', False, True,  None, FU_ACT],
-    ['KI', '金', False, False, None, KI_ACT],
-    ['GI', '銀', False, True,  None, GI_ACT],
-    ['KE', '桂', False, True,  None, KE_ACT],
-    ['KY', '香', False, True,  None, KY_ACT],
-    ['HI', '飛', False, True,  None, HI_ACT],
-    ['KA', '角', False, True,  None, KA_ACT],
-    ['OU', '玉', False, False, None, OU_ACT],
-    ['UM', '馬', True,  False, 'KA', UM_ACT],
-    ['RY', '竜', True,  False, 'HI', RY_ACT],
-    ['NG', '全', True,  False, 'GI', NG_ACT],
-    ['NY', '杏', True,  False, 'KY', NY_ACT],
-    ['NK', '圭', True,  False, 'KE', NK_ACT],
-    ['TO', 'と', True,  False, 'FU', TO_ACT]
+    ['FU', '歩', False, True,  False, None, FU_ACT],
+    ['KI', '金', False, False, False, None, KI_ACT],
+    ['GI', '銀', False, True,  False, None, GI_ACT],
+    ['KE', '桂', False, True,  False, None, KE_ACT],
+    ['KY', '香', False, True,  False, None, KY_ACT],
+    ['HI', '飛', False, True,  True,  None, HI_ACT],
+    ['KA', '角', False, True,  True,  None, KA_ACT],
+    ['OU', '玉', False, False, False, None, OU_ACT],
+    ['UM', '馬', True,  False, True,  'KA', UM_ACT],
+    ['RY', '竜', True,  False, True,  'HI', RY_ACT],
+    ['NG', '全', True,  False, False, 'GI', NG_ACT],
+    ['NY', '杏', True,  False, False, 'KY', NY_ACT],
+    ['NK', '圭', True,  False, False, 'KE', NK_ACT],
+    ['TO', 'と', True,  False, False, 'FU', TO_ACT]
 ]
 
 KOMA_INFOS = pd.DataFrame(koma_infos_list, columns=columns)
@@ -124,7 +120,8 @@ _teai_options = [
     ['手合割：二枚落ち', 'nimaioti', ['82HI', '22KA']],
     ['手合割：三枚落ち', 'sanmaioti', ['82HI', '22KA', '11KY']],
     ['手合割：四枚落ち', 'yonmaioti', ['91KY', '82HI', '22KA', '11KY']],
-    ['手合割：六枚落ち', 'rokumaioti', ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']],
+    ['手合割：六枚落ち', 'rokumaioti',
+     ['91KY', '81KE', '82HI', '22KA', '21KE', '11KY']],
     ['手合割：その他',   'sonota', None]
 ]
 TEAI_OPTIONS = pd.DataFrame(_teai_options,
