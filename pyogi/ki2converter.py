@@ -184,7 +184,7 @@ class Ki2converter:
         elif re.findall('中断\n*$', self.ki2_txt):
             csa_kifu.append('%CHUDAN')
         else:
-            raise Exception('Parse error: Unknown terminate word')
+            return None
 
         return '\n'.join(csa_kifu)
 
