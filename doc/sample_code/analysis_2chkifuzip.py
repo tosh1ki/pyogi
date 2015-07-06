@@ -43,13 +43,15 @@ if __name__ == '__main__':
             'player0': kifu.players[0],
             'player1': kifu.players[1],
             'sente_win': kifu.sente_win,
+            'gote_win': kifu.gote_win,
             'sennnichite': kifu.is_sennichite,
             'joshogi': kifu.is_jishogi,
             'chudan': kifu.is_chudan,
             'datetime': kifu.datetime,
             'teai': kifu.teai,
             'moves': ' '.join(kifu.moves),
-            'description': kifu.description
+            'description': kifu.description,
+            'path_ki2': path_ki2
         }
         kifu_table_list.append(kifu_table)
 
