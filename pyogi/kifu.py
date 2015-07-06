@@ -42,6 +42,7 @@ class Kifu:
         self.moves = []
 
         self.sente_win = None
+        self.gote_win = None
         self.is_sennichite = None
         self.is_jishogi = None
         self.is_chudan = None
@@ -88,7 +89,14 @@ class Kifu:
         self.is_sennichite = self.kifu_txt.endswith('%SENNICHITE')
         self.is_jishogi = self.kifu_txt.endswith('%JISHOGI')
         self.is_chudan = self.kifu_txt.endswith('%CHUDAN')
-        self.sente_win = self.tesu % 2 == 1
+
+        if self.kifu_txt.endswith('%TORYO'):
+            self.sente_win = (self.tesu % 2 == 1)
+            self.gote_win = (self.tesu % 2 == 0)
+        else:
+            self.sente_win = False
+            self.gote_win = False
+
 
         komaochi_match = re.findall('^PI.+$', self.kifu_txt, re.M)
         if komaochi_match:
