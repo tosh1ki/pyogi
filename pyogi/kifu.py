@@ -37,8 +37,8 @@ class Kifu:
     teai
     '''
 
-    def __init__(self, kifu_txt):
-        self.kifu_txt = kifu_txt
+    def __init__(self):
+        self.kifu_txt = ''
         self.moves = []
 
         self.sente_win = None
@@ -54,8 +54,11 @@ class Kifu:
         self.teai = 'hirate'
 
         self.board = Board()
+
+    def from_csa(self, csa_txt):
+        self.kifu_txt = csa_txt
         self.extracted = self.extract_infomation()
-        self.reset_board(teai=self.teai)
+        self.reset_board(teai=self.teai)        
 
     def __repr__(self):
         return 'pyogi.kifu object'
