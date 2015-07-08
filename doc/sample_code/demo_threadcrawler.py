@@ -32,5 +32,6 @@ if __name__ == '__main__':
     csa = ki2converter.to_csa()
 
     # Print last state
-    kifu = Kifu(csa)
+    kifu = Kifu()
+    kifu.from_csa(csa)
     kifu.print_state(mode='mpl')
