@@ -4,10 +4,13 @@
 import re
 import datetime as dt
 import copy
+from itertools import chain
+import numpy as np
+
 
 import pdb
 
-from .board import Board
+from .board import Board, EMPTY_STR
 from .pieces_act import KOMAOCHI_CSA_TO_CODE
 
 REGEXP_MOVES = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
@@ -70,9 +73,9 @@ class Kifu:
         self.players = names
         self.board.players = names
 
-    def reset_board(self, teai='hirate'):
-        self.board.set_initial_state(teai=teai)
-        self.teai = teai
+    def reset_board(self):
+        self.board.set_initial_state(teai=self.teai)
+        self.teai = self.teai
 
     def extract_infomation(self):
         '''Extract infomations from kifu text.
@@ -195,3 +198,33 @@ class Kifu:
 
         return [sente_forked, gote_forked,
                 sente_forked_and_picked, gote_forked_and_picked]
+
+    def make_features(self):
+
+        new_board = copy.deepcopy(self.board)
+        new_board.set_initial_state(teai=new_board.teai)
+
+        sum_list = [[[] for _ in range(9)] for _ in range(9)]
+        count_list = [[None for _ in range(9)] for _ in range(9)]
+
+        counts_list = []
+
+        for move_csa in self.moves:
+            new_board.move(move_csa)
+
+            for i in range(9):
+                for j in range(9):
+                    grid = new_board[i][j]
+                    
+                    if grid == EMPTY_STR or grid[0] == '-':
+                        continue
+
+                    sum_list[i][j].append(grid[1])
+
+        for i in range(9):
+            for j in range(9):
+                count_list[i][j] = sum_list[i][j].count('FU')
+
+        counts = list(chain.from_iterable(count_list))
+
+        return np.array(counts)
