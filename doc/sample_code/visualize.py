@@ -4,43 +4,49 @@
 import sys
 import numpy as np
 import pandas as pd
+from scipy.cluster import hierarchy
 import matplotlib.pyplot as plt
 sys.path.append('./../../')
 
-from pyogi.board import Board, EMPTY_STR
+from pyogi.kifu import Kifu
 
 
 if __name__ == '__main__':
 
-    board = Board()
-    sum_list = [[[] for _ in range(9)] for _ in range(9)]
-    count_list = [[None for _ in range(9)] for _ in range(9)]
+    kifu = Kifu()
 
     df = pd.read_csv('2chkifuzip_dataframe.csv', index_col=0)
-    df_habu_sente = df.query('player0 == "羽生善治"')
+    df = df.query('player0 == "羽生善治" or player0 == "森内俊之" or player0 == "藤井　猛"')
+    df = df.iloc[0:100, :]
 
-    for index, d in df_habu_sente.iterrows():
+    player_list = []
+    feature_list = []
 
-        board.set_initial_state()
+    for index, d in df.iterrows():
 
-        for move_csa in d.moves.split(' '):
-            board.move(move_csa)
+        kifu.moves = d.moves.split(' ')
+        kifu.players = [d.player0, d.player1]
+        kifu.teai = d.teai
+        kifu.reset_board()
 
-            for i in range(9):
-                for j in range(9):
-                    grid = board.board[i][j]
-                    
-                    if grid == EMPTY_STR or grid[0] == '-':
-                        continue
+        feature_list.append(kifu.make_features())
+        player_list.append(d.player0)
 
-                    sum_list[i][j].append(grid[1])
 
-                
-    for i in range(9):
-        for j in range(9):
-            count_list[i][j] = sum_list[i][j].count('OU')
+    X = np.array(feature_list)
 
-    plt.pcolor(np.array(count_list).T)
+    plt.figure(figsize=(6, 17*len(player_list)/100))
+    linkage = hierarchy.linkage(X)
+    hierarchy.dendrogram(linkage, labels=player_list, orientation='right')
+    plt.show()
+
+    # Visualize using heatmap of board
+    Y = X[0,:]
+    Y.shape = (9, 9)
+
+    plt.pcolor(Y.T)
     plt.xlim(9, 0)
     plt.ylim(9, 0)
     plt.colorbar()
+    plt.show()
+
