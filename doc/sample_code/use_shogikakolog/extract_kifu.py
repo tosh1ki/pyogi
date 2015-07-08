@@ -70,7 +70,8 @@ if __name__ == '__main__':
 
         # If extracted kifu of CSA format
         if csa:
-            kifu = Kifu(csa)
+            kifu = Kifu()
+            kifu.from_csa(csa)
             kifu_list.append(kifu)
         else:
             print(txt)
