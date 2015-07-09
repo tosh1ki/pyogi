@@ -11,7 +11,7 @@ import numpy as np
 import pdb
 
 from .board import Board, EMPTY_STR
-from .pieces_act import KOMAOCHI_CSA_TO_CODE
+from .pieces_act import KOMAOCHI_CSA_TO_CODE, KOMA_INFOS
 
 REGEXP_MOVES = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
 REGEXP_DATETIME = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S | re.M)
@@ -205,7 +205,6 @@ class Kifu:
         new_board.set_initial_state(teai=new_board.teai)
 
         sum_list = [[[] for _ in range(9)] for _ in range(9)]
-        count_list = [[None for _ in range(9)] for _ in range(9)]
 
         counts_list = []
 
@@ -221,10 +220,14 @@ class Kifu:
 
                     sum_list[i][j].append(grid[1])
 
-        for i in range(9):
-            for j in range(9):
-                count_list[i][j] = sum_list[i][j].count('FU')
+        
+        for koma_csa in KOMA_INFOS.csa.pipe(list):
+            count_koma = [[None for _ in range(9)] for _ in range(9)]
 
-        counts = list(chain.from_iterable(count_list))
+            for i in range(9):
+                for j in range(9):
+                    count_koma[i][j] = sum_list[i][j].count(koma_csa)
 
-        return np.array(counts)
+            counts_list.extend(count_koma)
+
+        return np.array(list(chain.from_iterable(counts_list)))
