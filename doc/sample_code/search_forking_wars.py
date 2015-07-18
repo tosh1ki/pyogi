@@ -25,8 +25,9 @@ if __name__ == '__main__':
 
     res_table = []
 
-    for key, d in df.T.to_dict().items():
-        kifu = Kifu(d['csa'])
+    for _, d in df.iterrows():
+        kifu = Kifu()
+        kifu.from_csa(d.csa)
 
         if not kifu.extracted:
             continue
@@ -41,7 +42,7 @@ if __name__ == '__main__':
         #   forkandwin: (sente won & sente forked) | (gote won & gote forked)
         res_table.append(
             {
-                'id': d['name'],
+                'id': d.name,
                 'player0': kifu.players[0],
                 'player1': kifu.players[1],
                 'sente_won': kifu.sente_win,

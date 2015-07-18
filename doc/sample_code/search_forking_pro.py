@@ -37,7 +37,8 @@ if __name__ == '__main__':
         if not csa:
             continue
 
-        kifu = Kifu(csa)
+        kifu = Kifu()
+        kifu.from_csa(csa)
         
         if not kifu.extracted:
             continue

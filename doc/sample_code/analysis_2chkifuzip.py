@@ -33,7 +33,8 @@ if __name__ == '__main__':
             print('Cannot convert:', path_ki2)
             continue
 
-        kifu = Kifu(csa)
+        kifu = Kifu()
+        kifu.from_csa(csa)
         
         if not kifu.extracted:
             print('Cannot extract:', path_ki2)
