@@ -9,8 +9,6 @@ from matplotlib.patches import Circle
 font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
-import pdb
-
 from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS, PIECE_TO_ACT
 
 EMPTY_STR = '   '
@@ -76,9 +74,17 @@ class Board:
 
         return '\n'.join(s)
 
-    def plot_state_mpl(self, figsize=(8, 9),
-                       title = '', savepath=None):
+    def plot_state_mpl(self, figsize=(8, 9), title = '', savepath=''):
         '''Plot current state using matplotlib.
+
+        Args
+        -------------------
+        figsize : tuple of int, optional (default = (8, 9))
+            Figure size of output
+        title : str, optional (default = '')
+            If title == '', plot a string of last move.
+        savepath : str, optional (default = '')
+            If savepath != None, save output of matplotlib as a png file
         '''
         fig, ax = plt.subplots(figsize=figsize)
 

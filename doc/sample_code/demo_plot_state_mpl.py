@@ -22,4 +22,4 @@ if __name__ == '__main__':
     board.move('+2868HI')
     board.move('-2288UM')
 
-    board.plot_state_mpl(figsize=(18, 20))
+    board.plot_state_mpl(figsize=(8, 9))
