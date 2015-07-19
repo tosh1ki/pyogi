@@ -35,5 +35,6 @@ class Koma:
         if self.is_promoted:
             self.csa, self.csa_rear = self.csa_rear, self.csa
             self.is_promoted = False
+
         else:
             raise RuntimeError('This piece is NOT promoted.')

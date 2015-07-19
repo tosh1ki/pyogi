@@ -277,7 +277,7 @@ class Board:
 
             # If picking promoted piece
             if picked_koma and picked_koma.is_promoted:
-                picked_koma = picked_koma.depromote()
+                picked_koma.depromote()
 
             self.mochigoma[teban].append(picked_koma)
 
@@ -307,10 +307,10 @@ class Board:
         '''
         pieces_index = [[], []]
         for j, column in enumerate(self.board):
-            for i, value in enumerate(column):
-                teban = value[0]
-                board_piece = value[1]
-                if board_piece == piece:
+            for i, grid in enumerate(column):
+                teban = grid.which_player
+
+                if grid.koma and grid.koma.csa == piece:
                     pieces_index[teban==TEBAN_CODE[1]].append([j, i])
 
         return pieces_index
@@ -363,7 +363,6 @@ class Board:
         '''
         is_forked_list = []
         sente_index, gote_index = self.get_piece_indexes(query_piece)
-
         options = [
             ['-',  1, sente_index],
             ['+', -1,  gote_index]
@@ -394,10 +393,10 @@ class Board:
 
                         # If conflict with other piece
                         if not self.board[next_i][next_j].is_empty():
-                            b = self.board[next_i][next_j]
+                            grid = self.board[next_i][next_j]
 
-                            if b[0] == enemys_pm:
-                                fork_candidates.append(b[1])
+                            if grid.which_player == enemys_pm:
+                                fork_candidates.append(grid.koma.csa)
 
                             break
 
