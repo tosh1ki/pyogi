@@ -14,16 +14,16 @@ class Grid:
             raise RuntimeError('Invalid which_player:', which_player)
 
         if csa_piece:
-            self.piece = Koma(csa_piece)
+            self.koma = Koma(csa_piece)
         else:
-            self.piece = None
+            self.koma = None
 
-    def __repr__(self):
-        if self.which_player and self.piece:
-            return self.which_player + self.piece.csa
+    def __str__(self):
+        if self.which_player and self.koma:
+            return self.which_player + self.koma.csa
         else:
             return '   '
-
+                
     def is_empty(self):
         return self.which_player is None
            
