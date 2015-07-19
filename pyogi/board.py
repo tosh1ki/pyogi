@@ -82,8 +82,8 @@ class Board:
         '''
         fig, ax = plt.subplots(figsize=figsize)
 
-        width_x = 9
-        width_y = 9
+        width_x = figsize[0]
+        width_y = figsize[1]
 
         plt.xlim(0, width_x)
         plt.ylim(0, width_y)
@@ -91,7 +91,7 @@ class Board:
         dx = width_x / 9
         dy = width_y / 9
 
-        fontsize = 20 * dx
+        fontsize = 30 * min(dx, dy)
 
         # Plot grids
         for i in range(1, 9):
@@ -111,20 +111,21 @@ class Board:
             for i, b_i in enumerate(board_indexes):
                 d = self.board[b_i][j]
 
-                x = (8 - i) + dx / 2
-                y = (8 - j) + dy / 2
+                x = ((8 - i) + 1/2) * dx
+                y = ((8 - j) + 1/2) * dy
 
                 if d != EMPTY_STR:
                     s = CSA_TO_KANJI[d[1]]
                     is_gote = int(d[0] == '-')
-                    plt.text(x - 1 / 5, y - 1 / 10, s,
+                    # TOFIX: 60, 80にするとよくわからないけどうまくいく
+                    plt.text(x - fontsize/2/60, y - fontsize/2/80, s,
                              size=fontsize, rotation=180 * is_gote)
 
                 # Plot circle around piece moved recently
                 if (len(self.last_move_xy) == 2 and
                         self.last_move_xy[0] == i and
                         self.last_move_xy[1] == j):
-                    circle = Circle((x, y), 0.5, facecolor='none',
+                    circle = Circle((x, y), 0.5*dx, facecolor='none',
                                     linewidth=3, alpha=0.5)
                     ax.add_patch(circle)
 
@@ -135,9 +136,9 @@ class Board:
                  fontsize=fontsize, rotation=180)
 
         # Plot names
-        plt.text(width_x+0.2, 2*dx, self.players[0],
+        plt.text(width_x+0.2, 2*dy, self.players[0],
                  fontsize=fontsize, rotation=90)
-        plt.text(width_x+0.2, 8*dx, self.players[1],
+        plt.text(width_x+0.2, 8*dy, self.players[1],
                  fontsize=fontsize, rotation=90)
 
         # Plot title
