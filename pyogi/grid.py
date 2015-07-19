@@ -4,8 +4,15 @@
 from .koma import Koma
 from .pieces_act import KOMA_INFOS
 
-class Grid:
 
+class Grid:
+    '''Grid class
+
+    Args
+    -------------------
+    which_player : optional (default = None)
+    csa_piece : optional (default = None)
+    '''
     def __init__(self, which_player=None, csa_piece=None):
 
         if which_player in [None, '+', '-']:

@@ -3,8 +3,13 @@
 
 from .pieces_act import KOMA_INFOS
 
+
 class Koma:
     '''Koma class
+    
+    Args
+    -------------------
+    piece_type : str
     '''
     def __init__(self, piece_type):
         if not piece_type in list(KOMA_INFOS.csa):
@@ -25,6 +30,8 @@ class Koma:
         return self.csa
 
     def promote(self):
+        '''Promote this piece
+        '''
         if not self.is_promoted:
             self.csa, self.csa_rear = self.csa_rear, self.csa 
             self.is_promoted = True
@@ -32,6 +39,8 @@ class Koma:
             raise RuntimeError('This piece is already promoted.')
 
     def depromote(self):
+        '''Return promoted piece
+        '''
         if self.is_promoted:
             self.csa, self.csa_rear = self.csa_rear, self.csa
             self.is_promoted = False
