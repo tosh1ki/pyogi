@@ -250,7 +250,7 @@ class Board:
         next_point = points[2:4]
         koma = move[5:]
 
-        picked_koma = ''
+        picked_koma_csa = ''
 
         if prev_point == [0, 0]:
             # use mochigoma
@@ -280,6 +280,7 @@ class Board:
                 picked_koma.depromote()
 
             self.mochigoma[teban].append(picked_koma)
+            picked_koma_csa = picked_koma.csa
 
         next_grid_new = Grid(move[0], prev_koma)
         self.board[next_point[0] - 1][next_point[1] - 1] = next_grid_new
@@ -288,7 +289,7 @@ class Board:
         self.last_move_xy = [next_point[0] - 1, next_point[1] - 1]
         self.tesu += 1
 
-        return [next_grid_new.__str__(), picked_koma]
+        return [next_grid_new.koma.csa, picked_koma_csa]
 
     def get_piece_indexes(self, piece):
         '''Get indexes of a certain piece on a board.
@@ -383,7 +384,7 @@ class Board:
                 # For each act of query_piece
                 for act in PIECE_TO_ACT[query_piece]:
                     for move in act:
-                        next_i = i + move[0]
+                        next_i = i + move[0] * direction
                         next_j = j + move[1] * direction
 
                         # If next_i or next_j is outside of the board

@@ -3,7 +3,7 @@
 
 import re
 
-from .board import *
+from .board import Board, TEBAN_CODE
 from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA, KOMA_INFOS
 
 
@@ -244,7 +244,7 @@ class Ki2converter:
                         prev_pos_candidates.append([pi, pj])
 
                     # If conflict with other pieces
-                    if self.board[next_i][next_j] != EMPTY_STR:
+                    if not self.board[next_i][next_j].is_empty():
                         break
 
         # If promote
