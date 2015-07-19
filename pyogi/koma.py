@@ -18,6 +18,7 @@ class Koma:
         info = KOMA_INFOS.query('csa == @piece_type').iloc[0, :]
         self.csa = info.csa
         self.kanji = info.kanji
+        self.kanji_rear = info.kanji_rear
         self.is_promoted = bool(info.promoted)
         self.act = info.act
 
@@ -34,6 +35,7 @@ class Koma:
         '''
         if not self.is_promoted:
             self.csa, self.csa_rear = self.csa_rear, self.csa 
+            self.kanji, self.kanji_rear = self.kanji_rear, self.kanji
             self.is_promoted = True
         else:
             raise RuntimeError('This piece is already promoted.')
@@ -43,6 +45,7 @@ class Koma:
         '''
         if self.is_promoted:
             self.csa, self.csa_rear = self.csa_rear, self.csa
+            self.kanji, self.kanji_rear = self.kanji_rear, self.kanji
             self.is_promoted = False
 
         else:
