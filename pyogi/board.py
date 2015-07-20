@@ -72,6 +72,12 @@ class Board:
 
         return '\n'.join(s)
 
+    def __setitem__(self, index, value):
+        self.board[index] = value
+
+    def __getitem__(self, index):
+        return self.board[index]
+
     def plot_state_mpl(self, figsize=(8, 9), title = '', savepath=''):
         '''Plot current state using matplotlib.
 
@@ -181,12 +187,6 @@ class Board:
                 mochigoma_list.append('{0}x{1}'.format(k, counter[k]))
 
         return ' '.join(mochigoma_list)
-
-    def __setitem__(self, index, value):
-        self.board[index] = value
-
-    def __getitem__(self, index):
-        return self.board[index]
 
     def set_initial_state(self, teai='hirate'):
         '''Set state as initial state (with handicap).
