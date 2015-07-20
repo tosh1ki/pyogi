@@ -6,6 +6,7 @@ from .pieces_act import KOMA_INFOS
 
 
 class Grid:
+
     '''Grid class
 
     Args
@@ -13,6 +14,7 @@ class Grid:
     which_player : optional (default = None)
     csa_piece : optional (default = None)
     '''
+
     def __init__(self, which_player=None, csa_piece=None):
 
         if which_player in [None, '+', '-']:
@@ -30,10 +32,10 @@ class Grid:
             return self.which_player + self.koma.csa
         else:
             return '   '
-                
+
     def is_empty(self):
         return self.which_player is None
-           
+
     def is_of_sente(self):
         return self.which_player == '+'
 
