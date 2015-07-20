@@ -5,14 +5,16 @@ from .pieces_act import KOMA_INFOS
 
 
 class Koma:
+
     '''Koma class
-    
+
     Args
     -------------------
     piece_type : str
     '''
+
     def __init__(self, piece_type):
-        if not piece_type in list(KOMA_INFOS.csa):
+        if piece_type not in list(KOMA_INFOS.csa):
             raise RuntimeError('Invalid piece_type:', piece_type)
 
         info = KOMA_INFOS.query('csa == @piece_type').iloc[0, :]
@@ -34,7 +36,7 @@ class Koma:
         '''Promote this piece
         '''
         if not self.is_promoted:
-            self.csa, self.csa_rear = self.csa_rear, self.csa 
+            self.csa, self.csa_rear = self.csa_rear, self.csa
             self.kanji, self.kanji_rear = self.kanji_rear, self.kanji
             self.is_promoted = True
         else:
