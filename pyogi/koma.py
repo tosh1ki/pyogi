@@ -32,12 +32,15 @@ class Koma:
     def __str__(self):
         return self.csa
 
+    def reverse(self):
+        self.csa, self.csa_rear = self.csa_rear, self.csa
+        self.kanji, self.kanji_rear = self.kanji_rear, self.kanji
+
     def promote(self):
         '''Promote this piece
         '''
         if not self.is_promoted:
-            self.csa, self.csa_rear = self.csa_rear, self.csa
-            self.kanji, self.kanji_rear = self.kanji_rear, self.kanji
+            self.reverse()
             self.is_promoted = True
         else:
             raise RuntimeError('This piece is already promoted.')
@@ -46,9 +49,7 @@ class Koma:
         '''Return promoted piece
         '''
         if self.is_promoted:
-            self.csa, self.csa_rear = self.csa_rear, self.csa
-            self.kanji, self.kanji_rear = self.kanji_rear, self.kanji
+            self.reverse()
             self.is_promoted = False
-
         else:
             raise RuntimeError('This piece is NOT promoted.')

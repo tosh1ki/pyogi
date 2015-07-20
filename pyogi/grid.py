@@ -16,7 +16,6 @@ class Grid:
     '''
 
     def __init__(self, which_player=None, csa_piece=None):
-
         if which_player in [None, '+', '-']:
             self.which_player = which_player
         else:
