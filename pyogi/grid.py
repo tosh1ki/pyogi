@@ -36,3 +36,7 @@ class Grid:
            
     def is_of_sente(self):
         return self.which_player == '+'
+
+    def reset(self):
+        self.which_player = None
+        self.koma = None

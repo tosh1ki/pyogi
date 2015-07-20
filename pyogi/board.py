@@ -227,7 +227,7 @@ class Board:
             p = dp[2:]
 
             if self[i][j].which_player == '-' and self[i][j].koma == p:
-                self[i][j] = Grid()
+                self[i][j].reset()
 
         self.last_move_txt = ''
         self.last_move_xy = []
@@ -266,7 +266,7 @@ class Board:
                 prev_grid.koma.promote()
 
             prev_koma = prev_grid.koma.csa
-            self.board[prev_point[0] - 1][prev_point[1] - 1] = Grid()
+            self.board[prev_point[0] - 1][prev_point[1] - 1].reset()
                 
 
         next_grid = self.board[next_point[0] - 1][next_point[1] - 1]
