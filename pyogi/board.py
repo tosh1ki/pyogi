@@ -9,7 +9,7 @@ from matplotlib.patches import Circle
 font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
-from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS, PIECE_TO_ACT
+from .pieces_act import KOMA_INFOS, KOMAOCHI_OPTIONS, PIECE_TO_ACT
 from .grid import Grid
 from .koma import Koma
 
@@ -17,10 +17,10 @@ import pdb
 
 row_separator = '-' * 37
 board_indexes = list(range(0, 9))
-TEBAN_CODE = ['+', '-']
 
-_all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
-all_mochigoma = list(map(Koma, _all_mochigoma))
+all_mochigoma_csa = (['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2
+                     + ['HI', 'KA', 'OU'])
+all_mochigoma = list(map(Koma, all_mochigoma_csa))
 
 
 class Board:
@@ -119,10 +119,10 @@ class Board:
                 y = ((8 - j) + 1/2) * dy
 
                 if not grid.is_empty():
-                    s = grid.koma.kanji
                     is_gote = not grid.is_of_sente()
                     # TOFIX: 60, 80にするとよくわからないけどうまくいく
-                    plt.text(x - fontsize/2/60, y - fontsize/2/80, s,
+                    plt.text(x - fontsize/2/60, y - fontsize/2/80,
+                             grid.koma.kanji,
                              size=fontsize, rotation=180 * is_gote)
 
                 # Plot circle around piece moved recently
@@ -312,7 +312,7 @@ class Board:
                 teban = grid.which_player
 
                 if grid.koma and grid.koma.csa == piece:
-                    pieces_index[teban==TEBAN_CODE[1]].append([j, i])
+                    pieces_index[teban == '-'].append([j, i])
 
         return pieces_index
 
