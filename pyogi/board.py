@@ -121,13 +121,13 @@ class Board:
             for i, b_i in enumerate(board_indexes):
                 grid = self.board[b_i][j]
 
-                x = ((8 - i) + 1/2) * dx
-                y = ((8 - j) + 1/2) * dy
+                x = ((8 - i) + 1 / 2) * dx
+                y = ((8 - j) + 1 / 2) * dy
 
                 if not grid.is_empty():
                     is_gote = not grid.is_of_sente()
                     # TOFIX: 60, 80にするとよくわからないけどうまくいく
-                    plt.text(x - fontsize/2/60, y - fontsize/2/80,
+                    plt.text(x - fontsize / 2 / 60, y - fontsize / 2 / 80,
                              grid.koma.kanji,
                              size=fontsize, rotation=180 * is_gote)
 
@@ -135,7 +135,7 @@ class Board:
                 if (len(self.last_move_xy) == 2 and
                         self.last_move_xy[0] == i and
                         self.last_move_xy[1] == j):
-                    circle = Circle((x, y), 0.5*dx, facecolor='none',
+                    circle = Circle((x, y), 0.5 * dx, facecolor='none',
                                     linewidth=3, alpha=0.5)
                     ax.add_patch(circle)
 
@@ -146,9 +146,9 @@ class Board:
                  fontsize=fontsize, rotation=180)
 
         # Plot names
-        plt.text(width_x+0.2, 2*dy, self.players[0],
+        plt.text(width_x + 0.2, 2 * dy, self.players[0],
                  fontsize=fontsize, rotation=90)
-        plt.text(width_x+0.2, 8*dy, self.players[1],
+        plt.text(width_x + 0.2, 8 * dy, self.players[1],
                  fontsize=fontsize, rotation=90)
 
         # Plot title
@@ -212,7 +212,7 @@ class Board:
         for move in moves:
             if move:
                 self.move(move)
-                
+
         # Komaochi
         for d_teai, d_pieces in KOMAOCHI_OPTIONS.items():
             if teai == d_teai:
@@ -267,7 +267,6 @@ class Board:
 
             prev_koma = prev_grid.koma.csa
             self.board[prev_point[0] - 1][prev_point[1] - 1].reset()
-                
 
         next_grid = self.board[next_point[0] - 1][next_point[1] - 1]
 
@@ -404,7 +403,7 @@ class Board:
                 # If all targets in fork_candidates,
                 #  print board & info.
                 for target in targets:
-                    if not target in fork_candidates:
+                    if target not in fork_candidates:
                         break
                 else:
                     if display:
