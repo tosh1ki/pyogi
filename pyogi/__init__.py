@@ -1,3 +1,6 @@
+import pyximport
+pyximport.install()
+
 from .pieces_act import *
 from .koma import Koma
 from .grid import Grid
