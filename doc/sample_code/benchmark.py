@@ -7,15 +7,20 @@ import argparse
 sys.path.append('./../../')
 
 from pyogi.ki2converter import *
-from get_ki2_list import get_ki2_list
 
 
 if __name__ == '__main__':
 
-    path_ki2_list = get_ki2_list(argparse.ArgumentParser())
+    # Convert kifu        
+    for n in range(0, 50):
+    
+        path = ('~/data/shogi/2chkifu/{0}000{1}/{2:0>5}.KI2'
+                .format(n // 10000, int(n < 10000), n))
+        path_ki2 = os.path.expanduser(path)
 
-    # Convert kifu
-    for path_ki2 in path_ki2_list[0:10]:
+        if not os.path.exists(path_ki2):
+            continue
+
         ki2converter = Ki2converter()
         ki2converter.from_path(path_ki2)
         
