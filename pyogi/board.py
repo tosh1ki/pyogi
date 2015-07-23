@@ -9,13 +9,18 @@ from matplotlib.patches import Circle
 font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
-from .pieces_act import KOMA_INFOS, CSA_TO_KANJI, KOMAOCHI_OPTIONS, PIECE_TO_ACT
+from .pieces_act import KOMA_INFOS, KOMAOCHI_OPTIONS, PIECE_TO_ACT
+from .grid import Grid
+from .koma import Koma
 
-EMPTY_STR = '   '
+import pdb
+
 row_separator = '-' * 37
-all_mochigoma = ['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2 + ['HI', 'KA', 'OU']
 board_indexes = list(range(0, 9))
-TEBAN_CODE = ['+', '-']
+
+all_mochigoma_csa = (['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2
+                     + ['HI', 'KA', 'OU'])
+all_mochigoma = list(map(Koma, all_mochigoma_csa))
 
 
 class Board:
@@ -42,16 +47,13 @@ class Board:
     '''
 
     def __init__(self):
-        self.board = [[EMPTY_STR] * 9 for n in range(9)]
-        self.mochigoma = [[], []]
+        self.board = []
+        self.mochigoma = []
         self.tesu = 0
         self.last_move_txt = ''
         self.last_move_xy = []
         self.teai = ''
         self.players = ['', '']
-
-    def __repr__(self):
-        return self.__str__()
 
     def __str__(self):
         sente_mochigoma = self.get_mochigoma_str(0, kanji=False)
@@ -61,11 +63,7 @@ class Board:
              gote_mochigoma, row_separator]
 
         for j in board_indexes:
-            s_j = []
-            for i in board_indexes[::-1]:
-                s_ij = ''.join(self.board[i][j])
-                s_j.append(s_ij)
-
+            s_j = [self.board[i][j].__str__() for i in board_indexes[::-1]]
             s_temp = '|' + '|'.join(s_j) + '|'
             s.append(s_temp)
             s.append(row_separator)
@@ -73,6 +71,12 @@ class Board:
         s.append(sente_mochigoma)  # sente's mochigoma
 
         return '\n'.join(s)
+
+    def __setitem__(self, index, value):
+        self.board[index] = value
+
+    def __getitem__(self, index):
+        return self.board[index]
 
     def plot_state_mpl(self, figsize=(8, 9), title = '', savepath=''):
         '''Plot current state using matplotlib.
@@ -115,23 +119,23 @@ class Board:
         # Plot pieces
         for j in board_indexes:
             for i, b_i in enumerate(board_indexes):
-                d = self.board[b_i][j]
+                grid = self.board[b_i][j]
 
-                x = ((8 - i) + 1/2) * dx
-                y = ((8 - j) + 1/2) * dy
+                x = ((8 - i) + 1 / 2) * dx
+                y = ((8 - j) + 1 / 2) * dy
 
-                if d != EMPTY_STR:
-                    s = CSA_TO_KANJI[d[1]]
-                    is_gote = int(d[0] == '-')
+                if not grid.is_empty():
+                    is_gote = not grid.is_of_sente()
                     # TOFIX: 60, 80にするとよくわからないけどうまくいく
-                    plt.text(x - fontsize/2/60, y - fontsize/2/80, s,
+                    plt.text(x - fontsize / 2 / 60, y - fontsize / 2 / 80,
+                             grid.koma.kanji,
                              size=fontsize, rotation=180 * is_gote)
 
                 # Plot circle around piece moved recently
                 if (len(self.last_move_xy) == 2 and
                         self.last_move_xy[0] == i and
                         self.last_move_xy[1] == j):
-                    circle = Circle((x, y), 0.5*dx, facecolor='none',
+                    circle = Circle((x, y), 0.5 * dx, facecolor='none',
                                     linewidth=3, alpha=0.5)
                     ax.add_patch(circle)
 
@@ -142,9 +146,9 @@ class Board:
                  fontsize=fontsize, rotation=180)
 
         # Plot names
-        plt.text(width_x+0.2, 2*dy, self.players[0],
+        plt.text(width_x + 0.2, 2 * dy, self.players[0],
                  fontsize=fontsize, rotation=90)
-        plt.text(width_x+0.2, 8*dy, self.players[1],
+        plt.text(width_x + 0.2, 8 * dy, self.players[1],
                  fontsize=fontsize, rotation=90)
 
         # Plot title
@@ -167,10 +171,10 @@ class Board:
             1 : gote
         '''
         if kanji:
-            mochigoma = map(lambda x: CSA_TO_KANJI[x], self.mochigoma[teban])
+            mochigoma = [m.kanji for m in self.mochigoma[teban]]
             koma = list(KOMA_INFOS.kanji)
         else:
-            mochigoma = self.mochigoma[teban]
+            mochigoma = [m.csa for m in self.mochigoma[teban]]
             koma = list(KOMA_INFOS.csa)
 
         counter = Counter(mochigoma)
@@ -184,12 +188,6 @@ class Board:
 
         return ' '.join(mochigoma_list)
 
-    def __setitem__(self, index, value):
-        self.board[index] = value
-
-    def __getitem__(self, index):
-        return self.board[index]
-
     def set_initial_state(self, teai='hirate'):
         '''Set state as initial state (with handicap).
 
@@ -200,7 +198,7 @@ class Board:
             ex. hirate, kakuoti, hisyaoti, kyouoti,migikyouoti,
                 hikyouoti, nimaioti, sanmaioti, yonmaioti, rokumaioti
         '''
-        self.board = [[EMPTY_STR] * 9 for n in range(9)]
+        self.board = [[Grid()] * 9 for n in range(9)]
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
         curdir = os.path.dirname(__file__)
@@ -228,8 +226,8 @@ class Board:
             j = int(dp[1]) - 1
             p = dp[2:]
 
-            if self[i][j] == ['-', p]:
-                self[i][j] = EMPTY_STR
+            if self[i][j].which_player == '-' and self[i][j].koma == p:
+                self[i][j].reset()
 
         self.last_move_txt = ''
         self.last_move_xy = []
@@ -252,37 +250,45 @@ class Board:
         next_point = points[2:4]
         koma = move[5:]
 
-        picked_koma = ''
+        picked_koma_csa = ''
 
         if prev_point == [0, 0]:
             # use mochigoma
-            self.mochigoma[teban].remove(koma)
+            for m in self.mochigoma[teban]:
+                if m.csa == koma:
+                    self.mochigoma[teban].remove(m)
+                    break
+            prev_koma = koma
         else:
-            self.board[prev_point[0] - 1][prev_point[1] - 1] = EMPTY_STR
+            prev_grid = self.board[prev_point[0] - 1][prev_point[1] - 1]
 
-        next_point_info = self.board[next_point[0] - 1][next_point[1] - 1]
+            if prev_grid.koma.csa_rear == koma:
+                prev_grid.koma.promote()
+
+            prev_koma = prev_grid.koma.csa
+            self.board[prev_point[0] - 1][prev_point[1] - 1].reset()
+
+        next_grid = self.board[next_point[0] - 1][next_point[1] - 1]
 
         # If picking enemy's koma
-        if next_point_info != EMPTY_STR:
-            picked_koma = next_point_info[1]
+        if not next_grid.is_empty():
+            picked_koma = next_grid.koma
 
             # If picking promoted piece
-            picked_koma_index = KOMA_INFOS.csa==picked_koma
-            if KOMA_INFOS[picked_koma_index].promoted.iloc[0]:
-                picked_koma = (KOMA_INFOS
-                               .loc[picked_koma_index, 'beforepromote']
-                               .iloc[0])
+            if picked_koma and picked_koma.is_promoted:
+                picked_koma.depromote()
 
             self.mochigoma[teban].append(picked_koma)
+            picked_koma_csa = picked_koma.csa
 
-        moved_koma = [move[0], koma]
-        self.board[next_point[0] - 1][next_point[1] - 1] = moved_koma
+        next_grid_new = Grid(move[0], prev_koma)
+        self.board[next_point[0] - 1][next_point[1] - 1] = next_grid_new
 
         self.last_move_txt = move
         self.last_move_xy = [next_point[0] - 1, next_point[1] - 1]
         self.tesu += 1
 
-        return [moved_koma, picked_koma]
+        return [next_grid_new.koma.csa, picked_koma_csa]
 
     def get_piece_indexes(self, piece):
         '''Get indexes of a certain piece on a board.
@@ -301,11 +307,11 @@ class Board:
         '''
         pieces_index = [[], []]
         for j, column in enumerate(self.board):
-            for i, value in enumerate(column):
-                teban = value[0]
-                board_piece = value[1]
-                if board_piece == piece:
-                    pieces_index[teban==TEBAN_CODE[1]].append([j, i])
+            for i, grid in enumerate(column):
+                teban = grid.which_player
+
+                if grid.koma and grid.koma.csa == piece:
+                    pieces_index[teban == '-'].append([j, i])
 
         return pieces_index
 
@@ -357,7 +363,6 @@ class Board:
         '''
         is_forked_list = []
         sente_index, gote_index = self.get_piece_indexes(query_piece)
-
         options = [
             ['-',  1, sente_index],
             ['+', -1,  gote_index]
@@ -378,7 +383,7 @@ class Board:
                 # For each act of query_piece
                 for act in PIECE_TO_ACT[query_piece]:
                     for move in act:
-                        next_i = i + move[0]
+                        next_i = i + move[0] * direction
                         next_j = j + move[1] * direction
 
                         # If next_i or next_j is outside of the board
@@ -387,18 +392,18 @@ class Board:
                             break
 
                         # If conflict with other piece
-                        if self.board[next_i][next_j] != EMPTY_STR:
-                            b = self.board[next_i][next_j]
+                        if not self.board[next_i][next_j].is_empty():
+                            grid = self.board[next_i][next_j]
 
-                            if b[0] == enemys_pm:
-                                fork_candidates.append(b[1])
+                            if grid.which_player == enemys_pm:
+                                fork_candidates.append(grid.koma.csa)
 
                             break
 
                 # If all targets in fork_candidates,
                 #  print board & info.
                 for target in targets:
-                    if not target in fork_candidates:
+                    if target not in fork_candidates:
                         break
                 else:
                     if display:

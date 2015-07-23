@@ -10,7 +10,7 @@ import numpy as np
 
 import pdb
 
-from .board import Board, EMPTY_STR
+from .board import Board
 from .pieces_act import KOMAOCHI_CSA_TO_CODE, KOMA_INFOS
 
 REGEXP_MOVES = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
@@ -61,7 +61,7 @@ class Kifu:
     def from_csa(self, csa_txt):
         self.kifu_txt = csa_txt
         self.extracted = self.extract_infomation()
-        self.reset_board(teai=self.teai)        
+        self.reset_board()
 
     def __repr__(self):
         return 'pyogi.kifu object'
@@ -75,7 +75,6 @@ class Kifu:
 
     def reset_board(self):
         self.board.set_initial_state(teai=self.teai)
-        self.teai = self.teai
 
     def extract_infomation(self):
         '''Extract infomations from kifu text.
@@ -215,10 +214,8 @@ class Kifu:
                 for j in range(9):
                     grid = new_board[i][j]
                     
-                    if grid == EMPTY_STR or grid[0] == '-':
-                        continue
-
-                    sum_list[i][j].append(grid[1])
+                    if not (grid.is_empty() or grid.which_player == '-'):
+                        sum_list[i][j].append(grid.koma.csa)
 
         
         for koma_csa in KOMA_INFOS.csa.pipe(list):

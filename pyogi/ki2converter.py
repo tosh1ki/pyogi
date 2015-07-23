@@ -3,11 +3,11 @@
 
 import re
 
-from .board import *
+from .board import Board
 from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA, KOMA_INFOS
 
 
-SYMBOL_TO_CODE = {'▲': TEBAN_CODE[0], '△': TEBAN_CODE[1]}
+SYMBOL_TO_CODE = {'▲': '+', '△': '-'}
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 REGEX_KI2_MOVE = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
 OGOMA = KOMA_INFOS.query('ogoma == True').csa.pipe(list)
@@ -244,7 +244,7 @@ class Ki2converter:
                         prev_pos_candidates.append([pi, pj])
 
                     # If conflict with other pieces
-                    if self.board[next_i][next_j] != EMPTY_STR:
+                    if not self.board[next_i][next_j].is_empty():
                         break
 
         # If promote
