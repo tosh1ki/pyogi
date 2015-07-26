@@ -12,6 +12,7 @@ from pyogi.ki2converter import *
 if __name__ == '__main__':
 
     # Convert kifu        
+    csa_list = []
     for n in range(0, 50):
     
         path = ('~/data/shogi/2chkifu/{0}000{1}/{2:0>5}.KI2'
@@ -25,3 +26,7 @@ if __name__ == '__main__':
         ki2converter.from_path(path_ki2)
         
         csa = ki2converter.to_csa()
+
+        csa_list.append(csa)
+
+    print(csa_list[25][:20])
