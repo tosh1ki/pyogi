@@ -7,8 +7,8 @@ font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
 from .pieces_act import KOMA_INFOS, KOMAOCHI_OPTIONS, PIECE_TO_ACT
-from .grid import Grid
-from .koma import Koma
+from .grid cimport Grid
+from .koma cimport Koma
 
 import pdb
 
