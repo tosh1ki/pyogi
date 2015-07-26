@@ -2,6 +2,7 @@
 EMPTY_PLAYER = ' '
 EMPTY_CSA = <Koma>None
 
+
 cdef class Grid:
 
     '''Grid class
@@ -34,6 +35,6 @@ cdef class Grid:
     def is_of_sente(self):
         return self.which_player == '+'
 
-    cdef reset(self):
+    cdef void reset(self):
         self.which_player = EMPTY_PLAYER
         self.koma = EMPTY_CSA
