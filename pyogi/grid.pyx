@@ -27,7 +27,7 @@ cdef class Grid:
         if self.which_player != EMPTY_PLAYER and self.koma != EMPTY_CSA:
             return self.which_player + self.koma.csa
         else:
-            return EMPTY_PLAYER + EMPTY_CSA
+            return '   '
 
     cpdef is_empty(self):
         return self.which_player == EMPTY_PLAYER
