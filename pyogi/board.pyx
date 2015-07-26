@@ -269,8 +269,8 @@ cdef class Board:
             j = int(dp[1]) - 1
             p = dp[2:]
 
-            if self[i][j].which_player == '-' and self[i][j].koma == p:
-                self[i][j].reset()
+            if self.board[i][j].which_player == '-' and self.board[i][j].koma.csa == p:
+                self.board[i][j].reset()
 
         self.last_move_txt = ''
         self.last_move_xy = []
