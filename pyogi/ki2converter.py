@@ -6,6 +6,7 @@ import re
 from .board import Board
 from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA, KOMA_INFOS
 
+import pdb
 
 SYMBOL_TO_CODE = {'▲': '+', '△': '-'}
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
@@ -167,6 +168,7 @@ class Ki2converter:
 
             # If move_ki2_to_csa cannot read `move_ki2`
             if not move_csa:
+                print(self.board)
                 raise Exception('Parse error at Kifu.move_ki2_to_csa')
 
             self.board.move(move_csa)
@@ -308,12 +310,12 @@ class Ki2converter:
                 if re.findall('(?<!不)成', matched[3]):
                     if direction == 1:
                         prev_pos_candidates = filter(
-                            lambda x: 0 <= x[1] <= 2 or 0 <= j <= 2,
+                            lambda x: (0 <= x[1] <= 2) or (0 <= j <= 2),
                             prev_pos_candidates
                         )
                     else:
                         prev_pos_candidates = filter(
-                            lambda x: 6 <= x[1] <= 8 or 6 <= j <= 8,
+                            lambda x: (6 <= x[1] <= 8) or (6 <= j <= 8),
                             prev_pos_candidates
                         )
 
