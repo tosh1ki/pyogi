@@ -10,6 +10,8 @@ from .pieces_act import KOMA_INFOS, KOMAOCHI_OPTIONS, PIECE_TO_ACT
 from .grid cimport Grid
 from .koma cimport Koma
 
+from cpython cimport bool as bool_t
+
 import pdb
 
 row_separator = '-' * 37
@@ -63,7 +65,7 @@ initial_state_csa = '''
 '''
 
 
-class Board:
+cdef class Board:
 
     '''Shogi board class
 
@@ -85,6 +87,13 @@ class Board:
     >>> board.move('-3122GI')
     >>> print(board)
     '''
+    cdef:
+        readonly list board
+        readonly list mochigoma
+        readonly int tesu
+        readonly str last_move_txt, teai
+        public list players
+        readonly list last_move_xy
 
     def __init__(self):
         self.board = []
@@ -268,7 +277,7 @@ class Board:
         self.tesu = 0
         self.teai = teai
 
-    def move(self, move):
+    cpdef move(self, move):
         '''Move a piece on a board
 
         Args
@@ -277,14 +286,19 @@ class Board:
             Move CSA format
             ex. '+9998KY'
         '''
+        cdef:
+            int teban
+            list points, prev_point, next_point
+            str koma, picked_koma_csa = ''
+            Koma m, picked_koma
+            Grid prev_grid, next_grid, next_grid_new
+
         teban = int(move[0] != '+')  # 0 if sente, 1 if gote
 
         points = list(map(int, list(move[1:5])))
         prev_point = points[0:2]
         next_point = points[2:4]
         koma = move[5:]
-
-        picked_koma_csa = ''
 
         if prev_point == [0, 0]:
             # use mochigoma
@@ -339,6 +353,13 @@ class Board:
         >>> board.get_piece_indexes('HI')
         [[[7, 1]], [[1, 7]]]
         '''
+        cdef:
+            int i, j
+            str teban
+            list column
+            Grid grid
+            list pieces_index
+
         pieces_index = [[], []]
         for j, column in enumerate(self.board):
             for i, grid in enumerate(column):
@@ -366,6 +387,8 @@ class Board:
             is_forked_list[0] : Is sente's piece forked?
             is_forked_list[1] : Is  gote's piece forked?
         '''
+        cdef str query_piece
+
         results = [False, False]
 
         for query_piece in list(KOMA_INFOS.csa):
