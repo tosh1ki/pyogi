@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from .koma import Koma
 from .pieces_act import KOMA_INFOS
 
