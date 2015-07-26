@@ -304,6 +304,20 @@ class Ki2converter:
                         prev_pos_candidates
                     )
 
+                # 22と77に後手の角がいるときに，55角成という符号が-7755UMになる
+                if re.findall('(?<!不)成', matched[3]):
+                    if direction == 1:
+                        prev_pos_candidates = filter(
+                            lambda x: 0 <= x[1] <= 2 or 0 <= j <= 2,
+                            prev_pos_candidates
+                        )
+                    else:
+                        prev_pos_candidates = filter(
+                            lambda x: 6 <= x[1] <= 8 or 6 <= j <= 8,
+                            prev_pos_candidates
+                        )
+
+
                 # cf. http://www.shogi.or.jp/faq/kihuhyouki.html
                 # "竜が2枚の場合はやはり動作を優先します。
                 #  ただし、「直」は使わずに「左」「右」で記入します。"
@@ -323,6 +337,9 @@ class Ki2converter:
                 prev_pos_candidates = list(prev_pos_candidates)
                 if (not prev_pos_candidates or
                         len(prev_pos_candidates) >= 2):
+
+                    print(self.board)
+                    print(move_ki2)
                     raise RuntimeError('Parse Error')
 
                 prev_pos = prev_pos_candidates[0]
