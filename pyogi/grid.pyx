@@ -29,12 +29,12 @@ cdef class Grid:
         else:
             return EMPTY_PLAYER + EMPTY_CSA
 
-    def is_empty(self):
+    cpdef is_empty(self):
         return self.which_player == EMPTY_PLAYER
 
-    def is_of_sente(self):
+    cpdef is_of_sente(self):
         return self.which_player == '+'
 
-    cdef void reset(self):
+    cpdef reset(self):
         self.which_player = EMPTY_PLAYER
         self.koma = EMPTY_CSA
