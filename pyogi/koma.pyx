@@ -1,6 +1,5 @@
 from .pieces_act import KOMA_INFOS
 
-from cpython cimport bool as bool_t
 
 CSA_TO_INFO = KOMA_INFOS.set_index('csa').T.to_dict()
 KOMA_CSA_ALL = list(KOMA_INFOS.csa)
@@ -14,11 +13,6 @@ cdef class Koma:
     -------------------
     piece_type : str
     '''
-
-    cdef:
-        readonly str kanji, kanji_rear, csa, csa_rear
-        readonly bool_t is_promoted
-        readonly list act
 
     def __init__(self, piece_type):
         if piece_type not in KOMA_CSA_ALL:
