@@ -306,19 +306,6 @@ class Ki2converter:
                         prev_pos_candidates
                     )
 
-                # 22と77に後手の角がいるときに，55角成という符号が-7755UMになる
-                if re.findall('(?<!不)成', matched[3]):
-                    if direction == 1:
-                        prev_pos_candidates = filter(
-                            lambda x: (0 <= x[1] <= 2) or (0 <= j <= 2),
-                            prev_pos_candidates
-                        )
-                    else:
-                        prev_pos_candidates = filter(
-                            lambda x: (6 <= x[1] <= 8) or (6 <= j <= 8),
-                            prev_pos_candidates
-                        )
-
 
                 # cf. http://www.shogi.or.jp/faq/kihuhyouki.html
                 # "竜が2枚の場合はやはり動作を優先します。
