@@ -84,7 +84,7 @@ cdef class Board:
     >>> print(board)
     '''
     def __init__(self):
-        self.board = []
+        self.board = [[''] * 9 for _ in range(9)]
         self.mochigoma = []
         self.tesu = 0
         self.last_move_txt = ''
@@ -200,7 +200,7 @@ cdef class Board:
         else:
             plt.show()
 
-    cpdef get_mochigoma_str(self, teban, kanji=True):
+    cpdef str get_mochigoma_str(self, int teban, bool_t kanji=True):
         '''Returns string of all mochigoma.
 
         teban : int
@@ -228,7 +228,7 @@ cdef class Board:
 
         return ' '.join(mochigoma_list)
 
-    cpdef set_initial_state(self, teai='hirate'):
+    cpdef int set_initial_state(self, str teai='hirate'):
         '''Set state as initial state (with handicap).
 
         Args
@@ -240,7 +240,8 @@ cdef class Board:
         '''
         cdef:
             int n, i, j
-            str move
+            str move, p, dp
+            list moves
 
         self.board = [[Grid()] * 9 for n in range(9)]
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
@@ -272,7 +273,7 @@ cdef class Board:
         self.tesu = 0
         self.teai = teai
 
-    cpdef move(self, move):
+    cpdef list move(self, str move):
         '''Move a piece on a board
 
         Args

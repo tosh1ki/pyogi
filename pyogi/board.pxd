@@ -14,6 +14,6 @@ cdef class Board:
         public list players
         readonly list last_move_xy
 
-    cpdef get_mochigoma_str(self, teban, kanji=*)
-    cpdef set_initial_state(self, teai=*)
-    cpdef move(self, move)
+    cpdef str get_mochigoma_str(self, int teban, bool_t kanji=*)
+    cpdef int set_initial_state(self, str teai=*)
+    cpdef list move(self, str move)
