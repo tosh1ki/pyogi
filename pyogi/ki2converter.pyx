@@ -1,6 +1,6 @@
 import re
 
-from .board import Board
+from .board cimport Board
 from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA, KOMA_INFOS
 
 import pdb
@@ -15,16 +15,21 @@ TO_INT.update(dict(zip(tuple('一二三四五六七八九'), range(1, 10))))
 TO_INT.update(dict(zip(tuple('１２３４５６７８９'), range(1, 10))))
 
 
-class Ki2converter:
+cdef class Ki2converter:
 
     '''Converter from KI2 format to CSA format.
     '''
+    cdef:
+        readonly str ki2_txt, comments, infos
+        readonly list moves_ki2
+        readonly Board board
 
     def __init__(self):
         self.ki2_txt = ''
         self.moves_ki2 = []
-        self.comments = []
-        self.infos = []
+        self.comments = ''
+        self.infos = ''
+        self.board = Board()
 
     def from_path(self, ki2path):
 
@@ -47,7 +52,11 @@ class Ki2converter:
         self.ki2_txt = ki2_txt
         self.from_lines(ki2_txt.split('\n'))
 
-    def from_lines(self, lines):
+    cpdef from_lines(self, lines):
+        cdef:
+            str line, move
+            int tesu_line
+
         moves = []
         comments = []
         infos = []
@@ -125,7 +134,6 @@ class Ki2converter:
 
     def to_csa(self):
 
-        self.board = Board()
         header_infos = self.extract_header_infos()
 
         if header_infos == -1:
