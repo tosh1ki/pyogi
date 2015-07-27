@@ -4,18 +4,20 @@ import copy
 from itertools import chain
 import numpy as np
 
+from .board cimport Board
+from .pieces_act import KOMAOCHI_CSA_TO_CODE, KOMA_INFOS
 
 import pdb
 
-from .board import Board
-from .pieces_act import KOMAOCHI_CSA_TO_CODE, KOMA_INFOS
+from cpython cimport bool as bool_t
+
 
 REGEXP_MOVES = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
 REGEXP_DATETIME = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S | re.M)
 REGEXP_PLAYERS = re.compile('\'対局者名\nN\+\n(.+?)\nN-\n(.+?)\n', re.S)
 
 
-class Kifu:
+cdef class Kifu:
 
     '''Class for handling kifu
 
@@ -36,6 +38,12 @@ class Kifu:
     description
     teai
     '''
+    cdef:
+        readonly str kifu_txt, datetime, description, teai
+        readonly list moves, players, times
+        readonly bool_t sente_win, gote_win, is_sennichite, is_jishogi, is_chudan, extracted
+        readonly Board board
+        readonly int tesu
 
     def __init__(self):
         self.kifu_txt = ''
@@ -52,10 +60,11 @@ class Kifu:
         self.players = []
         self.times = []
         self.teai = 'hirate'
+        self.extracted = None
 
         self.board = Board()
 
-    def from_csa(self, csa_txt):
+    cpdef int from_csa(self, str csa_txt):
         self.kifu_txt = csa_txt
         self.extracted = self.extract_infomation()
         self.reset_board()
@@ -66,7 +75,7 @@ class Kifu:
     def __str__(self):
         return self.kifu_txt
 
-    def set_players_name(self, names):
+    cpdef int set_players_name(self, list names):
         self.players = names
         self.board.players = names
 
@@ -144,7 +153,7 @@ class Kifu:
         else:
             raise RuntimeError('Invalid mode', mode)
 
-    def get_forking(self, target, display=True):
+    cpdef get_forking(self, list target, bool_t display=True):
         '''Returns list of a time which there is a piece forked.
 
         For example, if this function is called like 
@@ -159,30 +168,34 @@ class Kifu:
         sente_forked_and_picked : list
         gote_forked_and_picked : list
         '''
-        sente_forked = []
-        gote_forked = []
-        sente_forked_and_picked = []
-        gote_forked_and_picked = []
-        appended = False
+        cdef:
+            list sente_forked_list = []
+            list gote_forked_list = []
+            list sente_forked_and_picked = []
+            list gote_forked_and_picked = []
+            bool_t appended = False, sente_forked, gote_forked
+            int n
+            str move
+            list results
 
         for n, move in enumerate(self.moves):
             if not move.startswith('%'):
                 res_move = self.board.move(move)
-                results = self.board.is_forking(target, display=False)
+                sente_forked, gote_forked = self.board.is_forking(target, display=False)
 
                 # If forking pieces of target
-                if results[0]:
-                    sente_forked.append(n + 1)
-                if results[1]:
-                    gote_forked.append(n + 1)
+                if sente_forked:
+                    sente_forked_list.append(n + 1)
+                if gote_forked:
+                    gote_forked_list.append(n + 1)
 
                 # If forked at previous state and picked piece of target,
                 # save and plot state.
-                if n - 1 in sente_forked and res_move[1] in target:
+                if n - 1 in sente_forked_list and res_move[1] in target:
                     sente_forked_and_picked.append(n + 1)
                     appended = True
 
-                if n - 1 in gote_forked and res_move[1] in target:
+                if n - 1 in gote_forked_list and res_move[1] in target:
                     gote_forked_and_picked.append(n + 1)
                     appended = True
 
@@ -192,7 +205,7 @@ class Kifu:
 
                 appended = False
 
-        return [sente_forked, gote_forked,
+        return [sente_forked_list, gote_forked_list,
                 sente_forked_and_picked, gote_forked_and_picked]
 
     def make_features(self):
