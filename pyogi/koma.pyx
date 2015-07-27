@@ -1,8 +1,8 @@
 from .pieces_act import KOMA_INFOS
 
 
-CSA_TO_INFO = KOMA_INFOS.set_index('csa').T.to_dict()
-KOMA_CSA_ALL = list(KOMA_INFOS.csa)
+cdef dict CSA_TO_INFO = KOMA_INFOS.set_index('csa').T.to_dict()
+cdef list KOMA_CSA_ALL = list(KOMA_INFOS.csa)
 
 
 cdef class Koma:
@@ -13,8 +13,7 @@ cdef class Koma:
     -------------------
     piece_type : str
     '''
-
-    def __init__(self, piece_type):
+    def __cinit__(self, piece_type):
         if piece_type not in KOMA_CSA_ALL:
             raise RuntimeError('Invalid piece_type:', piece_type)
 
@@ -37,7 +36,7 @@ cdef class Koma:
         self.csa, self.csa_rear = self.csa_rear, self.csa
         self.kanji, self.kanji_rear = self.kanji_rear, self.kanji
 
-    def promote(self):
+    cdef void promote(self):
         '''Promote this piece
         '''
         if not self.is_promoted:
@@ -46,7 +45,7 @@ cdef class Koma:
         else:
             raise RuntimeError('This piece is already promoted.')
 
-    def depromote(self):
+    cdef void depromote(self):
         '''Return promoted piece
         '''
         if self.is_promoted:

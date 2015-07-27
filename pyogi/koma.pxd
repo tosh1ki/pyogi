@@ -7,3 +7,5 @@ cdef class Koma:
         readonly list act
 
     cdef void reverse(self)
+    cdef void promote(self)
+    cdef void depromote(self)
