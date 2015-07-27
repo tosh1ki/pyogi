@@ -212,13 +212,16 @@ cdef class Board:
         else:
             plt.show()
 
-    def get_mochigoma_str(self, teban, kanji=True):
+    cpdef get_mochigoma_str(self, teban, kanji=True):
         '''Returns string of all mochigoma.
 
         teban : int
             0 : sente
             1 : gote
         '''
+        cdef:
+            Koma k, m
+
         if kanji:
             mochigoma = [m.kanji for m in self.mochigoma[teban]]
             koma = list(KOMA_INFOS.kanji)
@@ -237,7 +240,7 @@ cdef class Board:
 
         return ' '.join(mochigoma_list)
 
-    def set_initial_state(self, teai='hirate'):
+    cpdef set_initial_state(self, teai='hirate'):
         '''Set state as initial state (with handicap).
 
         Args
