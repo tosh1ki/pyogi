@@ -7,10 +7,6 @@ font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
 from .pieces_act import KOMA_INFOS, KOMAOCHI_OPTIONS, PIECE_TO_ACT
-from .grid cimport Grid
-from .koma cimport Koma
-
-from cpython cimport bool as bool_t
 
 import pdb
 
@@ -87,14 +83,6 @@ cdef class Board:
     >>> board.move('-3122GI')
     >>> print(board)
     '''
-    cdef:
-        readonly list board
-        readonly list mochigoma
-        readonly int tesu
-        readonly str last_move_txt, teai
-        public list players
-        readonly list last_move_xy
-
     def __init__(self):
         self.board = []
         self.mochigoma = []
