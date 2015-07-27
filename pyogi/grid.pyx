@@ -1,6 +1,9 @@
 
-EMPTY_PLAYER = ' '
-EMPTY_CSA = <Koma>None
+cdef:
+    str EMPTY_PLAYER = ' '
+    EMPTY_CSA = <Koma>None
+    str SENTE_STR = '+'
+    list PLAYER_LIST = [EMPTY_PLAYER, '+', '-']
 
 
 cdef class Grid:
@@ -12,13 +15,13 @@ cdef class Grid:
     which_player : optional (default = None)
     csa_piece : optional (default = None)
     '''
-    def __init__(self, which_player=EMPTY_PLAYER, csa_piece=EMPTY_CSA):
-        if which_player in [EMPTY_PLAYER, '+', '-']:
+    def __init__(self, str which_player=EMPTY_PLAYER, str csa_piece=''):
+        if which_player in PLAYER_LIST:
             self.which_player = which_player
         else:
             raise RuntimeError('Invalid which_player:', which_player)
 
-        if csa_piece != EMPTY_CSA:
+        if csa_piece != '':
             self.koma = Koma(csa_piece)
         else:
             self.koma = EMPTY_CSA
@@ -29,12 +32,12 @@ cdef class Grid:
         else:
             return '   '
 
-    cpdef is_empty(self):
+    cpdef bool_t is_empty(self):
         return self.which_player == EMPTY_PLAYER
 
-    cpdef is_of_sente(self):
-        return self.which_player == '+'
+    cpdef bool_t is_of_sente(self):
+        return self.which_player == SENTE_STR
 
-    cpdef reset(self):
+    cpdef int reset(self):
         self.which_player = EMPTY_PLAYER
         self.koma = EMPTY_CSA
