@@ -250,6 +250,10 @@ cdef class Board:
             ex. hirate, kakuoti, hisyaoti, kyouoti,migikyouoti,
                 hikyouoti, nimaioti, sanmaioti, yonmaioti, rokumaioti
         '''
+        cdef:
+            int n, i, j
+            str move
+
         self.board = [[Grid()] * 9 for n in range(9)]
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
