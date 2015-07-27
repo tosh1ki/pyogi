@@ -5,12 +5,13 @@ from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAIT
 
 import pdb
 
-SYMBOL_TO_CODE = {'▲': '+', '△': '-'}
+
+cdef dict SYMBOL_TO_CODE = {'▲': '+', '△': '-'}
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 REGEX_KI2_MOVE = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
-OGOMA = KOMA_INFOS.query('ogoma == True').csa.pipe(list)
+cdef list OGOMA = KOMA_INFOS.query('ogoma == True').csa.pipe(list)
 
-TO_INT = {str(r): r for r in range(1, 10)}
+cdef dict TO_INT = {str(r): r for r in range(1, 10)}
 TO_INT.update(dict(zip(tuple('一二三四五六七八九'), range(1, 10))))
 TO_INT.update(dict(zip(tuple('１２３４５６７８９'), range(1, 10))))
 
@@ -43,7 +44,7 @@ cdef class Ki2converter:
         self.from_lines(lines)
         self.ki2_txt = ''.join(lines)
 
-    def from_txt(self, ki2_txt):
+    cpdef int from_txt(self, str ki2_txt):
         '''
 
         ki2_txt : str
@@ -52,7 +53,7 @@ cdef class Ki2converter:
         self.ki2_txt = ki2_txt
         self.from_lines(ki2_txt.split('\n'))
 
-    cpdef from_lines(self, lines):
+    cpdef int from_lines(self, list lines):
         cdef:
             str line, move
             int tesu_line
