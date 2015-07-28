@@ -158,13 +158,14 @@ cdef class Board:
             for i, b_i in enumerate(board_indexes):
                 grid = self.board[b_i][j]
 
-                x = ((8 - i) + 1 / 2) * dx
-                y = ((8 - j) + 1 / 2) * dy
+                x = ((8 - i) + 0.5) * dx
+                y = ((8 - j) + 0.5) * dy
 
                 if not grid.is_empty():
                     is_gote = not grid.is_of_sente()
                     # TOFIX: 60, 80にするとよくわからないけどうまくいく
-                    plt.text(x - fontsize / 2 / 60, y - fontsize / 2 / 80,
+                    plt.text(x - fontsize / 2 / 60, 
+                             y - fontsize / 2 / 80,
                              grid.koma.kanji,
                              size=fontsize, rotation=180 * is_gote)
 
@@ -208,7 +209,8 @@ cdef class Board:
             1 : gote
         '''
         cdef:
-            Koma k, m
+            Koma m
+            str k
 
         if kanji:
             mochigoma = [m.kanji for m in self.mochigoma[teban]]
