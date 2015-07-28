@@ -27,8 +27,6 @@ if __name__ == '__main__':
     
     for path_ki2 in path_ki2_list:
 
-        print(path_ki2)
-        
         ki2converter = Ki2converter()
         ki2converter.from_path(path_ki2)
 
@@ -44,8 +42,8 @@ if __name__ == '__main__':
             continue
 
         res = kifu.get_forking(['OU', 'HI'], display=False)
-        if res[2] or res[3]:
-            print(kifu.players)
+        # if res[2] or res[3]:
+        #     print(kifu.players)
 
         # Data
         #   fork: sente forked | gote forked
@@ -64,6 +62,9 @@ if __name__ == '__main__':
                                (not kifu.sente_win and res[3]!=[]))
             }
         )
+
+        if len(res_table) > 100:
+            break
         
 
     # Output

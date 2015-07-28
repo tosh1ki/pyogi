@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os
 from collections import Counter
 import matplotlib
@@ -10,8 +7,6 @@ font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
 from .pieces_act import KOMA_INFOS, KOMAOCHI_OPTIONS, PIECE_TO_ACT
-from .grid import Grid
-from .koma import Koma
 
 import pdb
 
@@ -22,8 +17,51 @@ all_mochigoma_csa = (['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2
                      + ['HI', 'KA', 'OU'])
 all_mochigoma = list(map(Koma, all_mochigoma_csa))
 
+initial_state_csa = '''
++0017FU
++0027FU
++0037FU
++0047FU
++0057FU
++0067FU
++0077FU
++0087FU
++0097FU
++0019KY
++0029KE
++0039GI
++0049KI
++0059OU
++0069KI
++0079GI
++0089KE
++0099KY
++0028HI
++0088KA
+-0013FU
+-0023FU
+-0033FU
+-0043FU
+-0053FU
+-0063FU
+-0073FU
+-0083FU
+-0093FU
+-0011KY
+-0021KE
+-0031GI
+-0041KI
+-0051OU
+-0061KI
+-0071GI
+-0081KE
+-0091KY
+-0082HI
+-0022KA
+'''
 
-class Board:
+
+cdef class Board:
 
     '''Shogi board class
 
@@ -45,9 +83,8 @@ class Board:
     >>> board.move('-3122GI')
     >>> print(board)
     '''
-
     def __init__(self):
-        self.board = []
+        self.board = [[''] * 9 for _ in range(9)]
         self.mochigoma = []
         self.tesu = 0
         self.last_move_txt = ''
@@ -121,13 +158,14 @@ class Board:
             for i, b_i in enumerate(board_indexes):
                 grid = self.board[b_i][j]
 
-                x = ((8 - i) + 1 / 2) * dx
-                y = ((8 - j) + 1 / 2) * dy
+                x = ((8 - i) + 0.5) * dx
+                y = ((8 - j) + 0.5) * dy
 
                 if not grid.is_empty():
                     is_gote = not grid.is_of_sente()
                     # TOFIX: 60, 80にするとよくわからないけどうまくいく
-                    plt.text(x - fontsize / 2 / 60, y - fontsize / 2 / 80,
+                    plt.text(x - fontsize / 2 / 60, 
+                             y - fontsize / 2 / 80,
                              grid.koma.kanji,
                              size=fontsize, rotation=180 * is_gote)
 
@@ -163,13 +201,17 @@ class Board:
         else:
             plt.show()
 
-    def get_mochigoma_str(self, teban, kanji=True):
+    cpdef str get_mochigoma_str(self, int teban, bool_t kanji=True):
         '''Returns string of all mochigoma.
 
         teban : int
             0 : sente
             1 : gote
         '''
+        cdef:
+            Koma m
+            str k
+
         if kanji:
             mochigoma = [m.kanji for m in self.mochigoma[teban]]
             koma = list(KOMA_INFOS.kanji)
@@ -188,7 +230,7 @@ class Board:
 
         return ' '.join(mochigoma_list)
 
-    def set_initial_state(self, teai='hirate'):
+    cpdef int set_initial_state(self, str teai='hirate'):
         '''Set state as initial state (with handicap).
 
         Args
@@ -198,16 +240,15 @@ class Board:
             ex. hirate, kakuoti, hisyaoti, kyouoti,migikyouoti,
                 hikyouoti, nimaioti, sanmaioti, yonmaioti, rokumaioti
         '''
+        cdef:
+            int n, i, j
+            str move, p, dp
+            list moves
+
         self.board = [[Grid()] * 9 for n in range(9)]
         self.mochigoma = [list(all_mochigoma), list(all_mochigoma)]
 
-        curdir = os.path.dirname(__file__)
-
-        csapath = os.path.join(curdir, 'initial_state_hirate.csa')
-        with open(csapath, 'r') as f:
-            initial_csa = f.read()
-
-        moves = initial_csa.split('\n')
+        moves = initial_state_csa.split('\n')
 
         for move in moves:
             if move:
@@ -226,15 +267,15 @@ class Board:
             j = int(dp[1]) - 1
             p = dp[2:]
 
-            if self[i][j].which_player == '-' and self[i][j].koma == p:
-                self[i][j].reset()
+            if self.board[i][j].which_player == '-' and self.board[i][j].koma.csa == p:
+                self.board[i][j].reset()
 
         self.last_move_txt = ''
         self.last_move_xy = []
         self.tesu = 0
         self.teai = teai
 
-    def move(self, move):
+    cpdef list move(self, str move):
         '''Move a piece on a board
 
         Args
@@ -243,14 +284,19 @@ class Board:
             Move CSA format
             ex. '+9998KY'
         '''
+        cdef:
+            int teban
+            list points, prev_point, next_point
+            str koma, picked_koma_csa = ''
+            Koma m, picked_koma
+            Grid prev_grid, next_grid, next_grid_new
+
         teban = int(move[0] != '+')  # 0 if sente, 1 if gote
 
         points = list(map(int, list(move[1:5])))
         prev_point = points[0:2]
         next_point = points[2:4]
         koma = move[5:]
-
-        picked_koma_csa = ''
 
         if prev_point == [0, 0]:
             # use mochigoma
@@ -305,6 +351,13 @@ class Board:
         >>> board.get_piece_indexes('HI')
         [[[7, 1]], [[1, 7]]]
         '''
+        cdef:
+            int i, j
+            str teban
+            list column
+            Grid grid
+            list pieces_index
+
         pieces_index = [[], []]
         for j, column in enumerate(self.board):
             for i, grid in enumerate(column):
@@ -332,6 +385,8 @@ class Board:
             is_forked_list[0] : Is sente's piece forked?
             is_forked_list[1] : Is  gote's piece forked?
         '''
+        cdef str query_piece
+
         results = [False, False]
 
         for query_piece in list(KOMA_INFOS.csa):
@@ -341,7 +396,7 @@ class Board:
 
         return results
 
-    def is_forking_query(self, query_piece, targets, display=True):
+    cpdef list is_forking_query(self, str query_piece, list targets, bool_t display=True):
         '''Check that there is a piece which forked by enemy's piece.
         Search a state which `query_piece` forks all pieces of `target` at.
 
@@ -361,7 +416,14 @@ class Board:
             is_forked_list[0] : Is sente's piece forked?
             is_forked_list[1] : Is  gote's piece forked?
         '''
-        is_forked_list = []
+        cdef:
+            list is_forked_list = [], fork_candidates
+            list sente_index, gote_index, options, option
+            str enemys_pm, target
+            int direction, i, j, next_i, next_j
+            list index, act, move
+            bool_t is_forked
+
         sente_index, gote_index = self.get_piece_indexes(query_piece)
         options = [
             ['-',  1, sente_index],

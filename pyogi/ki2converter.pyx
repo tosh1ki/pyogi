@@ -1,32 +1,36 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import re
 
-from .board import Board
+from .board cimport Board
 from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA, KOMA_INFOS
 
+import pdb
 
-SYMBOL_TO_CODE = {'▲': '+', '△': '-'}
+
+cdef dict SYMBOL_TO_CODE = {'▲': '+', '△': '-'}
 REGEX_MOVE = re.compile('([▲△](?:同\u3000)?[^▲△\s]+)')
 REGEX_KI2_MOVE = re.compile('([▲△])(同|[\d一二三四五六七八九]{2})(.)(.+)?')
-OGOMA = KOMA_INFOS.query('ogoma == True').csa.pipe(list)
+cdef list OGOMA = KOMA_INFOS.query('ogoma == True').csa.pipe(list)
 
-TO_INT = {str(r): r for r in range(1, 10)}
+cdef dict TO_INT = {str(r): r for r in range(1, 10)}
 TO_INT.update(dict(zip(tuple('一二三四五六七八九'), range(1, 10))))
 TO_INT.update(dict(zip(tuple('１２３４５６７８９'), range(1, 10))))
 
 
-class Ki2converter:
+cdef class Ki2converter:
 
     '''Converter from KI2 format to CSA format.
     '''
+    cdef:
+        readonly str ki2_txt, comments, infos
+        readonly list moves_ki2
+        readonly Board board
 
     def __init__(self):
         self.ki2_txt = ''
         self.moves_ki2 = []
-        self.comments = []
-        self.infos = []
+        self.comments = ''
+        self.infos = ''
+        self.board = Board()
 
     def from_path(self, ki2path):
 
@@ -40,7 +44,7 @@ class Ki2converter:
         self.from_lines(lines)
         self.ki2_txt = ''.join(lines)
 
-    def from_txt(self, ki2_txt):
+    cpdef int from_txt(self, str ki2_txt):
         '''
 
         ki2_txt : str
@@ -49,7 +53,11 @@ class Ki2converter:
         self.ki2_txt = ki2_txt
         self.from_lines(ki2_txt.split('\n'))
 
-    def from_lines(self, lines):
+    cpdef int from_lines(self, list lines):
+        cdef:
+            str line, move
+            int tesu_line
+
         moves = []
         comments = []
         infos = []
@@ -127,7 +135,6 @@ class Ki2converter:
 
     def to_csa(self):
 
-        self.board = Board()
         header_infos = self.extract_header_infos()
 
         if header_infos == -1:
@@ -167,6 +174,7 @@ class Ki2converter:
 
             # If move_ki2_to_csa cannot read `move_ki2`
             if not move_csa:
+                print(self.board)
                 raise Exception('Parse error at Kifu.move_ki2_to_csa')
 
             self.board.move(move_csa)
@@ -304,6 +312,7 @@ class Ki2converter:
                         prev_pos_candidates
                     )
 
+
                 # cf. http://www.shogi.or.jp/faq/kihuhyouki.html
                 # "竜が2枚の場合はやはり動作を優先します。
                 #  ただし、「直」は使わずに「左」「右」で記入します。"
@@ -323,6 +332,9 @@ class Ki2converter:
                 prev_pos_candidates = list(prev_pos_candidates)
                 if (not prev_pos_candidates or
                         len(prev_pos_candidates) >= 2):
+
+                    print(self.board)
+                    print(move_ki2)
                     raise RuntimeError('Parse Error')
 
                 prev_pos = prev_pos_candidates[0]
