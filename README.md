@@ -7,6 +7,10 @@ Pyogi (**Py**thon s**yogi**) is a Python library for shogi analysis, display kif
 
 # Feature
 # Installation
+Execute following command to compile all Cython script.
+
+`python setup.py build_ext --inplace`
+
 # Documentation
 ## Typo in 2chkifu.zip
 Prefer to collect these typo manually.
