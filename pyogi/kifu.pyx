@@ -1,6 +1,5 @@
 import re
 import datetime as dt
-import copy
 from itertools import chain
 import numpy as np
 
@@ -135,8 +134,9 @@ cdef class Kifu:
             'cui' : Print state using command line
             'mpl' : Print state using matplotlib
         '''
-        new_board = copy.deepcopy(self.board)
-        new_board.set_initial_state(teai=new_board.teai)
+        new_board = Board()
+        new_board.players = self.board.players
+        new_board.set_initial_state(teai=self.board.teai)
 
         for n, move in enumerate(self.moves):
             if tesu == -1 or n < tesu:
@@ -209,9 +209,9 @@ cdef class Kifu:
                 sente_forked_and_picked, gote_forked_and_picked]
 
     def make_features(self):
-
-        new_board = copy.deepcopy(self.board)
-        new_board.set_initial_state(teai=new_board.teai)
+        new_board = Board()
+        new_board.players = self.board.players
+        new_board.set_initial_state(teai=self.board.teai)
 
         sum_list = [[[] for _ in range(9)] for _ in range(9)]
 
