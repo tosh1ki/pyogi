@@ -38,8 +38,9 @@ cdef class Kifu:
     teai
     '''
     cdef:
-        readonly str kifu_txt, datetime, description, teai
-        readonly list moves, players, times
+        readonly str kifu_txt, datetime, description
+        public str teai
+        public list moves, players, times
         readonly bool_t sente_win, gote_win, is_sennichite, is_jishogi, is_chudan, extracted
         readonly Board board
         readonly int tesu

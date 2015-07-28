@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
 
     # Visualize using heatmap of board
-    Y = X_unique[players_unique.index('羽生善治'), 0:81]
+    Y = X_unique[players_unique2.index('羽生善治'), 0:81]
     Y.shape = (9, 9)
 
     plt.pcolor(Y.T)
