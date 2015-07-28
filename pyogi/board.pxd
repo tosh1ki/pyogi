@@ -17,3 +17,4 @@ cdef class Board:
     cpdef str get_mochigoma_str(self, int teban, bool_t kanji=*)
     cpdef int set_initial_state(self, str teai=*)
     cpdef list move(self, str move)
+    cpdef list is_forking_query(self, str query_piece, list targets, bool_t display=*)

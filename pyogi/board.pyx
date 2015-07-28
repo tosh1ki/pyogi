@@ -394,7 +394,7 @@ cdef class Board:
 
         return results
 
-    def is_forking_query(self, query_piece, targets, display=True):
+    cpdef list is_forking_query(self, str query_piece, list targets, bool_t display=True):
         '''Check that there is a piece which forked by enemy's piece.
         Search a state which `query_piece` forks all pieces of `target` at.
 
@@ -414,7 +414,14 @@ cdef class Board:
             is_forked_list[0] : Is sente's piece forked?
             is_forked_list[1] : Is  gote's piece forked?
         '''
-        is_forked_list = []
+        cdef:
+            list is_forked_list = [], fork_candidates
+            list sente_index, gote_index, options, option
+            str enemys_pm, target
+            int direction, i, j, next_i, next_j
+            list index, act, move
+            bool_t is_forked
+
         sente_index, gote_index = self.get_piece_indexes(query_piece)
         options = [
             ['-',  1, sente_index],
