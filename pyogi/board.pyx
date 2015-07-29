@@ -6,7 +6,8 @@ from matplotlib.patches import Circle
 font = {'family': 'TakaoGothic'}
 matplotlib.rc('font', **font)
 
-from .pieces_act import KOMA_INFOS, KOMAOCHI_OPTIONS, PIECE_TO_ACT
+from .pieces_act import KOMA_INFOS, PIECE_TO_ACT
+from .teai_options import KOMAOCHI_OPTIONS
 
 import pdb
 

@@ -1,7 +1,8 @@
 import re
 
 from .board cimport Board
-from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, TEAITXT_TO_TEAI, KOMAOCHI_CODE_TO_CSA, KOMA_INFOS
+from .pieces_act import PIECE_TO_ACT, TURN_PIECE_REVERSED, KANJI_TO_PIECE, KOMA_INFOS
+from teai_options import KOMAOCHI_CODE_TO_CSA, TEAITXT_TO_TEAI
 
 import pdb
 

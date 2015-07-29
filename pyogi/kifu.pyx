@@ -4,7 +4,8 @@ from itertools import chain
 import numpy as np
 
 from .board cimport Board
-from .pieces_act import KOMAOCHI_CSA_TO_CODE, KOMA_INFOS
+from .pieces_act import KOMA_INFOS
+from .teai_options import KOMAOCHI_CSA_TO_CODE
 
 import pdb
 
