@@ -10,5 +10,8 @@ python:
   - "nightly"
 # command to install dependencies
 install: "pip install -r requirements.txt"
+before_script:
+  - python setup.py build_ext --inplace
 # command to run tests
-script: nosetests
+script:
+  - python doc/sample_code/benchmark.py
