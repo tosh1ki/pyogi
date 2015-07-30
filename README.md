@@ -14,6 +14,9 @@ Execute following command to compile all Cython script.
 `python setup.py build_ext --inplace`
 
 # Documentation
+## Kifu included in this repository
+Kifu data of KI2 format in `kifu/` were copies of kifu data in [2chkifu.zip](https://code.google.com/p/zipkifubrowser/downloads/detail?name=2chkifu.zip&can=2&q=).
+
 ## Typo in 2chkifu.zip
 Prefer to collect these typo manually.
 
