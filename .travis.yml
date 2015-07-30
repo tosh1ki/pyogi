@@ -15,4 +15,4 @@ before_script:
 # command to run tests
 script:
   - cd ./doc/sample_code/
-  - python benchmark.py
+  - python checkscript.py
