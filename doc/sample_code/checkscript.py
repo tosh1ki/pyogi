@@ -13,10 +13,9 @@ if __name__ == '__main__':
 
     # Convert kifu        
     csa_list = []
-    for n in range(0, 1000):
+    for n in range(0, 10):
     
-        path = ('~/data/shogi/2chkifu/{0}000{1}/{2:0>5}.KI2'
-                .format(n // 10000, int(n < 10000), n))
+        path = './../../data/{0:0>5}.KI2'.format(n)
         path_ki2 = os.path.expanduser(path)
 
         if not os.path.exists(path_ki2):
@@ -29,4 +28,4 @@ if __name__ == '__main__':
 
         csa_list.append(csa)
 
-    print(csa_list[25][:20])
+    print(csa_list[5])
