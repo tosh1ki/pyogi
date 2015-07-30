@@ -14,4 +14,5 @@ before_script:
   - python setup.py build_ext --inplace
 # command to run tests
 script:
-  - python doc/sample_code/benchmark.py
+  - cd ./doc/sample_code/
+  - python benchmark.py
