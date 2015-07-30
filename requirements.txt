@@ -5,7 +5,7 @@
 requests
 #yaml
 #pdb
-collections
+#collections
 #datetime
 #sqlite3
 beautifulsoup4
