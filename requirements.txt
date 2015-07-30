@@ -9,6 +9,7 @@ pyyaml
 #datetime
 #sqlite3
 beautifulsoup4
+numexpr
 numpy
 pandas
 matplotlib
