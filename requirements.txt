@@ -1,13 +1,5 @@
-#os
-#sys
-#time
-#re
 requests
 pyyaml
-#pdb
-#collections
-#datetime
-#sqlite3
 beautifulsoup4
 numexpr
 numpy
