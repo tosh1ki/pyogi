@@ -1,9 +1,9 @@
 pyogi -- Shogi analysis in Python
 ===================================
 
-- develop : [![Build Status](https://travis-ci.org/tosh1ki/pyogi.svg?branch=develop)](https://travis-ci.org/tosh1ki/pyogi)
 
 [![Coverage Status](https://coveralls.io/repos/tosh1ki/pyogi/badge.svg?branch=master&service=github)](https://coveralls.io/github/tosh1ki/pyogi?branch=master)
+[![Build Status](https://travis-ci.org/tosh1ki/pyogi.svg?branch=develop)](https://travis-ci.org/tosh1ki/pyogi)
 
 Pyogi (**Py**thon s**yogi**) is a Python library for shogi analysis, display kifu, analyse kifu, crawl kifu.
 
