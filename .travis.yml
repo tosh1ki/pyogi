@@ -13,3 +13,6 @@ before_script:
 script:
   - cd ./doc/sample_code/
   - python checkscript.py
+  - coverage run --source=pyogi checkscript.py test
+after_success:
+  coveralls
