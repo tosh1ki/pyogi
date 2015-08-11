@@ -13,7 +13,7 @@ before_script:
   - python setup.py build_ext --inplace
 # command to run tests
 script:
-  - cd ./doc/sample_code/
+  - cd ./ci
   - python checkscript.py
   - coverage run --source=pyogi checkscript.py test
 after_success:
