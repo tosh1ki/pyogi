@@ -8,3 +8,5 @@ __pycache__/
 *.c
 build/
 *.html
+*.sqlite3
+.coverage

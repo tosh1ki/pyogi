@@ -13,8 +13,8 @@ before_script:
   - python setup.py build_ext --inplace
 # command to run tests
 script:
-  - cd ./ci
-  - python convert_ki2.py
+  - bash ci/run_tests.sh
+  - cd ci/
   - coverage run --source=pyogi convert_ki2.py test
 after_success:
   coveralls
