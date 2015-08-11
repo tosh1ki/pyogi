@@ -14,7 +14,7 @@ before_script:
 # command to run tests
 script:
   - cd ./ci
-  - python checkscript.py
-  - coverage run --source=pyogi checkscript.py test
+  - python convert_ki2.py
+  - coverage run --source=pyogi convert_ki2.py test
 after_success:
   coveralls
