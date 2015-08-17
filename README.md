@@ -39,6 +39,9 @@ Prefer to collect these typo manually.
   * 40000/44479.KIF
   * 40000/50319.kif
 
+# Materials
+* [将棋駒と将棋盤 画像フリー素材|無料素材倶楽部](http://sozai.7gates.net/docs/japanese-chess/)
+* [2chkifu.zip - zipkifubrowser - ki2 ziped archive - zip kifu browser for android - Google Project Hosting](https://code.google.com/p/zipkifubrowser/downloads/detail?name=2chkifu.zip&can=2&q=)
 
 # Reference
 ## Kifu data
