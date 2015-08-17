@@ -5,6 +5,7 @@
 2chの「将棋の棋譜貼り専門スレッド」から棋譜を収集するデモ
 '''
 
+import re
 import sys
 sys.path.append('./../../')
 
@@ -20,11 +21,11 @@ if __name__ == '__main__':
     url = 'http://peace.2ch.net/test/read.cgi/bgame/1428330063/'
     crawler = ThreadCrawler()
     crawler.get_response(url)
-    matched = crawler.extract_kifutxt()
+    matched = crawler.extract_kakikomitxt()
 
     # Extract one of kifu text
-    ki2 = [m[10] for m in matched  if '▲' in m[10] and '△' in m[10]]
-    ki2txt = re.sub(' (?:<br> )+', '\n', ki2[0])
+    ki2 = [m for m in matched  if '▲' in m and '△' in m]
+    ki2txt = re.sub(' (?:<br> ?)+', '\n', ki2[0])
 
     # Convert the kifu from KI2 to CSA
     ki2converter = Ki2converter()
