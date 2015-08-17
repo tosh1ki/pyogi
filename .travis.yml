@@ -14,7 +14,6 @@ before_script:
 # command to run tests
 script:
   - bash ci/run_tests.sh
-  - cd ci/
-  - coverage run --source=pyogi convert_ki2.py test
+  - coverage run --source=pyogi setup.py test
 after_success:
   coveralls
