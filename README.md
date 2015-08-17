@@ -4,6 +4,7 @@ pyogi -- Shogi analysis in Python
 [![Build Status](https://travis-ci.org/tosh1ki/pyogi.svg?branch=develop)](https://travis-ci.org/tosh1ki/pyogi)
 [![Coverage Status](https://coveralls.io/repos/tosh1ki/pyogi/badge.svg?branch=develop&service=github)](https://coveralls.io/github/tosh1ki/pyogi?branch=develop)
 [![Code Health](https://landscape.io/github/tosh1ki/pyogi/develop/landscape.svg?style=flat)](https://landscape.io/github/tosh1ki/pyogi/develop)
+[![Code Climate](https://codeclimate.com/github/tosh1ki/pyogi/badges/gpa.svg)](https://codeclimate.com/github/tosh1ki/pyogi)
 
 Pyogi (**Py**thon s**yogi**) is a Python library for shogi analysis, display kifu, analyse kifu, crawl kifu.
 
@@ -39,6 +40,9 @@ Prefer to collect these typo manually.
   * 40000/44479.KIF
   * 40000/50319.kif
 
+# Materials
+* [将棋駒と将棋盤 画像フリー素材|無料素材倶楽部](http://sozai.7gates.net/docs/japanese-chess/)
+* [2chkifu.zip - zipkifubrowser - ki2 ziped archive - zip kifu browser for android - Google Project Hosting](https://code.google.com/p/zipkifubrowser/downloads/detail?name=2chkifu.zip&can=2&q=)
 
 # Reference
 ## Kifu data
