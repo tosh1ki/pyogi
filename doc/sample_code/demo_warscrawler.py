@@ -24,6 +24,6 @@ if __name__ == '__main__':
     if not os.path.exists(csvpath):
         for mode, gtype in gtype_dict.items():
             t_users = wcrawler.get_users(tournament_name, max_page=1)
-            df_url = wcrawler.get_kifu_url(t_users, gtype, csvpath)
+            df_url = wcrawler.get_kifu_url(t_users[-2:], gtype, csvpath)
 
     df_kifu = wcrawler.get_all_kifu(csvpath)
