@@ -55,7 +55,8 @@ class WarsCrawler:
             try:
                 res = requests.session().get(url)
             except requests.ConnectionError:
-                print('\nConnection aborted.\n')
+                print('\nConnection aborted.')
+                print(url)
                 res = None
 
             if res and res.status_code == 200:
