@@ -55,7 +55,8 @@ class WarsCrawler:
             try:
                 res = requests.session().get(url)
             except requests.ConnectionError:
-                print('\nConnection aborted.\n')
+                print('\nConnection aborted.')
+                print(url)
                 res = None
 
             if res and res.status_code == 200:
@@ -208,6 +209,9 @@ class WarsCrawler:
 
             _url_list = self.get_url(_user, gtype=gtype, max_iter=max_iter)
             url_list.extend(_url_list)
+
+        if not url_list:
+            return None
 
         df = pd.DataFrame(url_list)
         df.ix[:, 1] = 0

@@ -4,7 +4,7 @@
 import os
 import sys
 import argparse
-sys.path.append('./../../')
+sys.path.append('./../')
 
 from pyogi.ki2converter import Ki2converter
 
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     csa_list = []
     for n in range(0, 10):
     
-        path = './../../data/{0:0>5}.KI2'.format(n)
+        path = './../data/{0:0>5}.KI2'.format(n)
         path_ki2 = os.path.expanduser(path)
 
         if not os.path.exists(path_ki2):
@@ -28,4 +28,4 @@ if __name__ == '__main__':
 
         csa_list.append(csa)
 
-    print(csa_list[5])
+    print(csa_list)

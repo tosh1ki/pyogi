@@ -8,13 +8,12 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-  - pip install coveralls
+#  - pip install coveralls
 before_script:
   - python setup.py build_ext --inplace
 # command to run tests
 script:
-  - cd ./doc/sample_code/
-  - python checkscript.py
-  - coverage run --source=pyogi checkscript.py test
-after_success:
-  coveralls
+  - bash ci/run_tests.sh
+#  - coverage run --source=pyogi setup.py test
+#after_success:
+#  coveralls
