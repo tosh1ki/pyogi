@@ -15,7 +15,7 @@ csa_to_code = {
 }
 
 
-def plot_state_pic(pieces_list, mochigoma_list, path_materials):
+def plot_state_pic(pieces_list, mochigoma_list, savepath):
 
     fig = plt.figure(figsize=(8, 8))
 
@@ -89,10 +89,13 @@ def plot_state_pic(pieces_list, mochigoma_list, path_materials):
         n_sente_mochigoma += not is_gote
         n_gote_mochigoma += is_gote
 
+    if savepath:
+        plt.savefig(savepath)
+
     plt.show()
 
 
-def plot_board_pic(board, path_materials):
+def plot_board_pic(board, savepath=None):
     '''Plot board object
     '''
 
@@ -113,5 +116,5 @@ def plot_board_pic(board, path_materials):
             mochigoma_list.append((which_player, _mochigoma.csa))
 
 
-    plot_state_pic(pieces_list, mochigoma_list, path_materials)
+    plot_state_pic(pieces_list, mochigoma_list, savepath)
 
