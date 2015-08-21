@@ -79,14 +79,16 @@ def plot_state_pic(pieces_list, mochigoma_list, path_materials):
         img_koma = mpimg.imread(path_koma)
         axes[is_gote].autoscale(False)
 
-        if not is_gote:
-            x = 1/9 * float(n_sente_mochigoma % 7)
-            y = 0.28 * float(n_sente_mochigoma // 7)
-        else:
-            x = 1/9 * float(n_gote_mochigoma % 7)
-            y = (1 - 1/4) - 0.28 * float(n_gote_mochigoma // 7)
+        N_COLUMN = 9
 
-        axes[is_gote].imshow(img_koma, extent=[x, x+1/4, y, y+1/4])
+        if not is_gote:
+            x = 0.1 * float(n_sente_mochigoma % N_COLUMN)
+            y = 0.2 * float(n_sente_mochigoma // N_COLUMN)
+        else:
+            x = 0.1 * float(n_gote_mochigoma % N_COLUMN)
+            y = (1 - 0.25) - 0.2 * float(n_gote_mochigoma // N_COLUMN)
+
+        axes[is_gote].imshow(img_koma, extent=[x, x+1/5, y, y+1/5])
 
         n_sente_mochigoma += not is_gote
         n_gote_mochigoma += is_gote
