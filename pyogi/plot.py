@@ -91,7 +91,7 @@ def plot_state_pic(pieces_list, mochigoma_list, savepath):
         n_gote_mochigoma += is_gote
 
     if savepath:
-        plt.savefig(savepath)
+        plt.savefig(savepath, bbox_inches="tight", pad_inches=0.0)
 
     plt.show()
 
