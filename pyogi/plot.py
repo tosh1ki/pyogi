@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from matplotlib import gridspec
 
+path_materials = os.path.join(os.path.dirname(__file__), 'materials')
 csa_to_code = {
     'OU': 1, 'HI': 2, 'KA': 3, 'KI': 4, 'GI': 5,
     'KE': 6, 'KY': 7, 'FU': 8, 'RY': 22, 'UM': 23,

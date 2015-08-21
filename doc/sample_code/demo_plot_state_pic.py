@@ -24,4 +24,4 @@ if __name__ == '__main__':
 
     path_materials = './../../pyogi/materials/'
 
-    plot_board_pic(board, path_materials)
+    plot_board_pic(board)
