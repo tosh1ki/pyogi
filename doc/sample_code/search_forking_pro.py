@@ -63,6 +63,9 @@ if __name__ == '__main__':
             }
         )
 
+        if len(res_table) % 10000 == 0:
+            print(len(res_table), path_ki2)
+
 
     # Output
     df = pd.DataFrame(res_table)
