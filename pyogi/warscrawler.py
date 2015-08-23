@@ -11,9 +11,6 @@ import sqlite3
 import requests
 import datetime as dt
 import pandas as pd
-from bs4 import BeautifulSoup
-
-import pdb
 
 
 gtype_dict = {'10m': '', '3m': 'sb', '10s': 's1'}
@@ -245,20 +242,7 @@ class WarsCrawler:
             # 1手も指さずに時間切れ or 接続切れ or 投了
             return '%TIME_UP'
 
-        if d['gtype'] == gtype_dict['10m']:
-            max_time = 60 * 10
-            rule = '\'持ち時間:10分、切れ負け'
-            time_limit = '$TIME_LIMIT:00:10+00'
-        elif d['gtype'] == gtype_dict['3m']:
-            max_time = 60 * 3
-            rule = '\'持ち時間:3分、切れ負け'
-            time_limit = '$TIME_LIMIT:00:03+00'
-        elif d['gtype'] == gtype_dict['10s']:
-            max_time = 3600
-            rule = '\'初手から10秒'
-            time_limit = '$TIME_LIMIT:00:00+10'
-        else:
-            print('Error: gtypeに不正な値; gtype={0}'.format(d['gtype']))
+        max_time, rule, time_limit = self.__gtype_to_rulestr(d['gtype'])
 
         sente_prev_remain_time = max_time
         gote_prev_remain_time = max_time
@@ -306,3 +290,25 @@ class WarsCrawler:
                 results.append('T' + str(_time))
 
         return '\n'.join(results)
+
+
+    def __gtype_to_rulestr(self, gtype):
+        if gtype == gtype_dict['10m']:
+            max_time = 60 * 10
+            rule = '\'持ち時間:10分、切れ負け'
+            time_limit = '$TIME_LIMIT:00:10+00'
+        elif gtype == gtype_dict['3m']:
+            max_time = 60 * 3
+            rule = '\'持ち時間:3分、切れ負け'
+            time_limit = '$TIME_LIMIT:00:03+00'
+        elif gtype == gtype_dict['10s']:
+            max_time = 3600
+            rule = '\'初手から10秒'
+            time_limit = '$TIME_LIMIT:00:00+10'
+        else:
+            print('Error: gtypeに不正な値; gtype={0}'.format(gtype))
+            max_time = None
+            rule = None
+            time_limit = None
+
+        return (max_time, rule, time_limit)
