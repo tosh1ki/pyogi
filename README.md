@@ -20,7 +20,7 @@ Execute following command to compile all Cython script.
 Kifu data of KI2 format in `kifu/` were copies of kifu data in [2chkifu.zip](https://code.google.com/p/zipkifubrowser/downloads/detail?name=2chkifu.zip&can=2&q=).
 
 ## Typo in 2chkifu.zip
-Prefer to collect these typo manually.
+Prefer to correct these typos manually.
 
 |File path      |Before                    |After                   |
 |:--------------|:-------------------------|:-----------------------|
