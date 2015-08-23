@@ -33,11 +33,11 @@ for i in range(8):
     else:
         ACT2.append([DIR[i]])
 
+make_act = lambda dirs: [[[d[0]*n, d[1]*n] for n in range(1, 9)] for d in dirs]
 dir_ka = [[1,  1], [ 1, -1], [-1,  1], [-1, -1]]
-KA_ACT = [[[d[0]*n, d[1]*n] for n in range(1, 9)] for d in dir_ka]
-
 dir_hi = [[1,  0], [-1,  0], [ 0,  1], [ 0, -1]]
-HI_ACT = [[[d[0]*n, d[1]*n] for n in range(1, 9)] for d in dir_hi]
+KA_ACT = make_act(dir_ka)
+HI_ACT = make_act(dir_hi)
 
 KY_ACT = [[[0, -n] for n in range(1, 9)]]
 
