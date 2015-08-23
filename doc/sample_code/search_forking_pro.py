@@ -63,9 +63,6 @@ if __name__ == '__main__':
             }
         )
 
-        if len(res_table) > 100:
-            break
-        
 
     # Output
     df = pd.DataFrame(res_table)
