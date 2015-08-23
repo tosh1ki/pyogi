@@ -25,8 +25,13 @@ DIR = [
     [ 1, -1]
 ]
 
-ACT1 = [[DIR[i]] for i in range(8) if i%2 == 0]
-ACT2 = [[DIR[i]] for i in range(8) if i%2 == 1]
+ACT1 = []
+ACT2 = []
+for i in range(8):
+    if i % 2 == 0:
+        ACT1.append([DIR[i]])
+    else:
+        ACT2.append([DIR[i]])
 
 KA_ACT = [
     [[ 1,  1], [ 2,  2], [ 3,  3], [ 4,  4],
