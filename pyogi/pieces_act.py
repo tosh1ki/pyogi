@@ -39,10 +39,7 @@ KA_ACT = [[[d[0]*n, d[1]*n] for n in range(1, 9)] for d in dir_ka]
 dir_hi = [[1,  0], [-1,  0], [ 0,  1], [ 0, -1]]
 HI_ACT = [[[d[0]*n, d[1]*n] for n in range(1, 9)] for d in dir_hi]
 
-KY_ACT = [
-    [[ 0, -1], [ 0, -2], [ 0, -3], [ 0, -4],
-     [ 0, -5], [ 0, -6], [ 0, -7], [ 0, -8]]
-]
+KY_ACT = [[[0, -n] for n in range(1, 9)]]
 
 KE_ACT = [
     [[ 1, -2]],
