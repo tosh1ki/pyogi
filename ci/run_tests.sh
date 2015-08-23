@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd ./ci
+bash 2chkifu.zip
 python convert_ki2.py
 cd -
 cd ./doc/sample_code/
