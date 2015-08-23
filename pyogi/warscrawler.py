@@ -11,9 +11,6 @@ import sqlite3
 import requests
 import datetime as dt
 import pandas as pd
-from bs4 import BeautifulSoup
-
-import pdb
 
 
 gtype_dict = {'10m': '', '3m': 'sb', '10s': 's1'}
