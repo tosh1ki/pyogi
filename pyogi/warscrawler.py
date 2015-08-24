@@ -261,18 +261,7 @@ class WarsCrawler:
 
         for i, w in enumerate(wcsa_list):
             if i % 2 == 0:
-                # 駒の動き，あるいは特殊な命令の処理
-                # CAUTION: 仕様がわからないので全部網羅できているかわからない
-                if w.find('TORYO') > 0 or w.find('DISCONNECT') > 0:
-                    w_ap = '%TORYO'
-                elif w.find('TIMEOUT') > 0:
-                    w_ap = '%TIME_UP'
-                elif w.find('DRAW_SENNICHI') > 0:
-                    w_ap = '%SENNICHITE'
-                else:
-                    w_ap = w
-
-                results.append(w_ap)
+                results.append(self.__extract_end_command(w))
 
             else:
                 # 時間の行の処理
@@ -312,3 +301,19 @@ class WarsCrawler:
             time_limit = None
 
         return (max_time, rule, time_limit)
+
+    def __extract_end_command(w):
+        '''駒の動き，あるいは特殊な命令の処理
+
+        CAUTION: 仕様がわからないので全部網羅できているかわからない
+        '''
+        if w.find('TORYO') > 0 or w.find('DISCONNECT') > 0:
+            w_ap = '%TORYO'
+        elif w.find('TIMEOUT') > 0:
+            w_ap = '%TIME_UP'
+        elif w.find('DRAW_SENNICHI') > 0:
+            w_ap = '%SENNICHITE'
+        else:
+            w_ap = w
+
+        return w_ap
