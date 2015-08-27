@@ -17,7 +17,7 @@ Pyogi (**Py**thon s**yogi**) is a Python library for shogi analysis, display kif
 * Plot a state of board like above picture (`pyogi.plot`)
 
 # Installation
-Execute following command to compile all Cython script.
+Execute following command to compile all Cython scripts.
 
 `python setup.py build_ext --inplace`
 
