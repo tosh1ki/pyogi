@@ -6,8 +6,6 @@
 '''
 
 import re
-import sys
-sys.path.append('./../../')
 
 from pyogi.kifu import Kifu
 from pyogi.threadcrawler import ThreadCrawler

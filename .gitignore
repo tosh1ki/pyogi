@@ -10,3 +10,7 @@ build/
 *.html
 *.sqlite3
 .coverage
+
+*.egg-info/
+dist/
+ci/*.txt

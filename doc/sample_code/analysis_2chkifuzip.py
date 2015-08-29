@@ -6,11 +6,9 @@ Convert kifu's of KI2 format, collect them and output to CSV
 '''
 
 import os
-import sys
 import argparse
 import pandas as pd
 import pdb
-sys.path.append('./../../')
 
 from pyogi.ki2converter import *
 from pyogi.kifu import *

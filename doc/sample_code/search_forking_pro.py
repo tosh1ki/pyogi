@@ -10,10 +10,8 @@
 '''
 
 import os
-import sys
 import argparse
 import pandas as pd
-sys.path.append('./../../')
 
 from pyogi.ki2converter import *
 from pyogi.kifu import *
