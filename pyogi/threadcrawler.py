@@ -16,7 +16,7 @@ def extract_kakikomitxt(html):
     return re.findall(REGEX_HTML, html)
 
 
-class ThreadCrawler:
+class ThreadCrawler(object):
 
     def __init__(self, INTERVAL_TIME=10, MAX_N_RETRY=10):
         self.res = None

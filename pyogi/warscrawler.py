@@ -19,7 +19,7 @@ WCSA_PATTERN = re.compile(r'(?<=receiveMove\(\").+?(?=\"\);)')
 GAME_HEADER_PATTERN = re.compile(r'(?<=var\sgamedata\s=\s){[^}]+}', re.DOTALL)
 
 
-class WarsCrawler:
+class WarsCrawler(object):
     '''将棋ウォーズ用のクローラー
 
     Args
