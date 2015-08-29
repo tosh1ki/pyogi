@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 import argparse
-sys.path.append('./../../')
 
 from pyogi.ki2converter import Ki2converter
 

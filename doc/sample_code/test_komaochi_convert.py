@@ -6,9 +6,7 @@
 '''
 
 import os
-import sys
 import argparse
-sys.path.append('./../../')
 
 from pyogi.ki2converter import *
 from get_ki2_list import get_ki2_list

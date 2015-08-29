@@ -6,9 +6,7 @@ WarsCrawlerのデモ
 '''
 
 import os
-import sys
 import argparse
-sys.path.append('./../../')
 
 from pyogi.warscrawler import WarsCrawler, gtype_dict
 

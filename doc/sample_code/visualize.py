@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 import numpy as np
 import pandas as pd
 from scipy.cluster import hierarchy
 import matplotlib.pyplot as plt
-sys.path.append('./../../')
 
 from pyogi.kifu import Kifu
 

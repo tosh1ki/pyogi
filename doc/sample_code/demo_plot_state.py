@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
-sys.path.append('./../../')
-
 from pyogi.board import Board
 from pyogi.plot import plot_board
 
