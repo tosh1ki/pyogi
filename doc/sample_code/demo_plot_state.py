@@ -22,4 +22,4 @@ if __name__ == '__main__':
     plot_board(board, savepath='example_pic.png', mode='pic')
 
     # Plot using matplotlib
-    board.plot_state_mpl(figsize=(8, 9), savepath='example_mpl.png')
+    board.plot_state_mpl(figsize=(8, 9))
