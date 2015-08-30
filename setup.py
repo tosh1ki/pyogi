@@ -22,5 +22,5 @@ setup(
     description='Shogi analysis in Python',
     ext_modules=ext_modules,
     cmdclass={'build_ext': build_ext},
-    package_data={'pyogi': ['materials/*']}
+    package_data={'pyogi': ['materials/*', './initial_state_hirate.csa']}
 )

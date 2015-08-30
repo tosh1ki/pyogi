@@ -8,6 +8,7 @@ matplotlib.rc('font', **font)
 
 from .pieces_act import KOMA_INFOS, PIECE_TO_ACT
 from .teai_options import KOMAOCHI_OPTIONS
+from .load_csa import initial_state_csa
 
 import pdb
 
@@ -17,49 +18,6 @@ board_indexes = list(range(0, 9))
 all_mochigoma_csa = (['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2
                      + ['HI', 'KA', 'OU'])
 all_mochigoma = list(map(Koma, all_mochigoma_csa))
-
-initial_state_csa = '''
-+0017FU
-+0027FU
-+0037FU
-+0047FU
-+0057FU
-+0067FU
-+0077FU
-+0087FU
-+0097FU
-+0019KY
-+0029KE
-+0039GI
-+0049KI
-+0059OU
-+0069KI
-+0079GI
-+0089KE
-+0099KY
-+0028HI
-+0088KA
--0013FU
--0023FU
--0033FU
--0043FU
--0053FU
--0063FU
--0073FU
--0083FU
--0093FU
--0011KY
--0021KE
--0031GI
--0041KI
--0051OU
--0061KI
--0071GI
--0081KE
--0091KY
--0082HI
--0022KA
-'''
 
 
 cdef class Board:
