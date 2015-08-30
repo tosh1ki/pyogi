@@ -3,7 +3,7 @@ from collections import Counter
 
 from .pieces_act import KOMA_INFOS, PIECE_TO_ACT
 from .teai_options import KOMAOCHI_OPTIONS
-from pyogi.plot import plot_board
+from .plot import plot_board
 
 import pdb
 
@@ -127,6 +127,9 @@ cdef class Board:
         title = '{0}手目: {1}'.format(self.tesu, self.last_move_txt)
         plot_board(self, savepath=savepath, mode='mpl', title=title, figsize=figsize,
                    last_move_xy=self.last_move_xy)
+
+    def plot_state_pic(self, savepath=None):
+        plot_board(self, savepath=savepath, mode='pic')
 
     cpdef str get_mochigoma_str(self, int teban, bool_t kanji=True):
         '''Returns string of all mochigoma.
