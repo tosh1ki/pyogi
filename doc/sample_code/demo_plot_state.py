@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 from pyogi.board import Board
 from pyogi.plot import plot_board
 
@@ -19,7 +20,11 @@ if __name__ == '__main__':
     board.move('+7988GI')
 
     # Plot by materials
-    plot_board(board, savepath='example_pic.png', mode='pic')
+    savepath = 'example_pic.png'
+    if os.path.exists(savepath):
+        savepath = None
+
+    plot_board(board, savepath=savepath, mode='pic')
 
     # Plot using matplotlib
     board.plot_state_mpl(figsize=(8, 9))
