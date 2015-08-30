@@ -1,19 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 import os
 
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from matplotlib import gridspec
 
-PATH_MATERIALS = os.path.join(os.path.dirname(__file__), 'materials')
+PATH_MATERIALS = os.path.join(os.path.dirname(__file__), '../materials')
 csa_to_code = {
     'OU': 1, 'HI': 2, 'KA': 3, 'KI': 4, 'GI': 5,
     'KE': 6, 'KY': 7, 'FU': 8, 'RY': 22, 'UM': 23,
     'NG': 24, 'NK': 26, 'NY': 27, 'TO': 28
 }
+
+
+def plot_state_pic(board, savepath=None):
+    pieces_list = []
+    for i, row in enumerate(board.board):
+        for j, grid in enumerate(row):
+            if grid.which_player != ' ':
+                pieces_list.append((grid.which_player, i+1, j+1, grid.koma.csa))
+    
+    mochigoma_list = []
+    for i, _mochigoma_list in enumerate(board.mochigoma):
+        if i == 0:
+            which_player = '+'
+        else:
+            which_player = '-'
+
+        for _mochigoma in _mochigoma_list:
+            mochigoma_list.append((which_player, _mochigoma.csa))
+
+
+    picplot = PicPlot(pieces_list, mochigoma_list)
+    picplot.plot()
+
+    if savepath:
+        picplot.save(savepath)
+
+    picplot.show()
 
 
 class PicPlot:
@@ -106,40 +132,3 @@ class PicPlot:
 
     def show(self):
         plt.show()
-
-
-def plot_state_pic(pieces_list, mochigoma_list, savepath=None):
-    picplot = PicPlot(pieces_list, mochigoma_list)
-    picplot.plot()
-
-    if savepath:
-        picplot.save(savepath)
-
-    picplot.show()
-
-
-def plot_board(board, savepath=None, mode='pic'):
-    '''Plot board object
-    '''
-
-    pieces_list = []
-    for i, row in enumerate(board.board):
-        for j, grid in enumerate(row):
-            if grid.which_player != ' ':
-                pieces_list.append((grid.which_player, i+1, j+1, grid.koma.csa))
-    
-    mochigoma_list = []
-    for i, _mochigoma_list in enumerate(board.mochigoma):
-        if i == 0:
-            which_player = '+'
-        else:
-            which_player = '-'
-
-        for _mochigoma in _mochigoma_list:
-            mochigoma_list.append((which_player, _mochigoma.csa))
-
-
-    if mode == 'pic':
-        plot_state_pic(pieces_list, mochigoma_list, savepath)
-    else:
-        print('Invalid mode : {0}'.format(mode))

@@ -3,7 +3,6 @@
 
 import os
 from pyogi.board import Board
-from pyogi.plot import plot_board
 
 
 if __name__ == '__main__':

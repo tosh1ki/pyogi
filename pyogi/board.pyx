@@ -1,19 +1,15 @@
 import os
 from collections import Counter
-import matplotlib
-import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
-font = {'family': 'TakaoGothic'}
-matplotlib.rc('font', **font)
 
 from .pieces_act import KOMA_INFOS, PIECE_TO_ACT
 from .teai_options import KOMAOCHI_OPTIONS
 from .load_csa import initial_state_csa
+from .plot import plot_board
 
 import pdb
 
-row_separator = '-' * 37
 board_indexes = list(range(0, 9))
+row_separator = '-' * 37
 
 all_mochigoma_csa = (['FU'] * 9 + ['KI', 'GI', 'KE', 'KY'] * 2
                      + ['HI', 'KA', 'OU'])
@@ -86,79 +82,12 @@ cdef class Board:
         savepath : str, optional (default = '')
             If savepath != None, save output of matplotlib as a png file
         '''
-        fig, ax = plt.subplots(figsize=figsize)
+        title = '{0}手目: {1}'.format(self.tesu, self.last_move_txt)
+        plot_board(self, savepath=savepath, mode='mpl', title=title, figsize=figsize,
+                   last_move_xy=self.last_move_xy)
 
-        width_x = figsize[0]
-        width_y = figsize[1]
-
-        plt.xlim(0, width_x)
-        plt.ylim(0, width_y)
-
-        dx = width_x / 9
-        dy = width_y / 9
-
-        fontsize = 30 * min(dx, dy)
-
-        # Plot grids
-        for i in range(1, 9):
-            x = i * dx
-            y = i * dy
-            plt.plot([0, width_x], [y, y], color='black')
-            plt.plot([x, x], [0, width_y], color='black')
-
-        # Plot pch
-        for x in [3 * dx, 6 * dx]:
-            for y in [3 * dy, 6 * dy]:
-                plt.plot([x], [y],
-                         marker='o', color='black', linestyle='None')
-
-        # Plot pieces
-        for j in board_indexes:
-            for i, b_i in enumerate(board_indexes):
-                grid = self.board[b_i][j]
-
-                x = ((8 - i) + 0.5) * dx
-                y = ((8 - j) + 0.5) * dy
-
-                if not grid.is_empty():
-                    is_gote = not grid.is_of_sente()
-                    # TOFIX: 60, 80にするとよくわからないけどうまくいく
-                    plt.text(x - fontsize / 2 / 60, 
-                             y - fontsize / 2 / 80,
-                             grid.koma.kanji,
-                             size=fontsize, rotation=180 * is_gote)
-
-                # Plot circle around piece moved recently
-                if (len(self.last_move_xy) == 2 and
-                        self.last_move_xy[0] == i and
-                        self.last_move_xy[1] == j):
-                    circle = Circle((x, y), 0.5 * dx, facecolor='none',
-                                    linewidth=3, alpha=0.5)
-                    ax.add_patch(circle)
-
-        # Plot mochigoma
-        plt.text(0, -0.5 * dx, self.get_mochigoma_str(0),
-                 fontsize=fontsize)
-        plt.text(0,  9.2 * dy, self.get_mochigoma_str(1),
-                 fontsize=fontsize, rotation=180)
-
-        # Plot names
-        plt.text(width_x + 0.2, 2 * dy, self.players[0],
-                 fontsize=fontsize, rotation=90)
-        plt.text(width_x + 0.2, 8 * dy, self.players[1],
-                 fontsize=fontsize, rotation=90)
-
-        # Plot title
-        if not title:
-            title = '{0}手目: {1}'.format(self.tesu, self.last_move_txt)
-
-        plt.title(title, y=1.07, fontsize=fontsize)
-        plt.tick_params(labelleft='off', labelbottom='off')
-
-        if savepath:
-            fig.savefig(savepath)
-        else:
-            plt.show()
+    def plot_state_pic(self, savepath=None):
+        plot_board(self, savepath=savepath, mode='pic')
 
     cpdef str get_mochigoma_str(self, int teban, bool_t kanji=True):
         '''Returns string of all mochigoma.

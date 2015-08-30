@@ -17,7 +17,7 @@ for pyx in pyx_list:
 setup(
     name='pyogi',
     version='0.1',
-    packages=['pyogi'],
+    packages=['pyogi', 'pyogi.plot'],
     author='tosh1ki',
     description='Shogi analysis in Python',
     ext_modules=ext_modules,
