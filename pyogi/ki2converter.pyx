@@ -164,6 +164,7 @@ cdef class Ki2converter:
             '$START_TIME:' + header_infos.get('start_time', ''),
             '\'持ち時間:' + header_infos.get('time', ''),
             '\'$TIME_LIMIT:',
+            '\'戦型:' + header_infos.get('opening', ''),
             '\'開始局面' + komaochi_txt,
             '\'先手番', header_infos['senteban'],
             '\'指し手と消費時間'

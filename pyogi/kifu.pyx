@@ -15,6 +15,7 @@ from cpython cimport bool as bool_t
 REGEXP_MOVES = re.compile('\'指し手と消費時間\n(.+)\n', re.S)
 REGEXP_DATETIME = re.compile('^\$START_TIME:([\d/:\s\w]+)\n', re.S | re.M)
 REGEXP_PLAYERS = re.compile('\'対局者名\nN\+\n(.+?)\nN-\n(.+?)\n', re.S)
+REGEXP_OPENING = re.compile('\'戦型:(.+?)\n', re.S)
 
 
 cdef class Kifu:
@@ -37,9 +38,10 @@ cdef class Kifu:
     datetime
     description
     teai
+    opening
     '''
     cdef:
-        readonly str kifu_txt, datetime, description
+        readonly str kifu_txt, datetime, description, opening
         public str teai
         public list moves, players, times
         readonly bool_t sente_win, gote_win, is_sennichite, is_jishogi, is_chudan, extracted
@@ -62,6 +64,7 @@ cdef class Kifu:
         self.times = []
         self.teai = 'hirate'
         self.extracted = None
+        self.opening = ''
 
         self.board = Board()
 
@@ -122,6 +125,10 @@ cdef class Kifu:
         match = re.search(REGEXP_PLAYERS, self.kifu_txt)
         if len(match.groups()) == 2:
             self.set_players_name(list(match.groups()))
+
+        match = re.search(REGEXP_OPENING, self.kifu_txt)
+        if match:
+            self.opening = match.groups()[0]
 
         return True
 

@@ -50,6 +50,7 @@ if __name__ == '__main__':
             'teai': kifu.teai,
             'moves': ' '.join(kifu.moves),
             'description': kifu.description,
+            'opening': kifu.opening,
             'path_ki2': path_ki2
         }
         kifu_table_list.append(kifu_table)
