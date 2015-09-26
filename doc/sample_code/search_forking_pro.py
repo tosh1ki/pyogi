@@ -55,6 +55,7 @@ if __name__ == '__main__':
                 'sennichite': kifu.is_sennichite,
                 'sente_forking': res[2] != [],
                 'gote_forking': res[3] != [],
+                'teai': kifu.teai,
                 'fork': res[2] != [] or res[3] != [],
                 'forkandwin': ((kifu.sente_win and res[2]!=[]) or 
                                (not kifu.sente_win and res[3]!=[]))
