@@ -142,6 +142,7 @@ cdef class Kifu:
         mode : str, optional (default = 'cui')
             'cui' : Print state using command line
             'mpl' : Print state using matplotlib
+            'pic' : Print state using materials
         '''
         new_board = Board()
         new_board.players = self.board.players
@@ -159,6 +160,8 @@ cdef class Kifu:
             print()
         elif mode == 'mpl':
             new_board.plot_state_mpl()
+        elif mode == 'pic':
+            new_board.plot_state_pic()
         else:
             raise RuntimeError('Invalid mode', mode)
 
@@ -209,8 +212,8 @@ cdef class Kifu:
                     appended = True
 
                 if appended and display:
-                    self.print_state(tesu=n-1, mode='mpl')
-                    self.board.plot_state_mpl()
+                    self.print_state(tesu=n-1, mode='pic')
+                    self.board.plot_state_pic()
 
                 appended = False
 

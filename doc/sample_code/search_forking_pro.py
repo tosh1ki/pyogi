@@ -39,7 +39,7 @@ if __name__ == '__main__':
         if not kifu.extracted:
             continue
 
-        res = kifu.get_forking(['OU', 'HI'], display=False)
+        res = kifu.get_forking(['OU', 'HI'], display=True)
         # if res[2] or res[3]:
         #     print(kifu.players)
 
